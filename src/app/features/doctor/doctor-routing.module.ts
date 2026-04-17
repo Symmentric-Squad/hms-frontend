@@ -4,7 +4,11 @@ import { DoctorDashboardComponent } from './pages/doctor-dashboard.component';
 import { DoctorGuard } from '../../core/guards/doctor.guard';
 
 const routes: Routes = [
-  { path: '', component: DoctorDashboardComponent, canActivate: [DoctorGuard] },
+  {
+    path: '',
+    component: DoctorDashboardComponent,
+    canActivate: [DoctorGuard]
+  },
   // Add doctor-specific child routes (records, prescriptions)
 ];
 

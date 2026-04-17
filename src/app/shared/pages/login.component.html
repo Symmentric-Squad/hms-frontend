@@ -1,0 +1,33 @@
+<div class="max-w-md mx-auto p-4">
+      <h2 class="text-xl font-semibold">Login - {{ role || 'user' }}</h2>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="mb-3">
+          <label class="block text-sm">Username</label>
+          <input formControlName="username" class="w-full border p-2" />
+          @if(form.get('username')?.touched && form.get('username')?.invalid){
+            <div class="text-red-600 text-sm">
+              Username is required.
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="block text-sm">Password</label>
+          <input type="password" formControlName="password" class="w-full border p-2" />
+          @if(form.get('password')?.touched && form.get('password')?.invalid){
+            <div class="text-red-600 text-sm">
+              Password is required (min 6 chars).
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white" [disabled]="form.invalid || loading">Login</button>
+        </div>
+
+        @if(error){
+          <div class="text-red-600">{{ error }}</div>
+        }
+      </form>
+    </div>
