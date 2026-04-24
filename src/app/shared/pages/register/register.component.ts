@@ -1,10 +1,12 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
 @Component({
-    selector: 'patient-register',
-    template: `
-        <h1>Register Page</h1>
-    `
+  selector: 'app-register',
+  template: `
+    <div class="max-w-md mx-auto p-4">
+      <h2 class="text-xl font-semibold">Register</h2>
+      <!--TODO: Implement registration form here -->
+    </div>
+  `,
 })
-
 export class RegisterComponent {}

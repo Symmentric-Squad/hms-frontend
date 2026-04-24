@@ -1,28 +1,21 @@
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 250px;
   height: 100vh;
-  background: #2c3e50;
-  color: white;
+  background: var(--brand-accent);
+  color: var(--brand-primary);
   transition: width 0.3s ease;
   overflow-x: hidden;
-  z-index: 1000; /* Ensure it stays above other content */
 
   &.collapsed {
     width: 60px;
-    .nav-item { justify-content: center; }
-  }
-}
-
-/* Adjust the content to account for the sidebar */
-.main-content {
-  margin-left: 250px;
-  transition: margin-left 0.3s ease;
-
-  &.collapsed {
-    margin-left: 60px;
+    .nav-item {
+      justify-content: center;
+      .icon {
+        margin-right: 0; // Center the icon
+        width: 30px; // Larger size for better visibility
+        height: 30px;
+      }
+    }
   }
 }
 
@@ -30,12 +23,12 @@
   display: flex;
   align-items: center;
   padding: 15px;
-  background: #1a252f;
+  background: var(--brand-accent);
   
   .burger-btn {
     background: none;
     border: none;
-    color: white;
+    color: var(--brand-primary);
     font-size: 20px;
     cursor: pointer;
   }
@@ -46,18 +39,28 @@
   align-items: center;
   padding: 12px 20px;
   text-decoration: none;
-  color: #bdc3c7;
+  color: var(--brand-primary);
   cursor: pointer;
   transition: background 0.2s;
 
-  &:hover { background: #34495e; color: white; }
-  &.active { border-left: 4px solid #3498db; background: #34495e; }
+  &:hover { background: var(--brand-accent-hover); color: var(--brand-secondary); }
+  &.active { border-left: 4px solid var(--brand-secondary); background: var(--brand-accent); color: var(--brand-secondary); }
   
-  .icon { margin-right: 15px; width: 20px; text-align: center; }
+  .icon { 
+    margin-right: 15px; 
+    width: 20px; 
+    text-align: center; 
+    transition: width 0.3s, height 0.3s; // Smooth transition for size changes
+
+    .sidebar.collapsed & {
+      width: 30px;
+      height: 30px;
+    }
+  }
 }
 
 .sub-nav {
-  background: #1f2d3a;
+  background: var(--brand-accent);
   .sub-item { padding-left: 55px; font-size: 0.9rem; }
 }
 
@@ -71,7 +74,7 @@
   display: inline-block;
   width: 20px;
   height: 20px;
-  background-color: #bdc3c7; // This is the color that will show through the SVG shape
+  background-color: var(--brand-primary);
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center; // Added for better alignment
@@ -83,7 +86,9 @@
 }
 
 // When the parent nav-item is hovered or active, change the icon color
-.nav-item:hover .icon,
+.nav-item:hover .icon{
+  background-color: var(--brand-secondary);
+}
 .nav-item.active .icon {
-  background-color: white; 
+  background-color: var(--brand-secondary);
 }

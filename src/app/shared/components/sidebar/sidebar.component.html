@@ -2,27 +2,24 @@
   <div class="sidebar-header">
     <button class="burger-btn" (click)="toggleSidebar()">
       <!-- TODO: Rectify the Collapsed view with better styling -->
-      <span class="burger-icon">
+      <span class="burger-icon m-2">
           {{ isSidebarCollapsed ? '☰' : '✕' }}
       </span>
     </button>
-    <span class="logo-text ml-4" *ngIf="!isSidebarCollapsed">HMS</span>
+    <span class="logo-text ml-4 font-bold text-lg" *ngIf="!isSidebarCollapsed">HMS</span>
   </div>
 
   <nav class="nav-list">
     <div *ngFor="let item of navItems">
-      
-      <a *ngIf="!item.children" 
-         [routerLink]="item.link" 
-         class="nav-item" 
-         routerLinkActive="active">
-         <span class="icon" 
-                [style.mask-image]="'url(' + item.icon + ')'"
-                [style.-webkit-mask-image]="'url(' + item.icon + ')'">
-          </span>
+      @if(!item.children){
+      <a [routerLink]="item.link" class="nav-item" routerLinkActive="active">
+        <span class="icon" 
+              [style.mask-image]="'url(' + item.icon + ')'"
+              [style.-webkit-mask-image]="'url(' + item.icon + ')'">
+        </span>
         <span class="label" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
       </a>
-
+    }
       <div *ngIf="item.children" class="dropdown-container">
         <div class="nav-item dropdown-header" (click)="toggleDropdown(item)">
           <span class="icon" 
@@ -44,7 +41,6 @@
           </a>
         </div>
       </div>
-
     </div>
   </nav>
 </div>
