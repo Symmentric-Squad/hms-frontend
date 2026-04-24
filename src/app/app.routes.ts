@@ -4,6 +4,11 @@ import { DoctorGuard } from './core/guards/doctor.guard';
 import { PatientGuard } from './core/guards/patient.guard';
 
 export const routes: Routes = [
+    {
+        path: '',
+        loadComponent: () => import('./shared/pages/landing/landing.component')
+        .then(m => m.LandingComponent)
+    },
     { 
         path: 'admin', 
         canActivate: [AdminGuard], 
@@ -21,7 +26,17 @@ export const routes: Routes = [
       },
       {
         path: 'login/:role',
-        loadComponent: () => import('./shared/pages/login.component')
+        loadComponent: () => import('./shared/pages/login/login.component')
         .then(m => m.LoginComponent)
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('./shared/pages/register/register.component')
+        .then(m => m.RegisterComponent)
+      },
+      {
+        path: '**',
+        loadComponent: () => import('./shared/pages/not-found/not-found.component')
+        .then(m => m.NotFoundComponent)
       }
 ];
