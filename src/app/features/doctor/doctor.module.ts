@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { DoctorDashboardComponent } from "./pages/doctor-dashboard.component";
 import { DoctorRoutingModule } from "./doctor-routing.module";
 import { CommonModule } from "@angular/common";
+import { SidebarComponent } from "../../shared/components/sidebar/sidebar.component";
 
 @NgModule({
   declarations: [
@@ -10,7 +11,7 @@ import { CommonModule } from "@angular/common";
   imports: [
     CommonModule,
     DoctorRoutingModule,
-    // SharedModule
-  ]
+    SidebarComponent
+]
 })
 export class DoctorModule { }

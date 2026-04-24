@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { LandingPageNavBar } from "../../components/landing-navbar.component";
+import { LandingPageNavBar } from "../../components/landing-navbar/landing-navbar.component";
 
 @Component({
     selector: 'not-found',
