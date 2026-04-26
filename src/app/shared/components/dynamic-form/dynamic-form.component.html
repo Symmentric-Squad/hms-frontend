@@ -1,0 +1,72 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  class="space-y-4 bg-bg p-6 rounded-xl shadow"
+>
+    @for(field of config.fields; track $index) {
+        <ng-container>
+
+            <!-- TEXT / EMAIL / PASSWORD / DATE -->
+            @if(field.type !== 'select' && field.type !== 'textarea') {
+            <div>
+            <label class="block text-sm font-medium mb-1 text-text">
+                {{ field.label }}
+            </label>
+
+            <input
+                [type]="field.type"
+                [placeholder]="field.placeholder"
+                formControlName="{{ field.name }}"
+                class="w-full px-3 py-2 border rounded bg-white text-black focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <div *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched" class="text-red-500 text-sm">
+                {{ field.label }} is required
+            </div>
+            </div>
+            }
+
+            <!-- TEXTAREA -->
+            @if(field.type === 'textarea') {
+                <div>
+                <label class="block text-sm font-medium mb-1 text-text">
+                    {{ field.label }}
+                </label>
+
+                <textarea
+                    [placeholder]="field.placeholder"
+                    formControlName="{{ field.name }}"
+                    class="w-full px-3 py-2 border rounded"
+                ></textarea>
+                <div *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched" class="text-red-500 text-sm">
+                    {{ field.label }} is required
+                </div>
+                </div>
+            }
+            <!-- SELECT -->
+            @if(field.type === 'select') {
+                <div>
+                <label class="block text-sm font-medium mb-1 text-text">
+                    {{ field.label }}
+                </label>
+
+                <select formControlName="{{ field.name }}" class="w-full px-3 py-2 border rounded">
+                @for (opt of field.options; track $index) {
+                    <option [value]="opt.value">
+                    {{ opt.label }}
+                    </option>
+                }
+                </select>
+                <div *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched" class="text-red-500 text-sm">
+                    {{ field.label }} is required
+                </div>
+                </div>
+            }
+
+        </ng-container>
+    }
+  <button
+    type="submit"
+    class="mt-4 border px-4 py-2 rounded hover:opacity-90">
+    {{ config.submitLabel || 'Submit' }}
+  </button>
+</form>

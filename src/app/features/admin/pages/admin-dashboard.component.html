@@ -1,0 +1,372 @@
+<div class="dashboard-wrapper">
+
+  <!-- Tab Navigation -->
+  <div class="tab-nav">
+    <button class="tab-btn" [class.active-tab]="activeTab === 'dashboard'" (click)="activeTab = 'dashboard'">
+      <span>📊</span> Dashboard
+    </button>
+    <button class="tab-btn" [class.active-tab]="activeTab === 'doctors'" (click)="activeTab = 'doctors'">
+      <span>🩺</span> Manage Doctors
+    </button>
+    <button class="tab-btn" [class.active-tab]="activeTab === 'patients'" (click)="activeTab = 'patients'">
+      <span>👥</span> Manage Patients
+    </button>
+    <button class="tab-btn" [class.active-tab]="activeTab === 'appointments'" (click)="activeTab = 'appointments'">
+      <span>📅</span> Appointments
+    </button>
+  </div>
+
+  <!-- ===== DASHBOARD TAB ===== -->
+  <div *ngIf="activeTab === 'dashboard'">
+    <div class="section-header">
+      <h2>Welcome Back, Admin</h2>
+      <p>Here's an overview of the hospital today</p>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card blue" (click)="activeTab = 'doctors'">
+        <div class="stat-icon">🩺</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalDoctors }}</span>
+          <span class="stat-label">Total Doctors</span>
+          <span class="stat-sub">{{ stats.activeDoctors }} Active</span>
+        </div>
+      </div>
+      <div class="stat-card green" (click)="activeTab = 'patients'">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalPatients }}</span>
+          <span class="stat-label">Total Patients</span>
+          <span class="stat-sub">{{ stats.activePatients }} Active</span>
+        </div>
+      </div>
+      <div class="stat-card orange" (click)="activeTab = 'appointments'">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.scheduledAppointments }}</span>
+          <span class="stat-label">Scheduled</span>
+          <span class="stat-sub">{{ stats.completedAppointments }} Completed</span>
+        </div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-icon">📋</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.totalAppointments }}</span>
+          <span class="stat-label">Total Appointments</span>
+          <span class="stat-sub">All time</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-bottom">
+      <!-- Recent Appointments -->
+      <div class="dash-panel">
+        <div class="panel-header">
+          <h3>Recent Appointments</h3>
+          <button class="view-all-btn" (click)="activeTab = 'appointments'">View All →</button>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let a of recentAppointments">
+              <td>{{ a.patient }}</td>
+              <td>{{ a.doctor }}</td>
+              <td>{{ a.date }}</td>
+              <td><span class="status-badge" [class]="'status-' + a.status.toLowerCase()">{{ a.status }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Doctor List Preview -->
+      <div class="dash-panel">
+        <div class="panel-header">
+          <h3>Doctor Overview</h3>
+          <button class="view-all-btn" (click)="activeTab = 'doctors'">View All →</button>
+        </div>
+        <div class="doctor-list">
+          <div class="doctor-item" *ngFor="let d of doctors">
+            <div class="doctor-avatar">{{ d.name[4] }}</div>
+            <div class="doctor-meta">
+              <span class="doctor-name">{{ d.name }}</span>
+              <span class="doctor-specialty">{{ d.specialty }}</span>
+            </div>
+            <span class="status-badge" [class]="'status-' + d.status.toLowerCase()">{{ d.status }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DOCTORS TAB ===== -->
+  <div *ngIf="activeTab === 'doctors'">
+    <div class="section-header">
+      <div>
+        <h2>Manage Doctors</h2>
+        <p>Add, edit or remove doctors from the system</p>
+      </div>
+      <button class="add-btn" (click)="openAddDoctor()">+ Add Doctor</button>
+    </div>
+
+    <div class="table-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Specialty</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of doctors; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td class="fw-bold">{{ d.name }}</td>
+            <td>{{ d.specialty }}</td>
+            <td>{{ d.phone }}</td>
+            <td>{{ d.email }}</td>
+            <td><span class="status-badge" [class]="'status-' + d.status.toLowerCase()">{{ d.status }}</span></td>
+            <td class="action-cell">
+              <button class="edit-btn" (click)="openEditDoctor(d)">✏️ Edit</button>
+              <button class="del-btn" (click)="deleteDoctor(d.id)">🗑️ Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== PATIENTS TAB ===== -->
+  <div *ngIf="activeTab === 'patients'">
+    <div class="section-header">
+      <div>
+        <h2>Manage Patients</h2>
+        <p>View and manage all registered patients</p>
+      </div>
+      <button class="add-btn" (click)="openAddPatient()">+ Add Patient</button>
+    </div>
+
+    <div class="table-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Phone</th>
+            <th>Blood Group</th>
+            <th>Assigned Doctor</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of patients; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td class="fw-bold">{{ p.name }}</td>
+            <td>{{ p.age }}</td>
+            <td>{{ p.phone }}</td>
+            <td><span class="blood-badge">{{ p.bloodGroup }}</span></td>
+            <td>{{ p.doctor }}</td>
+            <td><span class="status-badge" [class]="'status-' + p.status.toLowerCase()">{{ p.status }}</span></td>
+            <td class="action-cell">
+              <button class="edit-btn" (click)="openEditPatient(p)">✏️ Edit</button>
+              <button class="del-btn" (click)="deletePatient(p.id)">🗑️ Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== APPOINTMENTS TAB ===== -->
+  <div *ngIf="activeTab === 'appointments'">
+    <div class="section-header">
+      <div>
+        <h2>Manage Appointments</h2>
+        <p>Schedule and track all hospital appointments</p>
+      </div>
+      <button class="add-btn" (click)="openAddAppointment()">+ New Appointment</button>
+    </div>
+
+    <div class="table-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of appointments; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td class="fw-bold">{{ a.patient }}</td>
+            <td>{{ a.doctor }}</td>
+            <td>{{ a.date }}</td>
+            <td>{{ a.time }}</td>
+            <td><span class="status-badge" [class]="'status-' + a.status.toLowerCase()">{{ a.status }}</span></td>
+            <td class="action-cell">
+              <button class="edit-btn" (click)="openEditAppointment(a)">✏️ Edit</button>
+              <button class="del-btn" (click)="deleteAppointment(a.id)">🗑️ Cancel</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DOCTOR MODAL ===== -->
+<div class="modal-overlay" *ngIf="showDoctorModal" (click)="showDoctorModal = false">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ isEditMode ? 'Edit Doctor' : 'Add New Doctor' }}</h3>
+      <button class="modal-close" (click)="showDoctorModal = false">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-field">
+          <label>Full Name</label>
+          <input type="text" [(ngModel)]="editingDoctor.name" placeholder="e.g. Dr. Ramesh Verma" />
+        </div>
+        <div class="form-field">
+          <label>Specialty</label>
+          <input type="text" [(ngModel)]="editingDoctor.specialty" placeholder="e.g. Cardiology" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Phone</label>
+          <input type="text" [(ngModel)]="editingDoctor.phone" placeholder="+91 XXXXX XXXXX" />
+        </div>
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" [(ngModel)]="editingDoctor.email" placeholder="doctor@hospital.com" />
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Status</label>
+        <select [(ngModel)]="editingDoctor.status">
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" (click)="showDoctorModal = false">Cancel</button>
+      <button class="save-btn" (click)="saveDoctor()">{{ isEditMode ? 'Update' : 'Add Doctor' }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PATIENT MODAL ===== -->
+<div class="modal-overlay" *ngIf="showPatientModal" (click)="showPatientModal = false">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ isEditMode ? 'Edit Patient' : 'Add New Patient' }}</h3>
+      <button class="modal-close" (click)="showPatientModal = false">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-field">
+          <label>Full Name</label>
+          <input type="text" [(ngModel)]="editingPatient.name" placeholder="Patient full name" />
+        </div>
+        <div class="form-field">
+          <label>Age</label>
+          <input type="number" [(ngModel)]="editingPatient.age" placeholder="Age" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Phone</label>
+          <input type="text" [(ngModel)]="editingPatient.phone" placeholder="+91 XXXXX XXXXX" />
+        </div>
+        <div class="form-field">
+          <label>Blood Group</label>
+          <select [(ngModel)]="editingPatient.bloodGroup">
+            <option value="">Select</option>
+            <option *ngFor="let bg of ['A+','A-','B+','B-','O+','O-','AB+','AB-']" [value]="bg">{{ bg }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Assigned Doctor</label>
+          <select [(ngModel)]="editingPatient.doctor">
+            <option value="">Select Doctor</option>
+            <option *ngFor="let d of doctorNames" [value]="d">{{ d }}</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Status</label>
+          <select [(ngModel)]="editingPatient.status">
+            <option value="Active">Active</option>
+            <option value="Discharged">Discharged</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" (click)="showPatientModal = false">Cancel</button>
+      <button class="save-btn" (click)="savePatient()">{{ isEditMode ? 'Update' : 'Add Patient' }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APPOINTMENT MODAL ===== -->
+<div class="modal-overlay" *ngIf="showAppointmentModal" (click)="showAppointmentModal = false">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ isEditMode ? 'Edit Appointment' : 'New Appointment' }}</h3>
+      <button class="modal-close" (click)="showAppointmentModal = false">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-field">
+          <label>Patient Name</label>
+          <input type="text" [(ngModel)]="editingAppointment.patient" placeholder="Patient name" />
+        </div>
+        <div class="form-field">
+          <label>Doctor</label>
+          <select [(ngModel)]="editingAppointment.doctor">
+            <option value="">Select Doctor</option>
+            <option *ngFor="let d of doctorNames" [value]="d">{{ d }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Date</label>
+          <input type="date" [(ngModel)]="editingAppointment.date" />
+        </div>
+        <div class="form-field">
+          <label>Time</label>
+          <input type="text" [(ngModel)]="editingAppointment.time" placeholder="e.g. 09:00 AM" />
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Status</label>
+        <select [(ngModel)]="editingAppointment.status">
+          <option value="Scheduled">Scheduled</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" (click)="showAppointmentModal = false">Cancel</button>
+      <button class="save-btn" (click)="saveAppointment()">{{ isEditMode ? 'Update' : 'Schedule' }}</button>
+    </div>
+  </div>
+</div>

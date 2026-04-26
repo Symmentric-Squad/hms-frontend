@@ -1,0 +1,19 @@
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-doctor-dashboard',
+  standalone:false,
+  template: `
+    <main>
+      <h1 class="text-2xl font-bold">Doctor Dashboard</h1>
+      <p class="text-sm text-gray-600">Placeholder doctor view. Add patient lists and records.</p>
+      <div class="mt-8 grid grid-cols-3 gap-4">
+        <div class="h-32 bg-gray-100 rounded">Card 1</div>
+        <div class="h-32 bg-gray-100 rounded">Card 2</div>
+        <div class="h-32 bg-gray-100 rounded">Card 3</div>
+      </div>
+    </main>
+  `,
+})
+export class DoctorDashboardComponent {
+}
