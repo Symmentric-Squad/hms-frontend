@@ -7,6 +7,7 @@ import { AuthService, AppUser } from '../../../core/services/auth.service';
 import { DynamicFormConfig } from '../../models/form.models';
 import { DynamicFormComponent } from "../../components/dynamic-form/dynamic-form.component";
 import { timeInterval } from 'rxjs';
+import { LandingPageNavBar } from "../../components/landing-navbar/landing-navbar.component";
 
 export const loginFormConfig: DynamicFormConfig = {
   submitLabel: 'Login',
@@ -30,12 +31,32 @@ export const loginFormConfig: DynamicFormConfig = {
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule, DynamicFormComponent],
+  imports: [CommonModule, ReactiveFormsModule, DynamicFormComponent, LandingPageNavBar],
   template:`
-  <app-dynamic-form
-  [config]="loginForm"
-  (formSubmit)="onSubmit($event)"
-></app-dynamic-form>
+  <div class="min-h-screen flex flex-col transition-colors duration-300" 
+     style="background-color: var(--brand-accent);">
+
+  <nav class="w-full shadow-sm" style="background-color: var(--brand-surface);">
+    <landing-navbar></landing-navbar>
+  </nav>
+
+  <main class="flex-grow flex items-center justify-center p-4">
+    
+    <div class="w-full max-w-md">
+      <div class="text-center mb-8 flex flex-col items-center">
+        <h2 class="text-3xl font-bold mb-6" style="color: var(--brand-primary);">
+          {{ role | titlecase }} Login
+        </h2>
+        <p *ngIf="error" class="text-red-500 mb-4">{{ error }}</p>
+      </div>
+      <app-dynamic-form
+        [config]="loginForm"
+        (formSubmit)="onSubmit($event)"
+      ></app-dynamic-form>
+    </div>
+
+  </main>
+</div>
   `,
 })
 

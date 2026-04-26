@@ -63,7 +63,7 @@ nav ul li a:hover {
 }
 
 .appointment-btn {
-  background: linear-gradient(90deg, #0d6efd, #ea4343);
+  background: var(--brand-primary);
   color: white;
   padding: 10px 40px;
   border: none;
@@ -328,7 +328,7 @@ section {
 }
 
 .contact-form button {
-  background: linear-gradient(90deg, #0d6efd, #ea4343);
+  background: var(--brand-primary);
   color: white;
   padding: 12px 30px;     
   border: none;

@@ -62,7 +62,7 @@ nav ul li a:hover {
 }
 
 .appointment-btn {
-  background: linear-gradient(90deg, #0d6efd, #ea4343);
+  background: var(--brand-primary);
   color: white;
   padding: 10px 40px;
   border: none;
@@ -80,5 +80,5 @@ nav ul li a:hover {
   margin: 0 auto;      
 }*/
 .appointment-btn:hover {
-  background: #006666;
+  background: var(--brand-secondary);
 }
