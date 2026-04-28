@@ -6,102 +6,101 @@
       <h1>Hospital Management System</h1>
     </div>
   </section>
-  <!-- Login Section -->
+
   <section id="login" class="login-section">
-    <h2>Portal Login</h2>
-    <h6>Select your role and sign in to access your dashboard</h6>
-    <div class="login-cards">
-      <!-- Admin Login -->
-      <div class="login-card" [class.active]="activeLogin === 'admin'" (click)="setActiveLogin('admin')">
-        <div class="login-card-header admin-header">
-          <div class="role-icon">🛡️</div>
-          <h3>Admin Login</h3>
-          <p>Manage hospital operations</p>
-        </div>
-        <div class="login-card-body" *ngIf="activeLogin === 'admin'">
-          <form (ngSubmit)="onLogin('admin')" #adminForm="ngForm" novalidate>
-            <div class="login-form-group">
-              <label>Username</label>
-              <input type="text" [(ngModel)]="adminCreds.username" name="adminUsername" placeholder="Enter admin username" required />
-            </div>
-            <div class="login-form-group">
-              <label>Password</label>
-              <div class="password-wrapper">
-                <input [type]="showAdminPass ? 'text' : 'password'" [(ngModel)]="adminCreds.password" name="adminPassword" placeholder="Enter password" required />
-                <span class="toggle-pass" (click)="showAdminPass = !showAdminPass">{{ showAdminPass ? '🙈' : '👁️' }}</span>
-              </div>
-            </div>
-            <div class="login-error" *ngIf="loginError['admin']">{{ loginError['admin'] }}</div>
-            <button type="submit" class="login-btn admin-btn">Login as Admin</button>
-          </form>
-        </div>
-        <div class="login-card-footer" *ngIf="activeLogin !== 'admin'">
-          <span>Click to expand</span>
-        </div>
+  <h2>Portal Login</h2>
+  <h6>Select your role and sign in to access your dashboard</h6>
+  <div class="login-cards">
+    
+    <div class="login-card" [class.active]="activeLogin === 'admin'" (click)="setActiveLogin('admin')">
+      <div class="login-card-header admin-header">
+        <div class="role-icon">🛡️</div>
+        <h3>Admin Login</h3>
+        <p>Manage hospital operations</p>
       </div>
-
-      <!-- Doctor Login -->
-      <div class="login-card" [class.active]="activeLogin === 'doctor'" (click)="setActiveLogin('doctor')">
-        <div class="login-card-header doctor-header">
-          <div class="role-icon">🩺</div>
-          <h3>Doctor Login</h3>
-          <p>Access patient & appointment data</p>
-        </div>
-        <div class="login-card-body" *ngIf="activeLogin === 'doctor'">
-          <form (ngSubmit)="onLogin('doctor')" #doctorForm="ngForm" novalidate>
-            <div class="login-form-group">
-              <label>Username</label>
-              <input type="text" [(ngModel)]="doctorCreds.username" name="doctorUsername" placeholder="Enter doctor username" required />
-            </div>
-            <div class="login-form-group">
-              <label>Password</label>
-              <div class="password-wrapper">
-                <input [type]="showDoctorPass ? 'text' : 'password'" [(ngModel)]="doctorCreds.password" name="doctorPassword" placeholder="Enter password" required />
-                <span class="toggle-pass" (click)="showDoctorPass = !showDoctorPass">{{ showDoctorPass ? '🙈' : '👁️' }}</span>
-              </div>
-            </div>
-            <div class="login-error" *ngIf="loginError['doctor']">{{ loginError['doctor'] }}</div>
-            <button type="submit" class="login-btn doctor-btn">Login as Doctor</button>
-          </form>
-        </div>
-        <div class="login-card-footer" *ngIf="activeLogin !== 'doctor'">
-          <span>Click to expand</span>
-        </div>
-      </div>
-
-      <!-- Patient Login -->
-      <div class="login-card" [class.active]="activeLogin === 'patient'" (click)="setActiveLogin('patient')">
-        <div class="login-card-header patient-header">
-          <div class="role-icon">🏥</div>
-          <h3>Patient Login</h3>
-          <p>View appointments & health records</p>
-        </div>
-        <div class="login-card-body" *ngIf="activeLogin === 'patient'">
-          <form (ngSubmit)="onLogin('patient')" #patientForm="ngForm" novalidate>
-            <div class="login-form-group">
-              <label>Username</label>
-              <input type="text" [(ngModel)]="patientCreds.username" name="patientUsername" placeholder="Enter patient username" required />
-            </div>
-            <div class="login-form-group">
-              <label>Password</label>
-              <div class="password-wrapper">
-                <input [type]="showPatientPass ? 'text' : 'password'" [(ngModel)]="patientCreds.password" name="patientPassword" placeholder="Enter password" required />
-                <span class="toggle-pass" (click)="showPatientPass = !showPatientPass">{{ showPatientPass ? '🙈' : '👁️' }}</span>
-              </div>
-            </div>
-            <div class="login-error" *ngIf="loginError['patient']">{{ loginError['patient'] }}</div>
-            <button type="submit" class="login-btn patient-btn">Login as Patient</button>
-          </form>
-          <div class="register-link">
-            Don't have an account? <a routerLink="/register">Register here</a>
+      <div class="login-card-body" *ngIf="activeLogin === 'admin'" (click)="$event.stopPropagation()">
+        <form (ngSubmit)="onLogin('admin')" #adminForm="ngForm" novalidate>
+          <div class="login-form-group">
+            <label>Username</label>
+            <input type="text" [(ngModel)]="adminCreds.username" name="adminUsername" placeholder="Enter admin username" required />
           </div>
-        </div>
-        <div class="login-card-footer" *ngIf="activeLogin !== 'patient'">
-          <span>Click to expand</span>
-        </div>
+          <div class="login-form-group">
+            <label>Password</label>
+            <div class="password-wrapper">
+              <input [type]="showAdminPass ? 'text' : 'password'" [(ngModel)]="adminCreds.password" name="adminPassword" placeholder="Enter password" required />
+              <span class="toggle-pass" (click)="showAdminPass = !showAdminPass">{{ showAdminPass ? '🙈' : '👁️' }}</span>
+            </div>
+          </div>
+          <div class="login-error" *ngIf="loginError['admin']">{{ loginError['admin'] }}</div>
+          <button type="submit" class="login-btn admin-btn">Login as Admin</button>
+        </form>
+      </div>
+      <div class="login-card-footer" *ngIf="activeLogin !== 'admin'">
+        <span>Click to expand</span>
       </div>
     </div>
-  </section>
+
+    <div class="login-card" [class.active]="activeLogin === 'doctor'" (click)="setActiveLogin('doctor')">
+      <div class="login-card-header doctor-header">
+        <div class="role-icon">🩺</div>
+        <h3>Doctor Login</h3>
+        <p>Access patient & appointment data</p>
+      </div>
+      <div class="login-card-body" *ngIf="activeLogin === 'doctor'" (click)="$event.stopPropagation()">
+        <form (ngSubmit)="onLogin('doctor')" #doctorForm="ngForm" novalidate>
+          <div class="login-form-group">
+            <label>Username</label>
+            <input type="text" [(ngModel)]="doctorCreds.username" name="doctorUsername" placeholder="Enter doctor username" required />
+          </div>
+          <div class="login-form-group">
+            <label>Password</label>
+            <div class="password-wrapper">
+              <input [type]="showDoctorPass ? 'text' : 'password'" [(ngModel)]="doctorCreds.password" name="doctorPassword" placeholder="Enter password" required />
+              <span class="toggle-pass" (click)="showDoctorPass = !showDoctorPass">{{ showDoctorPass ? '🙈' : '👁️' }}</span>
+            </div>
+          </div>
+          <div class="login-error" *ngIf="loginError['doctor']">{{ loginError['doctor'] }}</div>
+          <button type="submit" class="login-btn doctor-btn">Login as Doctor</button>
+        </form>
+      </div>
+      <div class="login-card-footer" *ngIf="activeLogin !== 'doctor'">
+        <span>Click to expand</span>
+      </div>
+    </div>
+
+    <div class="login-card" [class.active]="activeLogin === 'patient'" (click)="setActiveLogin('patient')">
+      <div class="login-card-header patient-header">
+        <div class="role-icon">🏥</div>
+        <h3>Patient Login</h3>
+        <p>View appointments & health records</p>
+      </div>
+      <div class="login-card-body" *ngIf="activeLogin === 'patient'" (click)="$event.stopPropagation()">
+        <form (ngSubmit)="onLogin('patient')" #patientForm="ngForm" novalidate>
+          <div class="login-form-group">
+            <label>Username</label>
+            <input type="text" [(ngModel)]="patientCreds.username" name="patientUsername" placeholder="Enter patient username" required />
+          </div>
+          <div class="login-form-group">
+            <label>Password</label>
+            <div class="password-wrapper">
+              <input [type]="showPatientPass ? 'text' : 'password'" [(ngModel)]="patientCreds.password" name="patientPassword" placeholder="Enter password" required />
+              <span class="toggle-pass" (click)="showPatientPass = !showPatientPass">{{ showPatientPass ? '🙈' : '👁️' }}</span>
+            </div>
+          </div>
+          <div class="login-error" *ngIf="loginError['patient']">{{ loginError['patient'] }}</div>
+          <button type="submit" class="login-btn patient-btn">Login as Patient</button>
+        </form>
+        <div class="register-link">
+          Don't have an account? <a routerLink="/register">Register here</a>
+        </div>
+      </div>
+      <div class="login-card-footer" *ngIf="activeLogin !== 'patient'">
+        <span>Click to expand</span>
+      </div>
+    </div>
+
+  </div>
+</section>
 
   <section class="services" id="services">
     <h2>Our Key Services</h2>

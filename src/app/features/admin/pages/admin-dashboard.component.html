@@ -1,12 +1,11 @@
 <div class="dashboard-wrapper">
 
-  <!-- Tab Navigation -->
   <div class="tab-nav">
     <button class="tab-btn" [class.active-tab]="activeTab === 'dashboard'" (click)="activeTab = 'dashboard'">
       <span>📊</span> Dashboard
     </button>
     <button class="tab-btn" [class.active-tab]="activeTab === 'doctors'" (click)="activeTab = 'doctors'">
-      <span>🩺</span> Manage Doctors
+      <span></span> Manage Doctors
     </button>
     <button class="tab-btn" [class.active-tab]="activeTab === 'patients'" (click)="activeTab = 'patients'">
       <span>👥</span> Manage Patients
@@ -16,7 +15,6 @@
     </button>
   </div>
 
-  <!-- ===== DASHBOARD TAB ===== -->
   <div *ngIf="activeTab === 'dashboard'">
     <div class="section-header">
       <h2>Welcome Back, Admin</h2>
@@ -59,7 +57,6 @@
     </div>
 
     <div class="dash-bottom">
-      <!-- Recent Appointments -->
       <div class="dash-panel">
         <div class="panel-header">
           <h3>Recent Appointments</h3>
@@ -80,7 +77,6 @@
         </table>
       </div>
 
-      <!-- Doctor List Preview -->
       <div class="dash-panel">
         <div class="panel-header">
           <h3>Doctor Overview</h3>
@@ -100,7 +96,6 @@
     </div>
   </div>
 
-  <!-- ===== DOCTORS TAB ===== -->
   <div *ngIf="activeTab === 'doctors'">
     <div class="section-header">
       <div>
@@ -141,7 +136,6 @@
     </div>
   </div>
 
-  <!-- ===== PATIENTS TAB ===== -->
   <div *ngIf="activeTab === 'patients'">
     <div class="section-header">
       <div>
@@ -184,7 +178,6 @@
     </div>
   </div>
 
-  <!-- ===== APPOINTMENTS TAB ===== -->
   <div *ngIf="activeTab === 'appointments'">
     <div class="section-header">
       <div>
@@ -226,7 +219,6 @@
   </div>
 </div>
 
-<!-- ===== DOCTOR MODAL ===== -->
 <div class="modal-overlay" *ngIf="showDoctorModal" (click)="showDoctorModal = false">
   <div class="modal-box" (click)="$event.stopPropagation()">
     <div class="modal-header">
@@ -269,7 +261,6 @@
   </div>
 </div>
 
-<!-- ===== PATIENT MODAL ===== -->
 <div class="modal-overlay" *ngIf="showPatientModal" (click)="showPatientModal = false">
   <div class="modal-box" (click)="$event.stopPropagation()">
     <div class="modal-header">
@@ -324,7 +315,6 @@
   </div>
 </div>
 
-<!-- ===== APPOINTMENT MODAL ===== -->
 <div class="modal-overlay" *ngIf="showAppointmentModal" (click)="showAppointmentModal = false">
   <div class="modal-box" (click)="$event.stopPropagation()">
     <div class="modal-header">

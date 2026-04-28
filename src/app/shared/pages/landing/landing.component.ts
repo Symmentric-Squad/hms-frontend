@@ -36,17 +36,31 @@ export class LandingComponent {
   }
 
   onLogin(role: string) {
-    this.loginError[role] = '';
-    const creds = role === 'admin' ? this.adminCreds : role === 'doctor' ? this.doctorCreds : this.patientCreds;
-    const user = this.mockUserDatabase.get(role);
-    if (user && user.username === creds.username && user.password === creds.password) {
-      const appUser: AppUser = { id: 'mock-id', username: creds.username, role: role.toUpperCase() };
-      this.auth.setCurrentUser(appUser);
-      this.router.navigate([`/${role}`]);
-    } else {
-      this.loginError[role] = 'Invalid username or password. Please try again.';
-    }
+  this.loginError[role] = '';
+  
+  const creds = role === 'admin' ? this.adminCreds : role === 'doctor' ? this.doctorCreds : this.patientCreds;
+  
+  const sqlPattern = /^[a-zA-Z0-9]*$/; 
+  
+  if (!creds.username || !sqlPattern.test(creds.username)) {
+    this.loginError[role] = 'Invalid username format.';
+    return;
   }
+
+  const user = this.mockUserDatabase.get(role);
+
+  if (user && user.username === creds.username && user.password === creds.password) {
+    const appUser: AppUser = { 
+      id: 'mock-id', 
+      username: creds.username, 
+      role: role.toUpperCase() 
+    };
+    this.auth.setCurrentUser(appUser);
+    this.router.navigate([`/${role}`]);
+  } else {
+    this.loginError[role] = 'Invalid username or password. Please try again.';
+  }
+}
 
     ngOnInit() {
         const filterButtons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
