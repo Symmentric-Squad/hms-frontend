@@ -1,3 +1,5 @@
+import { PatientReport } from "../../features/doctor/models/report.doctor.model";
+
 export const activeTab: 'dashboard' | 'doctors' | 'patients' | 'appointments' = 'dashboard';
 
   export const doctors: Doctor[] = [
@@ -23,4 +25,12 @@ export const activeTab: 'dashboard' | 'doctors' | 'patients' | 'appointments' = 
     { id: 4, patient: 'Deepa Krishnan', doctor: 'Dr. Shalini Rao', date: '2026-04-25', time: '11:00 AM', status: 'Completed' },
     { id: 5, patient: 'Anand Velu', doctor: 'Dr. Vikram Patel', date: '2026-04-27', time: '04:00 PM', status: 'Scheduled' },
     { id: 6, patient: 'Suresh Babu', doctor: 'Dr. Priya Nair', date: '2026-04-23', time: '09:30 AM', status: 'Cancelled' },
+  ];
+
+  export const reports: PatientReport[] = [
+    { id: 1, patientName: 'Suresh Babu', bloodPressure: '120/80', weight: 75, bloodSugar: 120, bodyTemp: 37, medicalPrescription: 'Medication A, Lifestyle changes', reportDate: '2026-04-20' },
+    { id: 2, patientName: 'Kavitha Rajan', bloodPressure: '110/70', weight: 68, bloodSugar: 100, bodyTemp: 36.5, medicalPrescription: 'Medication B, Avoid triggers', reportDate: '2026-04-22' },
+    { id: 3, patientName: 'Murugan S', bloodPressure: 'Dr. Rajan Kumar', weight: 80, bloodSugar: 110, bodyTemp: 37.5, medicalPrescription: 'Medication C, Physical therapy', reportDate: '2026-04-18' },
+    { id: 4, patientName: 'Deepa Krishnan', bloodPressure: 'Dr. Shalini Rao', weight: 65, bloodSugar: 95, bodyTemp: 36, medicalPrescription: 'Inhaler, Avoid allergens', reportDate: '2026-04-21' },
+    { id: 5, patientName: 'Anand Velu', bloodPressure: 'Dr. Vikram Patel', weight: 70, bloodSugar: 105, bodyTemp: 37, medicalPrescription: 'Medication D, Nasal spray', reportDate: '2026-04-19' },
   ];

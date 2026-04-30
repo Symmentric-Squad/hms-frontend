@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DoctorGuard } from '../../core/guards/doctor.guard';
-import { AppointmentHistory } from './pages/appointment-history/appointment-history.component';
 import { DoctorLayoutComponent } from './doctor-layout';
-import { PatientsComponent } from './pages/patients/patients.component';
-import { DoctorDashboardComponent } from './pages/dashboard/dashboard.component';
-import { P } from '@angular/cdk/keycodes';
-import { DoctorReportsComponent } from './pages/resports/reports.component';
-import { AppointmentsComponent } from './example-table.component';
+import { DoctorAppointmentsPage } from './pages/appointment/appointment.component';
+import { DoctorDashboardPage } from './pages/dashboard/dashboard.component';
+import { DoctorPatientsPage } from './pages/patient/patient.component';
+import { DoctorReportsPage } from './pages/report/report.component';
 
 const routes: Routes = [
   {
@@ -17,19 +15,19 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: DoctorDashboardComponent,
+        component: DoctorDashboardPage,
       },
       {
         path: 'appointments',
-        component: AppointmentHistory,
+        component: DoctorAppointmentsPage,
       },
       {
         path: 'patients',
-        component: PatientsComponent
+        component: DoctorPatientsPage
       },
       {
         path: 'reports',
-        component: DoctorReportsComponent
+        component: DoctorReportsPage
       },
     ],
   },

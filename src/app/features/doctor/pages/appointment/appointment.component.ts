@@ -8,10 +8,10 @@ import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/mod
 @Component({
   selector: 'app-appointment-history',
   standalone:false,
-  templateUrl: './appointment-history.component.html',
-  styleUrl: './appointment-history.component.css',
+  templateUrl: './appointment.component.html',
+  styleUrl: './appointment.component.css',
 })
-export class AppointmentHistory {
+export class DoctorAppointmentsPage {
 
   doctors = doctors;
   patients = patients
