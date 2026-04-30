@@ -1,9 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DoctorDashboardComponent } from './pages/doctor-dashboard.component';
 import { DoctorGuard } from '../../core/guards/doctor.guard';
-import { AppointmentHistory } from './pages/appointment-history/appointment-history';
+import { AppointmentHistory } from './pages/appointment-history/appointment-history.component';
 import { DoctorLayoutComponent } from './doctor-layout';
+import { PatientsComponent } from './pages/patients/patients.component';
+import { DoctorDashboardComponent } from './pages/dashboard/dashboard.component';
+import { P } from '@angular/cdk/keycodes';
+import { DoctorReportsComponent } from './pages/resports/reports.component';
+import { AppointmentsComponent } from './example-table.component';
 
 const routes: Routes = [
   {
@@ -19,27 +23,14 @@ const routes: Routes = [
         path: 'appointments',
         component: AppointmentHistory,
       },
-      // {
-      //   path: 'patients',
-      //   canActivate: [DoctorGuard],
-      //   children: [
-      //     {
-      //       path: 'add',
-      //       loadComponent: () => import('./pages/doctor-patient-add.component')
-      //       .then(m => m.DoctorPatientAddComponent)
-      //     },
-      //     {
-      //       path: 'manage',
-      //       loadComponent: () => import('./pages/doctor-patient-manage.component')
-      //       .then(m => m.DoctorPatientManageComponent)
-      //     },
-      //     {
-      //       path: 'search',
-      //       loadComponent: () => import('./pages/doctor-patient-search.component')
-      //       .then(m => m.DoctorPatientSearchComponent)
-      //     }
-      //   ]
-      // },
+      {
+        path: 'patients',
+        component: PatientsComponent
+      },
+      {
+        path: 'reports',
+        component: DoctorReportsComponent
+      },
     ],
   },
 ];

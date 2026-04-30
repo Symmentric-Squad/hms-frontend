@@ -3,26 +3,16 @@ import { SidebarComponent } from "../../../shared/components/sidebar/sidebar.com
 
 @Component({
     selector: 'app-doctor-sidebar',
-    // standalone: false,
     imports: [SidebarComponent],
     template: `
-    <aside class="absolute left-0 top-0 h-full z-50">
-        <app-sidebar [navItems]="navItems"></app-sidebar>
-    </aside>
+    <app-sidebar [navItems]="navItems"></app-sidebar>
     `
 })
 export class DoctorSidebarComponent {
-    navItems: SideNavItem[] = [
-    { label: 'Dashboard', icon: 'home-2-svgrepo-com.svg', link: '/doctor' },
-    {label: 'Appointment History', icon: 'review-file-svgrepo-com.svg', link: '/doctor/appointments'},
-    { 
-      label: 'Patients', 
-      icon: 'people-svgrepo-com.svg', 
-      isExpanded: false,
-      children: [
-        { label: 'Add', link: '/doctor/patients/add' },
-        { label: 'Manage', link: '/doctor/patients/manage' },
-        { label: 'Search', link: '/doctor/patients/search' }
-      ]
-    }];
+    navItems = [
+    { label: 'Dashboard', icon: '📊', link: '/doctor', exact: true },
+    { label: 'Patients', icon: '👥', link: '/doctor/patients', exact: false },
+    { label: 'Appointments', icon: '📅', link: '/doctor/appointments', exact: false },
+    { label: 'Reports', icon: '📋', link: '/doctor/reports', exact: false },
+  ];
 }

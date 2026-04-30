@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { AppUser } from '../../models/app-user';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,16 +13,23 @@ import { RouterModule } from '@angular/router';
 export class SidebarComponent {
   isSidebarCollapsed = true;
 
-    @Input() navItems: SideNavItem[] = [];
+  constructor (private auth: AuthService, private router: Router) {}
 
+  @Input() navItems: SideNavItem[] = [];
+
+  currentUser: AppUser = {
+      id: 'd1',
+      username: 'doctor',
+      role: 'DOCTOR'
+    };
+    
   toggleSidebar() {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
-  toggleDropdown(item: SideNavItem) {
-    if (this.isSidebarCollapsed) {
-      this.isSidebarCollapsed = false; // Auto-expand sidebar if a dropdown is clicked
-    }
-    item.isExpanded = !item.isExpanded;
+  logout() {
+    this.auth.clearCurrentUser();
+    this.router.navigate(['/'], { replaceUrl: true });
   }
+
 }
