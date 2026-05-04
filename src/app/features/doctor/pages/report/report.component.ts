@@ -7,7 +7,7 @@ import { PatientReport } from '../../models/report.doctor.model';
   selector: 'app-report-management',
   standalone: false,
   templateUrl: './report.component.html',
-  styleUrl: './report.component.css'
+  styleUrl: '../common.css'
 })
 export class DoctorReportsPage {
   reports = reports;
@@ -30,18 +30,21 @@ export class DoctorReportsPage {
       label: 'View',
       icon: '👁️',
       type: 'primary',
+      actionColor: 'gray'
     },
     {
       id: 'edit',
       label: 'Edit',
       icon: '✏️',
       type: 'primary',
+      actionColor: 'blue'
     },
     {
       id: 'delete',
       label: 'Delete',
       icon: '🗑️',
       type: 'danger',
+      actionColor: 'red'
     },
   ];
 

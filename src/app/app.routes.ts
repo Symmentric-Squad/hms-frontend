@@ -25,16 +25,6 @@ export const routes: Routes = [
         loadChildren: () => import('./features/patient/patient.module').then(m => m.PatientModule) 
       },
       {
-        path: 'login/:role',
-        loadComponent: () => import('./shared/pages/login/login.component')
-        .then(m => m.LoginComponent)
-      },
-      {
-        path: 'register',
-        loadComponent: () => import('./shared/pages/register/register.component')
-        .then(m => m.RegisterComponent)
-      },
-      {
         path: '**',
         loadComponent: () => import('./shared/pages/not-found/not-found.component')
         .then(m => m.NotFoundComponent)

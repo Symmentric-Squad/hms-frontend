@@ -10,15 +10,18 @@ import { FormsModule, ɵInternalFormsSharedModule } from "@angular/forms";
 import { DataTableComponent } from "../../shared/components/data-table/data-table.component";
 import { DoctorReportsPage } from "./pages/report/report.component";
 import { DoctorPatientsPage } from "./pages/patient/patient.component";
+import { ModalFormComponent } from "../../shared/components/dialog-form/dialog-form.component";
+import { DashboardCard } from "../../shared/components/dashboard-card/dashboard-card.component";
 
 @NgModule({
   declarations: [
     DoctorDashboardPage,
     DoctorAppointmentsPage,
     DoctorPatientsPage,
-    DoctorReportsPage
+    DoctorReportsPage,
   ],
   imports: [
+    ModalFormComponent,
     DoctorSidebarComponent,
     CommonModule,
     DoctorRoutingModule,
@@ -26,7 +29,8 @@ import { DoctorPatientsPage } from "./pages/patient/patient.component";
     DoctorLayoutComponent,
     ɵInternalFormsSharedModule,
     DataTableComponent,
-    FormsModule
+    FormsModule,
+    DashboardCard
 ]
 })
 export class DoctorModule {}

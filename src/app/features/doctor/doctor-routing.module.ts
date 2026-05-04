@@ -6,6 +6,8 @@ import { DoctorAppointmentsPage } from './pages/appointment/appointment.componen
 import { DoctorDashboardPage } from './pages/dashboard/dashboard.component';
 import { DoctorPatientsPage } from './pages/patient/patient.component';
 import { DoctorReportsPage } from './pages/report/report.component';
+import { ModalFormComponent } from '../../shared/components/dialog-form/dialog-form.component';
+import { PatientDetails } from './pages/patient-details/patient-details.component';
 
 const routes: Routes = [
   {
@@ -29,6 +31,10 @@ const routes: Routes = [
         path: 'reports',
         component: DoctorReportsPage
       },
+      {
+        path: 'patients/:id',
+        component: PatientDetails
+      }
     ],
   },
 ];

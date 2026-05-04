@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { patients, doctors } from '../../../../shared/db/db';
 import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
+import { Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-patient-management',
   standalone: false,
   templateUrl: './patient.component.html',
-  styleUrls: ['./patient.component.css'],
+  styleUrl: '../common.css',
 })
 export class DoctorPatientsPage {
   patients = patients;
@@ -27,7 +28,7 @@ export class DoctorPatientsPage {
       label: 'Status',
       type: 'badge',
       tagColors: {
-        'Active': { bg: '#d1fae5', text: '#065f46' },
+        'Admitted': { bg: '#d1fae5', text: '#065f46' },
         'Discharged': { bg: '#fef3c7', text: '#92400e' },
       },
     },
@@ -35,17 +36,26 @@ export class DoctorPatientsPage {
 
   patientActions: TableAction[] = [
     {
+      id: 'view',
+      label: 'View',
+      icon: '👁️',
+      type: 'secondary',
+      actionColor: 'gray'
+    },
+    {
       id: 'edit',
       label: 'Edit',
       icon: '✏️',
       type: 'primary',
+      actionColor: 'blue'
     },
     {
       id: 'delete',
       label: 'Delete',
       icon: '🗑️',
       type: 'danger',
-    },
+      actionColor: 'red'
+    }
   ];
 
   showPatientModal = false;
@@ -56,8 +66,10 @@ export class DoctorPatientsPage {
     return this.doctors.map(d => d.name);
   }
 
+  constructor(private router: Router) {}
+
   openAddPatient() {
-    this.editingPatient = { status: 'Active' };
+    this.editingPatient = { status: 'Admitted' };
     this.isEditMode = false;
     this.showPatientModal = true;
   }
@@ -94,6 +106,8 @@ export class DoctorPatientsPage {
       this.openEditPatient(rowData);
     } else if (action === 'delete') {
       this.deletePatient(rowData.id);
+    } else if (action == 'view') {
+      this.router.navigate(['doctor/patients',rowData.id]);
     }
   }
 }

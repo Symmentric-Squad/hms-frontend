@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth.service';
 import { appointments, doctors, patients } from '../../../../shared/db/db';
 import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 
 
@@ -41,12 +42,14 @@ export class DoctorAppointmentsPage {
       label: 'Edit',
       icon: '✏️',
       type: 'primary',
+      actionColor: 'blue'
     },
     {
       id: 'cancel',
       label: 'Cancel',
       icon: '🗑️',
       type: 'danger',
+      actionColor: 'red'
     },
   ];
 
@@ -72,12 +75,14 @@ export class DoctorAppointmentsPage {
       label: 'Edit',
       icon: '✏️',
       type: 'primary',
+      actionColor: 'blue'
     },
     {
       id: 'delete',
       label: 'Delete',
       icon: '🗑️',
       type: 'danger',
+      actionColor: 'red'
     },
   ];
 
@@ -104,12 +109,14 @@ export class DoctorAppointmentsPage {
       label: 'Edit',
       icon: '✏️',
       type: 'primary',
+      actionColor: 'blue'
     },
     {
       id: 'delete',
       label: 'Delete',
       icon: '🗑️',
       type: 'danger',
+      actionColor: 'red'
     },
   ];
 
@@ -121,17 +128,6 @@ export class DoctorAppointmentsPage {
   editingAppointment: Partial<Appointment> = {};
   isEditMode = false;
 
-  get stats() {
-    return {
-      totalDoctors: this.doctors.length,
-      activeDoctors: this.doctors.filter(d => d.status === 'Active').length,
-      totalPatients: this.patients.length,
-      activePatients: this.patients.filter(p => p.status === 'Active').length,
-      totalAppointments: this.appointments.length,
-      scheduledAppointments: this.appointments.filter(a => a.status === 'Scheduled').length,
-      completedAppointments: this.appointments.filter(a => a.status === 'Completed').length,
-    };
-  }
 
   get recentAppointments() { return this.appointments.slice(0, 4); }
   get doctorNames() { return this.doctors.map(d => d.name); }

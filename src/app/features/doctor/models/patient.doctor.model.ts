@@ -5,5 +5,5 @@ interface Patient {
   phone: string;
   bloodGroup: string;
   doctor: string;
-  status: 'Active' | 'Discharged';
+  status: 'Admitted' | 'Discharged';
 }

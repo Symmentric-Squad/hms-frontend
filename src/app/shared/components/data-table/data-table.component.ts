@@ -7,10 +7,10 @@ import { RowActionEvent, TableAction, TableColumn } from '../../models/data-tabl
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="overflow-x-auto rounded-lg border" [style]="{ 'border-color': 'var(--brand-accent-hover)', 'background-color': 'var(--brand-surface)' }">
+    <div class="overflow-x-auto rounded-lg border-[var(--brand-accent-hover)] bg-[var(--brand-surface)]">
       <table class="w-full border-collapse text-sm">
         <thead>
-          <tr [style]="{ 'background-color': 'var(--brand-accent)' }">
+          <tr class="bg-[var(--brand-accent)]">
             <th class="px-4 py-3 text-left font-semibold text-gray-700">#</th>
             @for(col of columns; track $index) {
               <th
@@ -20,7 +20,9 @@ import { RowActionEvent, TableAction, TableColumn } from '../../models/data-tabl
                 {{ col.label }}
               </th>
             }
-            <th *ngIf="actions.length > 0" class="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
+            @if(actions.length > 0){
+              <th class="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
+            }
           </tr>
         </thead>
 
@@ -63,7 +65,7 @@ import { RowActionEvent, TableAction, TableColumn } from '../../models/data-tabl
                 @for(action of actions; track $index) {
                   <button
                   class="px-3 py-1 rounded text-xs font-semibold border-none cursor-pointer whitespace-nowrap hover:opacity-80"
-                  [ngClass]="getActionButtonClass(action.type)"
+                  [ngClass]="getActionButtonClass(action.actionColor)"
                   (click)="onActionClick(action.id, row)"
                   >
                   @if(action.icon){
@@ -106,16 +108,17 @@ export class DataTableComponent {
     });
   }
 
-  getActionButtonClass(type?: string): string {
-    const baseClass = '';
-    switch (type) {
-      case 'danger':
-        return 'text-red-600 bg-red-50 hover:bg-red-100';
-      case 'secondary':
-        return 'text-gray-600 bg-gray-100 hover:bg-gray-200';
-      case 'primary':
-      default:
-        return 'text-blue-600 bg-blue-50 hover:bg-blue-100';
-    }
-  }
+  getActionButtonClass(type: string = 'blue'): string {
+  // Define full strings so Tailwind can "find" them during build time
+  const themeMap: Record<string, string> = {
+    blue: 'text-blue-600 bg-blue-100 hover:bg-blue-50',
+    red: 'text-red-600 bg-red-100 hover:bg-red-50',
+    green: 'text-green-600 bg-green-100 hover:bg-green-50',
+    yellow: 'text-yellow-600 bg-yellow-100 hover:bg-yellow-50',
+    gray: 'text-gray-600 bg-gray-100 hover:bg-gray-50',
+  };
+
+  // Return the mapped classes, or a default if the type doesn't exist
+  return themeMap[type] || themeMap['blue'];
+}
 }

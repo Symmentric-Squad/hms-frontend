@@ -11,11 +11,11 @@ export const activeTab: 'dashboard' | 'doctors' | 'patients' | 'appointments' = 
   ];
 
   export const patients: Patient[] = [
-    { id: 1, name: 'Suresh Babu', age: 45, phone: '+91 90001 11111', bloodGroup: 'A+', doctor: 'Dr. Arjun Mehta', status: 'Active' },
-    { id: 2, name: 'Kavitha Rajan', age: 32, phone: '+91 90002 22222', bloodGroup: 'B+', doctor: 'Dr. Priya Nair', status: 'Active' },
+    { id: 1, name: 'Suresh Babu', age: 45, phone: '+91 90001 11111', bloodGroup: 'A+', doctor: 'Dr. Arjun Mehta', status: 'Admitted' },
+    { id: 2, name: 'Kavitha Rajan', age: 32, phone: '+91 90002 22222', bloodGroup: 'B+', doctor: 'Dr. Priya Nair', status: 'Admitted' },
     { id: 3, name: 'Murugan S', age: 60, phone: '+91 90003 33333', bloodGroup: 'O-', doctor: 'Dr. Rajan Kumar', status: 'Discharged' },
-    { id: 4, name: 'Deepa Krishnan', age: 28, phone: '+91 90004 44444', bloodGroup: 'AB+', doctor: 'Dr. Shalini Rao', status: 'Active' },
-    { id: 5, name: 'Anand Velu', age: 52, phone: '+91 90005 55555', bloodGroup: 'A-', doctor: 'Dr. Vikram Patel', status: 'Active' },
+    { id: 4, name: 'Deepa Krishnan', age: 28, phone: '+91 90004 44444', bloodGroup: 'AB+', doctor: 'Dr. Shalini Rao', status: 'Admitted' },
+    { id: 5, name: 'Anand Velu', age: 52, phone: '+91 90005 55555', bloodGroup: 'A-', doctor: 'Dr. Vikram Patel', status: 'Admitted' },
   ];
 
   export const appointments: Appointment[] = [

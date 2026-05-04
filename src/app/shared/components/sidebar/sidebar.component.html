@@ -1,6 +1,6 @@
 <aside class="admin-sidebar" [class.collapsed]="isSidebarCollapsed">
         <div class="sidebar-brand">
-          <span class="brand-icon">🏥</span>
+          <span class="brand-icon" (click)="toggleSidebar()">🏥</span>
           <span class="brand-text" *ngIf="!isSidebarCollapsed">HMS {{ currentUser.role }}</span>
         </div>
 
