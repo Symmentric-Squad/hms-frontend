@@ -1,0 +1,19 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss';
+
+:root {
+  --brand-primary: #0097A7;
+  --brand-secondary: #00796B;
+  --brand-surface: #ffffff;
+  --brand-accent: #e8e8e8;
+  --brand-accent-hover: #d8d8d8;
+}
+
+[data-theme='dark'] {
+  --brand-primary: #0097A7;
+  --brand-secondary: #00796B;
+  --brand-surface: #1f2937;
+  --brand-accent: #374151;
+  --brand-accent-hover: #4b5563;
+}

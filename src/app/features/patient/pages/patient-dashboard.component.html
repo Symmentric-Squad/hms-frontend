@@ -1,0 +1,23 @@
+<div class="section-header">
+  <h2>Patient Dashboard</h2>
+  <p>Quick actions and overview</p>
+</div>
+
+<div class="action-grid">
+  <div class="action-card" [routerLink]="['/patient/appointment']">
+    <h3>📅 Book Appointment</h3>
+    <p>Schedule a new consultation</p>
+  </div>
+  <div class="action-card" [routerLink]="['/patient/profile']">
+    <h3>🙍 Update Profile</h3>
+    <p>Manage your personal details</p>
+  </div>
+  <div class="action-card" [routerLink]="['/patient/appointment-history']">
+    <h3>📋 Appointment History</h3>
+    <p>View past and upcoming appointments</p>
+  </div>
+  <div class="action-card" [routerLink]="['/patient/medical-history']">
+    <h3>👥 Medical History</h3>
+    <p>View the medical records</p>
+  </div>
+</div>
