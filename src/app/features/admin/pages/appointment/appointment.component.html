@@ -1,0 +1,64 @@
+<div>
+  <!-- Appointments Tab -->
+  <div>
+    <div class="section-header">
+      <div>
+        <h2>Manage Appointments</h2>
+        <p>Schedule and track all hospital appointments</p>
+      </div>
+      <button class="add-btn" (click)="openAddAppointment()">+ New Appointment</button>
+    </div>
+
+    <app-data-table [columns]="appointmentColumns" [data]="appointments" [actions]="appointmentActions"
+      [emptyStateMessage]="'No appointments found'"
+      (actionTriggered)="onTableAction($event, 'appointment')"></app-data-table>
+  </div>
+
+  <!-- Appointment Modal -->
+  @if(showAppointmentModal){
+  <div class="modal-overlay" (click)="showAppointmentModal = false">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditMode ? 'Edit Appointment' : 'New Appointment' }}</h3>
+        <button class="modal-close" (click)="showAppointmentModal = false">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Patient Name</label>
+            <input type="text" (ngModel)="editingAppointment.patient" placeholder="Patient name" />
+          </div>
+          <div class="form-field">
+            <label>Doctor</label>
+            <select (ngModel)="editingAppointment.doctor">
+              <option value="">Select Doctor</option>
+              <option *ngFor="let d of doctorNames" [value]="d">{{ d }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Date</label>
+            <input type="date" (ngModel)="editingAppointment.date" />
+          </div>
+          <div class="form-field">
+            <label>Time</label>
+            <input type="text" (ngModel)="editingAppointment.time" placeholder="e.g. 09:00 AM" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Status</label>
+          <select (ngModel)="editingAppointment.status">
+            <option value="Scheduled">Scheduled</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-btn" (click)="showAppointmentModal = false">Cancel</button>
+        <button class="save-btn" (click)="saveAppointment()">{{ isEditMode ? 'Update' : 'Schedule' }}</button>
+      </div>
+    </div>
+  </div>
+  }

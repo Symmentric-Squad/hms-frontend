@@ -3,11 +3,11 @@ import { PatientReport } from "../../features/doctor/models/report.doctor.model"
 export const activeTab: 'dashboard' | 'doctors' | 'patients' | 'appointments' = 'dashboard';
 
   export const doctors: Doctor[] = [
-    { id: 1, name: 'Dr. Arjun Mehta', specialty: 'Cardiology', phone: '+91 98765 11001', email: 'arjun.mehta@hospital.com', status: 'Active' },
-    { id: 2, name: 'Dr. Priya Nair', specialty: 'Neurology', phone: '+91 98765 22002', email: 'priya.nair@hospital.com', status: 'Active' },
-    { id: 3, name: 'Dr. Rajan Kumar', specialty: 'Orthopedics', phone: '+91 98765 33003', email: 'rajan.kumar@hospital.com', status: 'Inactive' },
-    { id: 4, name: 'Dr. Shalini Rao', specialty: 'Pediatrics', phone: '+91 98765 44004', email: 'shalini.rao@hospital.com', status: 'Active' },
-    { id: 5, name: 'Dr. Vikram Patel', specialty: 'ENT', phone: '+91 98765 55005', email: 'vikram.patel@hospital.com', status: 'Active' },
+    { id: 1, name: 'Arjun Mehta', speciality: 'Cardiology', phone: '+91 98765 11001', email: 'arjun.mehta@hospital.com', status: 'Active' },
+    { id: 2, name: 'Priya Nair', speciality: 'Neurology', phone: '+91 98765 22002', email: 'priya.nair@hospital.com', status: 'Active' },
+    { id: 3, name: 'Rajan Kumar', speciality: 'Orthopedics', phone: '+91 98765 33003', email: 'rajan.kumar@hospital.com', status: 'Inactive' },
+    { id: 4, name: 'Shalini Rao', speciality: 'Pediatrics', phone: '+91 98765 44004', email: 'shalini.rao@hospital.com', status: 'Active' },
+    { id: 5, name: 'Vikram Patel', speciality: 'ENT', phone: '+91 98765 55005', email: 'vikram.patel@hospital.com', status: 'Active' },
   ];
 
   export const patients: Patient[] = [

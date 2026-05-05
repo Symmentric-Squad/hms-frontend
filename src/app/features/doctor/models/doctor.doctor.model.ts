@@ -1,7 +1,7 @@
 interface Doctor {
   id: number;
   name: string;
-  specialty: string;
+  speciality: string;
   phone: string;
   email: string;
   status: 'Active' | 'Inactive';

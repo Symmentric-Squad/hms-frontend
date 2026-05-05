@@ -1,0 +1,116 @@
+<div>
+  <div class="section-header">
+    <div>
+      <h2>Medical Reports</h2>
+      <p>View and manage patient medical reports</p>
+    </div>
+    <button class="add-btn" (click)="openAddReport()">+ New Report</button>
+  </div>
+
+  <app-data-table
+    [columns]="reportColumns"
+    [data]="reports"
+    [actions]="reportActions"
+    [emptyStateMessage]="'No reports found'"
+    (actionTriggered)="onTableAction($event)"
+  ></app-data-table>
+
+  <!-- Report Modal -->
+  @if(showReportModal) {
+  <div class="modal-overlay" (click)="showReportModal = false">
+    <div class="modal-box large-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isViewMode ? 'View Report' : (isEditMode ? 'Edit Report' : 'New Report') }}</h3>
+        <button class="modal-close" (click)="showReportModal = false">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Patient Name</label>
+            <input 
+              type="text" 
+              (ngModel)="editingReport.patientName" 
+              placeholder="Select or enter patient name"
+              [disabled]="isViewMode"
+            />
+          </div>
+          <div class="form-field">
+            <label>Report Date</label>
+            <input 
+              type="date" 
+              (ngModel)="editingReport.reportDate"
+              [disabled]="isViewMode"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Blood Pressure (mmHg)</label>
+            <input 
+              type="text" 
+              (ngModel)="editingReport.bloodPressure" 
+              placeholder="e.g. 120/80"
+              [disabled]="isViewMode"
+            />
+          </div>
+          <div class="form-field">
+            <label>Weight (kg)</label>
+            <input 
+              type="number" 
+              (ngModel)="editingReport.weight" 
+              placeholder="e.g. 75"
+              step="0.1"
+              [disabled]="isViewMode"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Blood Sugar (mg/dL)</label>
+            <input 
+              type="number" 
+              (ngModel)="editingReport.bloodSugar" 
+              placeholder="e.g. 120"
+              [disabled]="isViewMode"
+            />
+          </div>
+          <div class="form-field">
+            <label>Body Temperature (°C)</label>
+            <input 
+              type="number" 
+              (ngModel)="editingReport.bodyTemp" 
+              placeholder="e.g. 37.5"
+              step="0.1"
+              [disabled]="isViewMode"
+            />
+          </div>
+        </div>
+
+        <div class="form-field full-width">
+          <label>Medical Prescription</label>
+          <textarea 
+            (ngModel)="editingReport.medicalPrescription" 
+            placeholder="Enter medical prescription details"
+            rows="4"
+            [disabled]="isViewMode"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-btn" (click)="showReportModal = false">
+          {{ isViewMode ? 'Close' : 'Cancel' }}
+        </button>
+        <button 
+          *ngIf="!isViewMode"
+          class="save-btn" 
+          (click)="saveReport()"
+        >
+          {{ isEditMode ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

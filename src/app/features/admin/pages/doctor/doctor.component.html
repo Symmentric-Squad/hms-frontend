@@ -1,0 +1,61 @@
+<div>
+  <div class="section-header">
+    <div>
+      <h2>Manage Doctors</h2>
+      <p>View and manage all registered doctors</p>
+    </div>
+    <button class="add-btn" (click)="openAddDoctor()">+ Add Patient</button>
+  </div>
+
+  <app-data-table
+    [columns]="doctorColumns"
+    [data]="doctors"
+    [actions]="doctorActions"
+    [emptyStateMessage]="'No doctors found'"
+    (actionTriggered)="onTableAction($event)"
+  ></app-data-table>
+
+  <!-- Patient Modal -->
+  @if(showDoctorModal) {
+  <div class="modal-overlay" (click)="showDoctorModal = false">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditMode ? 'Edit Patient' : 'Add Patient' }}</h3>
+        <button class="modal-close" (click)="showDoctorModal = false">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Name</label>
+            <input type="text" (ngModel)="editingDoctor.name" placeholder="Patient name" />
+          </div>
+          <div class="form-field">
+            <label>Speciality</label>
+            <input type="number" (ngModel)="editingDoctor.speciality" placeholder="Speciaity" />
+          </div>
+          <div class="form-field">
+            <label>Email</label>
+            <input type="number" (ngModel)="editingDoctor.email" placeholder="Email" />
+          </div>
+          <div class="form-field">
+            <label>Phone</label>
+            <input type="text" (ngModel)="editingDoctor.phone" placeholder="Phone number" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Status</label>
+          <select (ngModel)="editingDoctor.status">
+            <option value="Active">Active</option>
+            <option value="Discharged">Discharged</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-btn" (click)="showDoctorModal = false">Cancel</button>
+        <button class="save-btn" (click)="saveDoctor()">{{ isEditMode ? 'Update' : 'Add' }}</button>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
