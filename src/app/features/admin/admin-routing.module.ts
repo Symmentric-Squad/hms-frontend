@@ -7,6 +7,8 @@ import { AdminPatientsPage } from './pages/patient/patient.component';
 import { AdminAppointmentsPage } from './pages/appointment/appointment.component';
 import { AdminReportsPage } from './pages/report/report.component';
 import { AdminDoctorsPage } from './pages/doctor/doctor.component';
+import { AdminSpecialisationPage } from './pages/doc-spec/doc-spec.component';
+import { AdminContactUsPage } from './pages/contact-us/contact-us.component';
 
 const routes: Routes = [
   {
@@ -33,6 +35,14 @@ const routes: Routes = [
       {
         path: 'reports',
         component: AdminReportsPage
+      },
+      {
+        path: 'specialisations',
+        component: AdminSpecialisationPage
+      },
+      {
+        path: 'contact',
+        component: AdminContactUsPage
       }
     ]
   },

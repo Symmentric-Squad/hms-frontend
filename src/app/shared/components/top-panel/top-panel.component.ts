@@ -99,7 +99,8 @@ export class TopPanelComponent {
   currentUser: AppUser = {
     id: '1',
     username: 'Suresh',
-    role: 'ADMIN',
+    // role: 'ADMIN',
+    role: 'PATIENT'
   };
 
   showProfileModal = false;

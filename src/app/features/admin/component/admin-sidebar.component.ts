@@ -15,5 +15,7 @@ export class AdminSidebarComponent {
     { label: 'Doctors', icon: '🩺', link: '/admin/doctors', exact:false },
     { label: 'Appointments', icon: '📅', link: '/admin/appointments', exact: false },
     { label: 'Reports', icon: '📋', link: '/admin/reports', exact: false },
+    { label: 'Specialisations', icon:"🎯", link: '/admin/specialisations', exact: true},
+    { label: 'Conatact Us', icon:'📩', link: '/admin/contact', exact:false}
   ];
 }

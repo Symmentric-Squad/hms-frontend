@@ -37,20 +37,8 @@ export class AdminAppointmentsPage {
   ];
 
   appointmentActions: TableAction[] = [
-    {
-      id: 'edit',
-      label: 'Edit',
-      icon: '✏️',
-      type: 'primary',
-      actionColor: 'blue'
-    },
-    {
-      id: 'cancel',
-      label: 'Cancel',
-      icon: '🗑️',
-      type: 'danger',
-      actionColor: 'red'
-    },
+    { id: 'edit', label: 'Edit', icon: '✏️', type: 'primary', actionColor: 'blue' },
+    { id: 'cancel', label: 'Cancel', icon: '🗑️', type: 'danger', actionColor: 'red' },
   ];
 
   doctorColumns: TableColumn[] = [
