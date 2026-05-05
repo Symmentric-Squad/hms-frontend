@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { appointments, doctors, patients } from '../../../../shared/db/db';
+import { appointments, doctors, patients, reports } from '../../../../shared/db/db';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -11,41 +11,43 @@ export class AdminDashboardPage {
   doctors = doctors;
   appointments = appointments;
   patients = patients;
+  reports = reports;
+  //TODO: change the card details as per doctor
   cardDetails: DashboardCardStats[] = [
     {
-        icon: "🩺",
+        icon: "doctor.svg",
         value: this.stats.totalDoctors,
         label: "Total Doctors",
         FocusedStatus: "Active",
         StatusCount: 4,
         cardColor: "blue",
-        link: '/admin'
+        link: '/doctor'
     },
     {
-        icon: "👥",
+        icon: "patient.svg",
         value: this.stats.totalPatients,
         label: "Total Patients",
         FocusedStatus: "Active",
         StatusCount: 4,
         cardColor: "green",
-        link: '/admin'
+        link: '/doctor'
     },
     {
-        icon: "📅",
-        value: 3,
-        label: "Scheduled",
+        icon: "calender.svg",
+        value: this.stats.totalAppointments,
+        label: "Total Appointments",
         FocusedStatus: "Completed",
         StatusCount: 4,
         cardColor: "orange",
-        link: '/admin'
-    },
-    {
-        icon: "📋",
-        value: this.stats.totalAppointments,
-        label: "Total Appointments",
+        link: '/doctor'
+      },
+      {
+        icon: "tick_file.svg",
+        value: this.stats.totalReports,
+        label: "Total Reports",
         FocusedStatus: "All time",
         cardColor: "red",
-        link: '/admin'
+        link: '/doctor'
     }
   ]
 
@@ -60,6 +62,7 @@ export class AdminDashboardPage {
       totalAppointments: this.appointments.length,
       scheduledAppointments: this.appointments.filter(a => a.status === 'Scheduled').length,
       completedAppointments: this.appointments.filter(a => a.status === 'Completed').length,
+      totalReports: this.reports.length
     };
   }
 }

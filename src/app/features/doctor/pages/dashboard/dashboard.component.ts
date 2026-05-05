@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { appointments, doctors, patients } from '../../../../shared/db/db';
+import { appointments, doctors, patients, reports } from '../../../../shared/db/db';
 
 @Component({
   selector: 'app-doctor-dashboard',
@@ -11,19 +11,20 @@ export class DoctorDashboardPage {
   doctors = doctors;
   appointments = appointments;
   patients = patients;
+  reports = reports
   //TODO: change the card details as per doctor
   cardDetails: DashboardCardStats[] = [
+    // {
+    //     icon: "doctor.svg",
+    //     value: this.stats.totalDoctors,
+    //     label: "Total Doctors",
+    //     FocusedStatus: "Active",
+    //     StatusCount: 4,
+    //     cardColor: "blue",
+    //     link: '/doctor'
+    // },
     {
-        icon: "🩺",
-        value: this.stats.totalDoctors,
-        label: "Total Doctors",
-        FocusedStatus: "Active",
-        StatusCount: 4,
-        cardColor: "blue",
-        link: '/doctor'
-    },
-    {
-        icon: "👥",
+        icon: "patient.svg",
         value: this.stats.totalPatients,
         label: "Total Patients",
         FocusedStatus: "Active",
@@ -32,18 +33,18 @@ export class DoctorDashboardPage {
         link: '/doctor'
     },
     {
-        icon: "📅",
-        value: 3,
-        label: "Scheduled",
+        icon: "calender.svg",
+        value: this.stats.totalAppointments,
+        label: "Total Appointments",
         FocusedStatus: "Completed",
         StatusCount: 4,
         cardColor: "orange",
         link: '/doctor'
-    },
-    {
-        icon: "📋",
-        value: this.stats.totalAppointments,
-        label: "Total Appointments",
+      },
+      {
+        icon: "tick_file.svg",
+        value: this.stats.totalReports,
+        label: "Total Reports",
         FocusedStatus: "All time",
         cardColor: "red",
         link: '/doctor'
@@ -61,6 +62,7 @@ export class DoctorDashboardPage {
       totalAppointments: this.appointments.length,
       scheduledAppointments: this.appointments.filter(a => a.status === 'Scheduled').length,
       completedAppointments: this.appointments.filter(a => a.status === 'Completed').length,
+      totalReports: this.reports.length
     };
   }
 }

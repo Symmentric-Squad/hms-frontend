@@ -10,9 +10,9 @@ import { SidebarComponent } from "../../../shared/components/sidebar/sidebar.com
 })
 export class DoctorSidebarComponent {
     navItems = [
-    { label: 'Dashboard', icon: '📊', link: '/doctor', exact: true },
-    { label: 'Patients', icon: '👥', link: '/doctor/patients', exact: false },
-    { label: 'Appointments', icon: '📅', link: '/doctor/appointments', exact: false },
-    { label: 'Reports', icon: '📋', link: '/doctor/reports', exact: false },
+    { label: 'Dashboard', icon: 'home_2.svg', link: '/doctor', exact: true },
+    { label: 'Patients', icon: 'patient.svg', link: '/doctor/patients', exact: false },
+    { label: 'Appointments', icon: 'calender.svg', link: '/doctor/appointments', exact: false },
+    { label: 'Reports', icon: 'tick_file.svg', link: '/doctor/reports', exact: false },
   ];
 }

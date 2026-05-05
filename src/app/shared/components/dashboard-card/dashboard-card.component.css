@@ -39,7 +39,7 @@
 .stat-card.orange { border-left-color: #f59e0b; }
 .stat-card.red { border-left-color: #ea4343; }
 
-.stat-icon { font-size: 36px; flex-shrink: 0; }
+.svg-host{ display: inline-block; mask-size: contain; mask-repeat: no-repeat; font-size: 36px; flex-shrink: 0; }
 
 .stat-info {
   display: flex;

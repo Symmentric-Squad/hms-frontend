@@ -22,11 +22,41 @@ interface ProfileUser {
       @if(currentUser) {
         <div class="topbar-user" (click)="showProfileModal = true">
           @if(currentUser.role === 'ADMIN') {
-            <span class="user-badge">🛡️ {{ currentUser.role }}</span>
+            <span class="user-badge px-2 align-middle">
+              <!-- <span 
+                class="brand-icon inline-block cursor-pointer bg-white w-[13px] h-[13px] m-0"
+                style="
+                  mask-image: url('admin.svg'); 
+                  -webkit-mask-image: url('admin.svg');
+                  mask-size: contain;
+                  mask-repeat: no-repeat;
+                "
+              ></span>  -->
+              {{ currentUser.role }}</span>
           } @else if (currentUser.role === 'DOCTOR') {
-            <span class="user-badge">🩺 {{ currentUser.role }}</span>
+            <span class="user-badge px-2 align-middle">
+              <!-- <span 
+                class="brand-icon inline-block cursor-pointer bg-white w-[13px] h-[13px] m-0"
+                style="
+                  mask-image: url('doctor.svg'); 
+                  -webkit-mask-image: url('doctor.svg');
+                  mask-size: contain;
+                  mask-repeat: no-repeat;
+                "
+              ></span>  -->
+              {{ currentUser.role }}</span>
           } @else {
-            <span class="user-badge">👥 {{ currentUser.role }}</span>
+            <span class="user-badge px-2 align-middle">
+              <!-- <span 
+                class="brand-icon inline-block cursor-pointer bg-white w-[13px] h-[13px] m-0"
+                style="
+                  mask-image: url('patient.svg'); 
+                  -webkit-mask-image: url('patient.svg');
+                  mask-size: contain;
+                  mask-repeat: no-repeat;
+                "
+              ></span>  -->
+              {{ currentUser.role }}</span>
           }
           <span class="user-name">{{ currentUser.username }}</span>
         </div>
@@ -83,12 +113,10 @@ interface ProfileUser {
     }
   `,
   styles: `
-    .admin-main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; transition: margin-left 0.3s ease; min-height: 100vh; }
-    .admin-main.expanded { margin-left: 64px; }
     .admin-topbar { background: white; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.07); position: sticky; top: 0; z-index: 50; }
     .admin-topbar h1 { font-size: 20px; font-weight: 700; color: #1e293b; margin: 0; }
     .topbar-user { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-    .user-badge { background: linear-gradient(90deg, #0d6efd, #0a58ca); color: white; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+    .user-badge { background: linear-gradient(90deg, #0d6efd, #0a58ca); color: white; border-radius: 20px; font-size: 14px; font-weight: 600; }
     .user-name { font-weight: 600; color: #374151; font-size: 14px; text-transform: capitalize; }
     .admin-content { padding: 28px 32px; flex: 1; }
   `,
@@ -99,8 +127,8 @@ export class TopPanelComponent {
   currentUser: AppUser = {
     id: '1',
     username: 'Suresh',
-    // role: 'ADMIN',
-    role: 'PATIENT'
+    role: 'ADMIN',
+    // role: 'PATIENT'
   };
 
   showProfileModal = false;

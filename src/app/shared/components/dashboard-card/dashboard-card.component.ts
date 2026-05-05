@@ -5,7 +5,13 @@ import { RouterModule } from "@angular/router";
     selector: 'app-dashboard-card',
     template: `
     <div class="stat-card {{cardStats.cardColor}}" [routerLink]="cardStats.link">
-        <div class="stat-icon">{{cardStats.icon}}</div>
+        <div class="svg-host" 
+            [style.mask-image]="'url(' + cardStats.icon + ')'"
+            [style.webkit-mask-image]="'url(' + cardStats.icon + ')'"
+            [style.background-color]="cardStats.cardColor"
+            [style.width.px]=48
+            [style.height.px]=48>
+        </div>
         <div class="stat-info">
             <span class="stat-value">{{ cardStats.value }}</span>
             <span class="stat-label">{{cardStats.label}}</span>
@@ -24,7 +30,7 @@ import { RouterModule } from "@angular/router";
 
 export class DashboardCard {
     @Input() cardStats: DashboardCardStats = {
-        icon: "🩺",
+        icon: "patient.svg",
         value: 5,
         label: "Total Doctors",
         FocusedStatus: "Active",

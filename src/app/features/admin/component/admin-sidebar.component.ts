@@ -10,12 +10,12 @@ import { SidebarComponent } from "../../../shared/components/sidebar/sidebar.com
 })
 export class AdminSidebarComponent {
     navItems = [
-    { label: 'Dashboard', icon: '📊', link: '/admin', exact: true },
-    { label: 'Patients', icon: '👥', link: '/admin/patients', exact: false },
-    { label: 'Doctors', icon: '🩺', link: '/admin/doctors', exact:false },
-    { label: 'Appointments', icon: '📅', link: '/admin/appointments', exact: false },
-    { label: 'Reports', icon: '📋', link: '/admin/reports', exact: false },
-    { label: 'Specialisations', icon:"🎯", link: '/admin/specialisations', exact: true},
-    { label: 'Conatact Us', icon:'📩', link: '/admin/contact', exact:false}
+    { label: 'Dashboard', icon: 'home_2.svg', link: '/admin', exact: true },
+    { label: 'Patients', icon: 'patient.svg', link: '/admin/patients', exact: false },
+    { label: 'Doctors', icon: 'doctor.svg', link: '/admin/doctors', exact:false },
+    { label: 'Appointments', icon: 'calender.svg', link: '/admin/appointments', exact: false },
+    { label: 'Reports', icon: 'tick_file.svg', link: '/admin/reports', exact: false },
+    { label: 'Specialisations', icon:"target.svg", link: '/admin/specialisations', exact: true},
+    { label: 'Conatact Us', icon:'mail.svg', link: '/admin/contact', exact:false}
   ];
 }
