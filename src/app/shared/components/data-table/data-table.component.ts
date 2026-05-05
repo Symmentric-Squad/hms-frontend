@@ -11,17 +11,17 @@ import { RowActionEvent, TableAction, TableColumn } from '../../models/data-tabl
       <table class="w-full border-collapse text-sm">
         <thead>
           <tr class="bg-[var(--brand-accent)]">
-            <th class="px-4 py-3 text-left font-semibold text-gray-700">#</th>
+            <th class="px-4 py-3 text-left font-bold text-gray-700">#</th>
             @for(col of columns; track $index) {
               <th
-                class="px-4 py-3 text-left font-semibold text-gray-700"
+                class="px-4 py-3 text-left font-bold text-gray-700"
                 [style]="{ 'width': col.width }"
               >
                 {{ col.label }}
               </th>
             }
             @if(actions.length > 0){
-              <th class="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
+              <th class="px-4 py-3 text-left font-bold text-gray-700">Actions</th>
             }
           </tr>
         </thead>

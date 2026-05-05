@@ -4,5 +4,6 @@ interface DashboardCardStats{
     label: string;
     FocusedStatus: string;
     StatusCount?: number;
-    cardColor: "blue" | "green" | "orange" | "red"
+    cardColor: "blue" | "green" | "orange" | "red";
+    link: string;
 }

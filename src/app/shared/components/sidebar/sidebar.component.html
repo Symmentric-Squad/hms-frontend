@@ -1,7 +1,7 @@
 <aside class="admin-sidebar" [class.collapsed]="isSidebarCollapsed">
         <div class="sidebar-brand">
           <span class="brand-icon" (click)="toggleSidebar()">🏥</span>
-          <span class="brand-text" *ngIf="!isSidebarCollapsed">HMS {{ currentUser.role }}</span>
+          <span class="brand-text" *ngIf="!isSidebarCollapsed">HMS {{ currentUser.role | customTitleCase }}</span>
         </div>
 
         <nav class="sidebar-nav">

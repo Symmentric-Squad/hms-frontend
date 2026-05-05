@@ -1,9 +1,10 @@
 import { Component, Input } from "@angular/core";
+import { RouterModule } from "@angular/router";
 
 @Component({
     selector: 'app-dashboard-card',
     template: `
-    <div class="stat-card {{cardStats.cardColor}}">
+    <div class="stat-card {{cardStats.cardColor}}" [routerLink]="cardStats.link">
         <div class="stat-icon">{{cardStats.icon}}</div>
         <div class="stat-info">
             <span class="stat-value">{{ cardStats.value }}</span>
@@ -17,7 +18,8 @@ import { Component, Input } from "@angular/core";
         </div>
     </div>
     `,
-    styleUrl: 'dashboard-card.component.css'
+    styleUrl: 'dashboard-card.component.css',
+    imports: [RouterModule]
 })
 
 export class DashboardCard {
@@ -27,6 +29,7 @@ export class DashboardCard {
         label: "Total Doctors",
         FocusedStatus: "Active",
         StatusCount: 4,
-        cardColor: "blue"
+        cardColor: "blue",
+        link: "/admin/doctors"
     };
 }

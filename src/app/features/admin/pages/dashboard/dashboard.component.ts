@@ -5,7 +5,7 @@ import { appointments, doctors, patients } from '../../../../shared/db/db';
   selector: 'app-admin-dashboard',
   standalone:false,
   templateUrl: './dashboard.component.html',
-  styleUrl: '../common.css'
+  styleUrl: '../../../../../styles.css'
 })
 export class AdminDashboardPage {
   doctors = doctors;
@@ -18,7 +18,8 @@ export class AdminDashboardPage {
         label: "Total Doctors",
         FocusedStatus: "Active",
         StatusCount: 4,
-        cardColor: "blue"
+        cardColor: "blue",
+        link: '/admin'
     },
     {
         icon: "👥",
@@ -26,7 +27,8 @@ export class AdminDashboardPage {
         label: "Total Patients",
         FocusedStatus: "Active",
         StatusCount: 4,
-        cardColor: "green"
+        cardColor: "green",
+        link: '/admin'
     },
     {
         icon: "📅",
@@ -34,14 +36,16 @@ export class AdminDashboardPage {
         label: "Scheduled",
         FocusedStatus: "Completed",
         StatusCount: 4,
-        cardColor: "orange"
+        cardColor: "orange",
+        link: '/admin'
     },
     {
         icon: "📋",
         value: this.stats.totalAppointments,
         label: "Total Appointments",
         FocusedStatus: "All time",
-        cardColor: "red"
+        cardColor: "red",
+        link: '/admin'
     }
   ]
 

@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   selector: 'app-patient-management',
   standalone: false,
   templateUrl: './patient.component.html',
-  styleUrl: '../common.css',
+  styleUrl: '../../../../../styles.css',
 })
 export class AdminPatientsPage {
   patients = patients;

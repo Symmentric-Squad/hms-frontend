@@ -7,7 +7,7 @@ import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/mod
   selector: 'app-admin-doctor',
   standalone: false,
   templateUrl: 'doctor.component.html',
-  styleUrl: '../common.css',
+  styleUrl: '../../../../../styles.css',
 })
 export class AdminDoctorsPage {
   doctors = doctors;

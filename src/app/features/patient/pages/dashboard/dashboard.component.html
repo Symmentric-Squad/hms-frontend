@@ -1,0 +1,41 @@
+<div class="section-header">
+  <h2>Welcome Back, Doctor</h2>
+  <!-- <p>Here's an overview of the hospital today</p> -->
+</div>
+
+<div class="stat-grid">
+  @for(cardDetail of cardDetails; track $index){
+    <app-dashboard-card
+      [cardStats] = cardDetail
+    ></app-dashboard-card>
+  }
+  </div>
+<!-- <div class="dash-bottom"> -->
+  <div class="dash-panel">
+    <div class="panel-header">
+      <h3>Recent Appointments</h3>
+      <button class="view-all-btn">View All →</button>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Doctor</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(a of recentAppointments; track $index){
+          <tr>
+            <td>{{ a.patient }}</td>
+            <td>{{ a.doctor }}</td>
+            <td>{{ a.date }}</td>
+            <td><span class="status-badge" [class]="'status-' + a.status.toLowerCase()">{{ a.status }}</span></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+<!-- </div> -->

@@ -1,13 +1,30 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PatientDashboardComponent } from './pages/patient-dashboard.component';
-import { PatientGuard } from '../../core/guards/patient.guard';
+import { DoctorGuard } from '../../core/guards/doctor.guard';
+import { PaitentLayoutComponent } from './patient.layout';
+import { PatientDashboardPage } from './pages/dashboard/dashboard.component';
+import { PatientAppointmentsPage } from './pages/appointment/appointment.component';
+import { PatientReportsPage } from './pages/report/report.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: PatientDashboardComponent,
-    canActivate: [PatientGuard]
+    component: PaitentLayoutComponent,
+    canActivate: [DoctorGuard],
+    children: [
+      {
+        path: '',
+        component: PatientDashboardPage,
+      },
+      {
+        path: 'appointments',
+        component: PatientAppointmentsPage,
+      },
+      {
+        path: 'reports',
+        component: PatientReportsPage
+      }
+    ],
   },
 ];
 

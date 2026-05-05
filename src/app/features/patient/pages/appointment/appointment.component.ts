@@ -12,7 +12,7 @@ import { Action } from 'rxjs/internal/scheduler/Action';
   templateUrl: './appointment.component.html',
   styleUrl: '../../../../../styles.css',
 })
-export class DoctorAppointmentsPage {
+export class PatientAppointmentsPage {
 
   doctors = doctors;
   patients = patients
@@ -37,13 +37,13 @@ export class DoctorAppointmentsPage {
   ];
 
   appointmentActions: TableAction[] = [
-    {
-      id: 'edit',
-      label: 'Edit',
-      icon: '✏️',
-      type: 'primary',
-      actionColor: 'blue'
-    },
+    // {
+    //   id: 'edit',
+    //   label: 'Edit',
+    //   icon: '✏️',
+    //   type: 'primary',
+    //   actionColor: 'blue'
+    // },
     {
       id: 'cancel',
       label: 'Cancel',

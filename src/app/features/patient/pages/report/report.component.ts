@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { patients, reports } from '../../../../shared/db/db';
 import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
-import { PatientReport } from '../../models/report.doctor.model';
+import { PatientReport } from '../../../doctor/models/report.doctor.model';
 
 @Component({
   selector: 'app-report-management',
@@ -9,7 +9,7 @@ import { PatientReport } from '../../models/report.doctor.model';
   templateUrl: './report.component.html',
   styleUrl: '../../../../../styles.css'
 })
-export class DoctorReportsPage {
+export class PatientReportsPage {
   reports = reports;
   patients = patients;
 
@@ -25,27 +25,27 @@ export class DoctorReportsPage {
   ];
 
   reportActions: TableAction[] = [
-    {
-      id: 'view',
-      label: 'View',
-      icon: '👁️',
-      type: 'primary',
-      actionColor: 'gray'
-    },
-    {
-      id: 'edit',
-      label: 'Edit',
-      icon: '✏️',
-      type: 'primary',
-      actionColor: 'blue'
-    },
-    {
-      id: 'delete',
-      label: 'Delete',
-      icon: '🗑️',
-      type: 'danger',
-      actionColor: 'red'
-    },
+    // {
+    //   id: 'view',
+    //   label: 'View',
+    //   icon: '👁️',
+    //   type: 'primary',
+    //   actionColor: 'gray'
+    // },
+    // {
+    //   id: 'edit',
+    //   label: 'Edit',
+    //   icon: '✏️',
+    //   type: 'primary',
+    //   actionColor: 'blue'
+    // },
+    // {
+    //   id: 'delete',
+    //   label: 'Delete',
+    //   icon: '🗑️',
+    //   type: 'danger',
+    //   actionColor: 'red'
+    // },
   ];
 
   showReportModal = false;

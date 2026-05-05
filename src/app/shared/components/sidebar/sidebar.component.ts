@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AppUser } from '../../models/app-user';
+import { TitleCasePipe } from '../../pipe/custom-title-case.pipe';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TitleCasePipe],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })

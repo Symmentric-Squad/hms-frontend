@@ -7,11 +7,11 @@ import { appointments, doctors, patients } from '../../../../shared/db/db';
   templateUrl: './dashboard.component.html',
   styleUrl: '../../../../../styles.css'
 })
-export class DoctorDashboardPage {
+export class PatientDashboardPage {
   doctors = doctors;
   appointments = appointments;
   patients = patients;
-  //TODO: change the card details as per doctor
+  //TODO: change the card details as per patient
   cardDetails: DashboardCardStats[] = [
     {
         icon: "🩺",
@@ -20,7 +20,7 @@ export class DoctorDashboardPage {
         FocusedStatus: "Active",
         StatusCount: 4,
         cardColor: "blue",
-        link: '/doctor'
+        link:'/patient/appointments'
     },
     {
         icon: "👥",
@@ -29,7 +29,7 @@ export class DoctorDashboardPage {
         FocusedStatus: "Active",
         StatusCount: 4,
         cardColor: "green",
-        link: '/doctor'
+        link:'/patient/appointments'
     },
     {
         icon: "📅",
@@ -38,7 +38,7 @@ export class DoctorDashboardPage {
         FocusedStatus: "Completed",
         StatusCount: 4,
         cardColor: "orange",
-        link: '/doctor'
+        link:'/patient/appointments'
     },
     {
         icon: "📋",
@@ -46,7 +46,7 @@ export class DoctorDashboardPage {
         label: "Total Appointments",
         FocusedStatus: "All time",
         cardColor: "red",
-        link: '/doctor'
+        link:'/patient/appointments'
     }
   ]
 

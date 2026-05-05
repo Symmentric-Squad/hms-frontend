@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { DoctorSidebarComponent } from './component/doctor-sidebar.component';
+import { DoctorSidebarComponent } from './component/patient-sidebar.component';
 import { TopPanelComponent } from '../../shared/components/top-panel/top-panel.component';
 
 @Component({
@@ -9,7 +9,7 @@ import { TopPanelComponent } from '../../shared/components/top-panel/top-panel.c
   imports: [RouterModule, DoctorSidebarComponent,TopPanelComponent],
   template: `
     <div class="relative flex min-h-screen">
-      <app-doctor-sidebar></app-doctor-sidebar>
+      <app-patient-sidebar></app-patient-sidebar>
       <div class="flex-1 pl-15">
         <app-top-panel></app-top-panel>
         <div class="p-6">
@@ -19,4 +19,4 @@ import { TopPanelComponent } from '../../shared/components/top-panel/top-panel.c
     </div>
   `,
 })
-export class DoctorLayoutComponent {}
+export class PaitentLayoutComponent {}
