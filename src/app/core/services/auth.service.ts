@@ -1,47 +1,88 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { LoginRequest, LoginResponse, RegisterUserRequest, RegisterUserResponse } from '../models/auth.model';
 
-export interface AppUser {
-  id: string;
-  username: string;
-  role: 'ADMIN' | 'DOCTOR' | 'PATIENT' | string;
-  // add other fields as needed (email, token, etc.)
-}
 
-@Injectable({ providedIn: 'root' })
+
+@Injectable({
+  providedIn: 'root',
+})
 export class AuthService {
-  // Tracks current user (null when not authenticated)
-  private _currentUser$ = new BehaviorSubject<AppUser | null>(null);
-
-  // Expose observable for components that want to react to auth changes
-  public currentUser$: Observable<AppUser | null> = this._currentUser$.asObservable();
-
-  constructor() {
-    // TODO: initialize from localStorage or a persisted source if needed
-  }
-
-  // Call this after a successful login
-  setCurrentUser(user: AppUser) {
-    this._currentUser$.next(user);
-    // Optionally persist token/user to localStorage
-  }
-
-  // Clear current user on logout
   clearCurrentUser() {
-    this._currentUser$.next(null);
-    // remove persisted tokens if stored
+    throw new Error('Method not implemented.');
+  }
+  setCurrentUser(appUser: any) {
+    throw new Error('Method not implemented.');
+  }
+  private baseUrl = 'http://localhost:8082/api';
+
+  constructor(private http: HttpClient) {}
+
+  // POST /api/auth/users/register
+  registerUser(request: RegisterUserRequest): Observable<RegisterUserResponse> {
+    return this.http.post<RegisterUserResponse>(`${this.baseUrl}/auth/users/register`, request);
   }
 
-  // Returns the current user snapshot
-  getCurrentUser(): AppUser | null {
-    return this._currentUser$.getValue();
+  // POST /api/auth/users/login
+  loginUser(request: LoginRequest): Observable<LoginResponse> {
+    return this.http
+      .post<LoginResponse>(`${this.baseUrl}/auth/users/login`, request)
+      .pipe(tap((res) => this.storeSession(res)));
   }
 
-  // Helper: checks whether the current user has the provided role
-  hasRole(role: string): boolean {
-    const user = this.getCurrentUser();
-    if (!user) return false;
-    return user.role === role;
+  // POST /api/auth/doctors/login
+  loginDoctor(request: LoginRequest): Observable<LoginResponse> {
+    return this.http
+      .post<LoginResponse>(`${this.baseUrl}/auth/doctors/login`, request)
+      .pipe(tap((res) => this.storeSession(res)));
   }
 
+  // POST /api/auth/admin/login
+  loginAdmin(request: LoginRequest): Observable<LoginResponse> {
+    return this.http
+      .post<LoginResponse>(`${this.baseUrl}/auth/admin/login`, request)
+      .pipe(tap((res) => this.storeSession(res)));
+  }
+
+  private storeSession(res: LoginResponse): void {
+    localStorage.setItem('token', res.token);
+    localStorage.setItem('role', res.role);
+    localStorage.setItem('userId', res.userId.toString());
+    localStorage.setItem('email', res.email);
+  }
+
+  logout(): void {
+    localStorage.clear();
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  getRole(): string | null {
+    return localStorage.getItem('role');
+  }
+
+  getUserId(): number {
+    return Number(localStorage.getItem('userId'));
+  }
+
+  getEmail(): string | null {
+    return localStorage.getItem('email');
+  }
+
+  isAdmin(): boolean {
+    return this.getRole() === 'ADMIN';
+  }
+  isDoctor(): boolean {
+    return this.getRole() === 'DOCTOR';
+  }
+  isUser(): boolean {
+    return this.getRole() === 'USER';
+  }
 }
