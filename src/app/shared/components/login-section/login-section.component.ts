@@ -9,13 +9,12 @@ import { LoginSubmitEvent, RoleConfig } from './login.model';
   selector: 'app-login-section',
   standalone: true,
   imports: [CommonModule, RouterModule, LoginCardComponent],
-  styleUrl: 'login-section.css',
   template:`
-  <section id="login" class="login-section text-center">
-  <h2 class="text-3xl font-bold">Portal Login</h2>
-  <h6>Select your role and sign in to access your dashboard</h6>
+  <section id="login" class="bg-gradient-to-br from-[#f0f6ff] via-[#e8f4fd] to-[#f5f0ff] pt-24 pb-20 px-10 text-center">
+  <h2 class="text-3xl font-bold text-blue-600">Portal Login</h2>
+  <h6 class="text-xs text-gray-500 mt-1 mb-12">Select your role and sign in to access your dashboard</h6>
 
-  <div class="login-cards">
+  <div class="mx-auto flex w-full max-w-[1100px] flex-wrap items-start justify-center gap-7">
     <app-login-card
       *ngFor="let config of roles"
       [role]="config.role"
@@ -40,19 +39,19 @@ export class LoginSectionComponent {
     {
       role: 'admin',
       label: 'Admin Login',
-      icon: '🛡️',
+      icon: 'guard.svg',
       subtitle: 'Manage hospital operations',
     },
     {
       role: 'doctor',
       label: 'Doctor Login',
-      icon: '🩺',
+      icon: 'steth.svg',
       subtitle: 'Access patient & appointment data',
     },
     {
       role: 'patient',
       label: 'Patient Login',
-      icon: '🏥',
+      icon: 'patient.svg',
       subtitle: 'View appointments & health records',
       showRegisterLink: true,
     },

@@ -105,7 +105,6 @@ export class AdminAppointmentsPage {
         {label:"Cancelled", value: "Cancelled"},
       ]
     },
-    
   ]
 
 

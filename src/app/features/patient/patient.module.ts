@@ -9,6 +9,7 @@ import { DataTableComponent } from "../../shared/components/data-table/data-tabl
 import { SidebarComponent } from "../../shared/components/sidebar/sidebar.component";
 import { FormsModule } from "@angular/forms";
 import { DashboardCard } from "../../shared/components/dashboard-card/dashboard-card.component";
+import { ModalFormComponent } from "../../shared/components/dialog-form/dialog-form.component";
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { DashboardCard } from "../../shared/components/dashboard-card/dashboard-
     DataTableComponent,
     SidebarComponent,
     FormsModule,
-    DashboardCard
+    DashboardCard,
+    ModalFormComponent
     // SharedModule
   ]
 })

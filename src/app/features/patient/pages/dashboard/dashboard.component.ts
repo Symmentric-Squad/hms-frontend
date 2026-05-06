@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { appointments, doctors, patients } from '../../../../shared/db/db';
+import { Router } from '@angular/router';
+import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
+import { ProfileUser } from '../../../../shared/components/top-panel/top-panel.component';
 
 @Component({
   selector: 'app-doctor-dashboard',
@@ -11,43 +14,141 @@ export class PatientDashboardPage {
   doctors = doctors;
   appointments = appointments;
   patients = patients;
+
+  showBookAppointmentModal = false;
+  editingAppointment: Partial<Appointment> = {};
+  isBookEditMode = false;
+
+  showEditProfileModal = false;
+  editingProfile: Partial<ProfileUser> = {};
+  isProfileEditMode = false;
+
+  router = inject(Router)
   //TODO: change the card details as per patient
-  cardDetails: DashboardCardStats[] = [
+  cardDetails = [
     {
-        icon: "🩺",
-        value: this.stats.totalDoctors,
-        label: "Total Doctors",
-        FocusedStatus: "Active",
-        StatusCount: 4,
-        cardColor: "blue",
-        link:'/patient/appointments'
+      icon: "review-file-svgrepo-com.svg",
+      value: "Book Appointments",
+      label: "Schedule a new Consultation",
+      cardColor: "blue",
+      action: () => {
+        this.showBookAppointmentModal = true;
+      }
     },
     {
-        icon: "👥",
-        value: this.stats.totalPatients,
-        label: "Total Patients",
-        FocusedStatus: "Active",
-        StatusCount: 4,
+        icon: "calender.svg",
+        label: "View past and upcoming Appointments",
+        value: "Appointment History",
         cardColor: "green",
-        link:'/patient/appointments'
+        action: () => {
+          this.router.navigate(['/patient/appointments'])
+        }
     },
     {
-        icon: "📅",
-        value: 3,
-        label: "Scheduled",
-        FocusedStatus: "Completed",
-        StatusCount: 4,
+        icon: "tick_file.svg",
+        value: "Medical History",
+        label: "View past medical Records",
         cardColor: "orange",
-        link:'/patient/appointments'
+        action: () => {
+          this.router.navigate(['/patient/reports'])
+        }
     },
     {
-        icon: "📋",
-        value: this.stats.totalAppointments,
-        label: "Total Appointments",
-        FocusedStatus: "All time",
+        icon: "patient.svg",
+        value: "Update Profile",
+        label: "Manage your personal Details",
         cardColor: "red",
-        link:'/patient/appointments'
+        action: () => {
+        this.showEditProfileModal = true;
+      }
     }
+  ]
+
+  BookAppointmentModalConfig: ModalConfig = {
+    title: 'New Appointment',
+    submitButtonText: 'Book Appointment',
+    cancelButtonText: 'Cancel',
+    size: 'small',
+    mode: 'create',
+  }
+  
+  appointmentModalFields: FormField[] = [
+    {
+      key: 'patient name',
+      label: 'Patient Name',
+      type: 'text',
+      required:true
+    },
+    {
+      key: 'doctor',
+      label: 'Doctor Name',
+      type: 'text',
+      required:true
+    },
+    {
+      key: 'date',
+      label: 'Appointment Date',
+      type: 'date',
+      required:true
+    },
+    {
+      key: 'time',
+      label: 'Appointment Time',
+      type: 'time',
+      required:true
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      required:true,
+      options: [
+        {label:"Scheduled", value: "Scheduled"},
+        {label:"Completed", value: "Completed"},
+        {label:"Cancelled", value: "Cancelled"},
+      ]
+    },
+  ]
+
+  editProfileModalConfig: ModalConfig = {
+    title: 'Edit Profile',
+    submitButtonText: 'Edit Profile',
+    cancelButtonText: 'Cancel',
+    size: 'small',
+    mode: 'create',
+  }
+  
+  profileModalFields: FormField[] = [
+    {
+      key: 'name',
+      label: 'Name',
+      type: 'text',
+      required:true
+    },
+    {
+      key: 'gender',
+      label: 'Gender',
+      type: 'text',
+      required:true
+    },
+    {
+      key: 'address',
+      label: 'Address',
+      type: 'text',
+      required:true
+    },
+    {
+      key: 'city',
+      label: 'City',
+      type: 'text',
+      required:true
+    },
+    {
+      key: 'email',
+      label: 'Email',
+      type: 'email',
+      required:true,
+    },
   ]
 
   get recentAppointments() { return this.appointments.slice(0, 4); }
@@ -63,4 +164,22 @@ export class PatientDashboardPage {
       completedAppointments: this.appointments.filter(a => a.status === 'Completed').length,
     };
   }
+
+    onSubmitAppointment(event: ModalSubmitEvent): void {
+      if (!event.isValid) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+      console.log('Form submitted:', event.formData);
+      this.showBookAppointmentModal= false;
+    }
+
+    onUpdateProfile(event: ModalSubmitEvent): void {
+      if (!event.isValid) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+      console.log('Form submitted:', event.formData);
+      this.showBookAppointmentModal= false;
+    }
 }

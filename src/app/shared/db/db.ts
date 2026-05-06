@@ -3,19 +3,19 @@ import { PatientReport } from "../../features/doctor/models/report.doctor.model"
 export const activeTab: 'dashboard' | 'doctors' | 'patients' | 'appointments' = 'dashboard';
 
   export const doctors: Doctor[] = [
-    { id: 1, name: 'Arjun Mehta', speciality: 'Cardiology', phone: '+91 98765 11001', email: 'arjun.mehta@hospital.com', status: 'Active' },
-    { id: 2, name: 'Priya Nair', speciality: 'Neurology', phone: '+91 98765 22002', email: 'priya.nair@hospital.com', status: 'Active' },
-    { id: 3, name: 'Rajan Kumar', speciality: 'Orthopedics', phone: '+91 98765 33003', email: 'rajan.kumar@hospital.com', status: 'Inactive' },
-    { id: 4, name: 'Shalini Rao', speciality: 'Pediatrics', phone: '+91 98765 44004', email: 'shalini.rao@hospital.com', status: 'Active' },
-    { id: 5, name: 'Vikram Patel', speciality: 'ENT', phone: '+91 98765 55005', email: 'vikram.patel@hospital.com', status: 'Active' },
+    { id: 1, name: 'Arjun Mehta', speciality: 'Cardiology', phone: '+91 98765 43210', email: 'arjun.mehta@hospital.com', status: 'Active' },
+    { id: 2, name: 'Priya Nair', speciality: 'Neurology', phone: '+91 96123 46273', email: 'priya.nair@hospital.com', status: 'Active' },
+    { id: 3, name: 'Rajan Kumar', speciality: 'Orthopedics', phone: '+91 71294 23682', email: 'rajan.kumar@hospital.com', status: 'Inactive' },
+    { id: 4, name: 'Shalini Rao', speciality: 'Pediatrics', phone: '+91 69138 92374', email: 'shalini.rao@hospital.com', status: 'Active' },
+    { id: 5, name: 'Vikram Patel', speciality: 'ENT', phone: '+91 61923 92837', email: 'vikram.patel@hospital.com', status: 'Active' },
   ];
 
   export const patients: Patient[] = [
-    { id: 1, name: 'Suresh Babu', age: 45, phone: '+91 90001 11111', bloodGroup: 'A+', doctor: 'Dr. Arjun Mehta', status: 'Admitted' },
-    { id: 2, name: 'Kavitha Rajan', age: 32, phone: '+91 90002 22222', bloodGroup: 'B+', doctor: 'Dr. Priya Nair', status: 'Admitted' },
-    { id: 3, name: 'Murugan S', age: 60, phone: '+91 90003 33333', bloodGroup: 'O-', doctor: 'Dr. Rajan Kumar', status: 'Discharged' },
-    { id: 4, name: 'Deepa Krishnan', age: 28, phone: '+91 90004 44444', bloodGroup: 'AB+', doctor: 'Dr. Shalini Rao', status: 'Admitted' },
-    { id: 5, name: 'Anand Velu', age: 52, phone: '+91 90005 55555', bloodGroup: 'A-', doctor: 'Dr. Vikram Patel', status: 'Admitted' },
+    { id: 1, name: 'Suresh Babu', age: 45, phone: '+91 91827 13636', bloodGroup: 'A+', doctor: 'Dr. Arjun Mehta', status: 'Admitted' },
+    { id: 2, name: 'Kavitha Rajan', age: 32, phone: '+91 91633 28464', bloodGroup: 'B+', doctor: 'Dr. Priya Nair', status: 'Admitted' },
+    { id: 3, name: 'Murugan S', age: 60, phone: '+91 81361 12386', bloodGroup: 'O-', doctor: 'Dr. Rajan Kumar', status: 'Discharged' },
+    { id: 4, name: 'Deepa Krishnan', age: 28, phone: '+91 61298 32375', bloodGroup: 'AB+', doctor: 'Dr. Shalini Rao', status: 'Admitted' },
+    { id: 5, name: 'Anand Velu', age: 52, phone: '+91 62398 28375', bloodGroup: 'A-', doctor: 'Dr. Vikram Patel', status: 'Admitted' },
   ];
 
   export const appointments: Appointment[] = [

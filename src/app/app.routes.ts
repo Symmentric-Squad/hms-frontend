@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AdminGuard } from './core/guards/admin.guard';
 import { DoctorGuard } from './core/guards/doctor.guard';
 import { PatientGuard } from './core/guards/patient.guard';
+import { RegisterComponent } from './shared/pages/register.component';
 
 export const routes: Routes = [
     {
@@ -23,6 +24,10 @@ export const routes: Routes = [
         path: 'patient', 
         canActivate: [PatientGuard],
         loadChildren: () => import('./features/patient/patient.module').then(m => m.PatientModule) 
+      },
+      {
+        path: 'register',
+        component: RegisterComponent
       },
       {
         path: '**',

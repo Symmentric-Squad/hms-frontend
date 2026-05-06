@@ -5,12 +5,21 @@
 
 <div class="stat-grid">
   @for(cardDetail of cardDetails; track $index){
-    <app-dashboard-card
-      [cardStats] = cardDetail
-    ></app-dashboard-card>
+    <div class="stat-card {{cardDetail.cardColor}}" (click)="cardDetail.action()">
+        <div class="svg-host" 
+            [style.mask-image]="'url(' + cardDetail.icon + ')'"
+            [style.webkit-mask-image]="'url(' + cardDetail.icon + ')'"
+            [style.background-color]="cardDetail.cardColor"
+            [style.width.px]=48
+            [style.height.px]=48>
+        </div>
+        <div class="stat-info">
+            <span class="stat-value">{{ cardDetail.value }}</span>
+            <span class="stat-label">{{cardDetail.label}}</span>
+        </div>
+    </div>
   }
   </div>
-<!-- <div class="dash-bottom"> -->
   <div class="dash-panel">
     <div class="panel-header">
       <h3>Recent Appointments</h3>
@@ -38,4 +47,24 @@
     </table>
   </div>
 
-<!-- </div> -->
+  @if(showBookAppointmentModal){
+    <app-modal-form
+        [config]="BookAppointmentModalConfig"
+        [fields]="appointmentModalFields"
+        (submitted)="onSubmitAppointment($event)"
+        (cancelled)="showBookAppointmentModal = false"
+        (backdropClicked)="showBookAppointmentModal = false"
+    >
+    </app-modal-form>
+  }
+
+  @if(showEditProfileModal){
+    <app-modal-form
+        [config]="editProfileModalConfig"
+        [fields]="profileModalFields"
+        (submitted)="onUpdateProfile($event)"
+        (cancelled)="showEditProfileModal = false"
+        (backdropClicked)="showEditProfileModal = false"
+    >
+    </app-modal-form>
+  }

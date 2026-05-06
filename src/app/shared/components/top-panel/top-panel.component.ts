@@ -2,8 +2,10 @@ import { Component } from "@angular/core";
 import { AppUser } from "../../models/app-user";
 import { TitleCasePipe } from "../../pipe/custom-title-case.pipe";
 import { FormsModule } from "@angular/forms";
+import { FormField, ModalConfig, ModalSubmitEvent } from "../../models/form.models";
+import { ModalFormComponent } from "../dialog-form/dialog-form.component";
 
-interface ProfileUser {
+export interface ProfileUser {
   name: string;
   gender: "Male" | "Female" | string;
   address: string;
@@ -15,14 +17,14 @@ interface ProfileUser {
 @Component({
   selector: 'app-top-panel',
   template: `
-    <header class="admin-topbar">
-      <div class="topbar-title">
-        <h1>{{ currentUser.role | customTitleCase }} Management Panel</h1>
+    <header class="bg-white py-3.5 px-8 flex items-center justify-between shadow-md sticky top-0 z-50">
+      <div>
+        <h1 class="text-[20px] font-bold text-slate-800 m-0">{{ currentUser.role | customTitleCase }} Management Panel</h1>
       </div>
       @if(currentUser) {
-        <div class="topbar-user" (click)="showProfileModal = true">
+        <div class="flex items-center gap-2.5 cursor-pointer" (click)="showProfileModal = true">
           @if(currentUser.role === 'ADMIN') {
-            <span class="user-badge px-2 align-middle">
+            <span class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-[20px] text-sm font-semibold px-2 inline-flex items-center">
               <!-- <span 
                 class="brand-icon inline-block cursor-pointer bg-white w-[13px] h-[13px] m-0"
                 style="
@@ -34,7 +36,7 @@ interface ProfileUser {
               ></span>  -->
               {{ currentUser.role }}</span>
           } @else if (currentUser.role === 'DOCTOR') {
-            <span class="user-badge px-2 align-middle">
+            <span class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-[20px] text-sm font-semibold px-2 inline-flex items-center">
               <!-- <span 
                 class="brand-icon inline-block cursor-pointer bg-white w-[13px] h-[13px] m-0"
                 style="
@@ -46,7 +48,7 @@ interface ProfileUser {
               ></span>  -->
               {{ currentUser.role }}</span>
           } @else {
-            <span class="user-badge px-2 align-middle">
+            <span class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-[20px] text-sm font-semibold px-2 inline-flex items-center">
               <!-- <span 
                 class="brand-icon inline-block cursor-pointer bg-white w-[13px] h-[13px] m-0"
                 style="
@@ -58,69 +60,24 @@ interface ProfileUser {
               ></span>  -->
               {{ currentUser.role }}</span>
           }
-          <span class="user-name">{{ currentUser.username }}</span>
+          <span class="font-semibold text-slate-700 text-sm capitalize">{{ currentUser.username }}</span>
         </div>
       }
     </header>
 
-    @if(showProfileModal) {
-      <div class="modal-overlay" (click)="showProfileModal = false">
-        <div class="modal-box" (click)="$event.stopPropagation()">
-          <div class="modal-header">
-            <h3>🙍 Edit Profile</h3>
-            <button class="modal-close" (click)="showProfileModal = false">✕</button>
-          </div>
-          <div class="modal-body">
-            <form (ngSubmit)="updateProfile()" #profileForm="ngForm">
-              <div class="form-row">
-                <div class="form-field">
-                  <label>Name</label>
-                  <input type="text" [(ngModel)]="user.name" name="name" placeholder="Your name" required />
-                </div>
-                <div class="form-field">
-                  <label>Gender</label>
-                  <select [(ngModel)]="user.gender" name="gender" required>
-                    <option value="" disabled>Select gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-field">
-                  <label>Address</label>
-                  <input type="text" [(ngModel)]="user.address" name="address" placeholder="Street address" required />
-                </div>
-                <div class="form-field">
-                  <label>City</label>
-                  <input type="text" [(ngModel)]="user.city" name="city" placeholder="City" required />
-                </div>
-              </div>
-              <div class="form-field">
-                <label>Email</label>
-                <input type="email" [(ngModel)]="user.email" name="email" placeholder="email@example.com" required />
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="cancel-btn" (click)="showProfileModal = false">Cancel</button>
-                <button type="submit" class="save-btn">Update Profile</button>
-              </div>
-              <p class="last-updated">Last Updated: {{ user.lastUpdated.toISOString().split('T')[0] }}</p>
-            </form>
-          </div>
-        </div>
-      </div>
+    @if(showProfileModal){
+      <app-modal-form
+          [config]="editProfileModalConfig"
+          [fields]="profileModalFields"
+          (submitted)="onUpdateProfile($event)"
+          (cancelled)="showProfileModal = false"
+          (backdropClicked)="showProfileModal = false"
+      >
+      </app-modal-form>
     }
   `,
-  styles: `
-    .admin-topbar { background: white; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.07); position: sticky; top: 0; z-index: 50; }
-    .admin-topbar h1 { font-size: 20px; font-weight: 700; color: #1e293b; margin: 0; }
-    .topbar-user { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-    .user-badge { background: linear-gradient(90deg, #0d6efd, #0a58ca); color: white; border-radius: 20px; font-size: 14px; font-weight: 600; }
-    .user-name { font-weight: 600; color: #374151; font-size: 14px; text-transform: capitalize; }
-    .admin-content { padding: 28px 32px; flex: 1; }
-  `,
-  imports: [TitleCasePipe, FormsModule]
+  
+  imports: [TitleCasePipe, FormsModule, ModalFormComponent]
 })
 export class TopPanelComponent {
   // TODO: fetch the user details from the service
@@ -141,6 +98,56 @@ export class TopPanelComponent {
     email: 'abc@asd.com',
     lastUpdated: new Date(),
   };
+
+  editProfileModalConfig: ModalConfig = {
+      title: 'Edit Profile',
+      submitButtonText: 'Edit Profile',
+      cancelButtonText: 'Cancel',
+      size: 'small',
+      mode: 'create',
+    }
+    
+    profileModalFields: FormField[] = [
+      {
+        key: 'name',
+        label: 'Name',
+        type: 'text',
+        required:true
+      },
+      {
+        key: 'gender',
+        label: 'Gender',
+        type: 'text',
+        required:true
+      },
+      {
+        key: 'address',
+        label: 'Address',
+        type: 'text',
+        required:true
+      },
+      {
+        key: 'city',
+        label: 'City',
+        type: 'text',
+        required:true
+      },
+      {
+        key: 'email',
+        label: 'Email',
+        type: 'email',
+        required:true,
+      },
+    ]
+
+  onUpdateProfile(event: ModalSubmitEvent): void {
+    if (!event.isValid) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+    console.log('Form submitted:', event.formData);
+    this.showProfileModal= false;
+  }
 
   updateProfile(): void {
     this.user.lastUpdated = new Date();
