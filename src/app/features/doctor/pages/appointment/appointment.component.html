@@ -1,64 +1,69 @@
 <div>
-  <!-- Appointments Tab -->
-  <div>
-    <div class="section-header">
-      <div>
-        <h2>Manage Appointments</h2>
-        <p>Schedule and track all hospital appointments</p>
-      </div>
-      <button class="add-btn" (click)="openAddAppointment()">+ New Appointment</button>
+<!-- Appointments Tab -->
+@if(loading()){
+  <div class="flex items-center justify-center min-h-screen">
+    <h1 class="absolute
+    -translate-x-1/2 
+    -translate-y-1/2 
+    text-3xl font-bold">
+        Loading...
+      </h1>
+    </div>
+   }
+@if (error()) {
+  <div class="flex flex-col items-center justify-center space-y-4 p-6 text-center">
+    <!-- Icon (Optional but recommended for UX) -->
+    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+      <span 
+          class="brand-icon inline-block cursor-pointer bg-red-900 w-[24px] h-[24px]"
+          style="
+            mask-image: url('close.svg'); 
+            -webkit-mask-image: url('close.svg');
+            mask-size: contain;
+            mask-repeat: no-repeat;
+          "
+        ></span>
     </div>
 
-    <app-data-table [columns]="appointmentColumns" [data]="appointments" [actions]="appointmentActions"
-      [emptyStateMessage]="'No appointments found'"
-      (actionTriggered)="onTableAction($event, 'appointment')"></app-data-table>
-  </div>
-
-  <!-- Appointment Modal -->
-  @if(showAppointmentModal){
-  <div class="modal-overlay" (click)="showAppointmentModal = false">
-    <div class="modal-box" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>{{ isEditMode ? 'Edit Appointment' : 'New Appointment' }}</h3>
-        <button class="modal-close" (click)="showAppointmentModal = false">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="form-field">
-            <label>Patient Name</label>
-            <input type="text" (ngModel)="editingAppointment.patient" placeholder="Patient name" />
-          </div>
-          <div class="form-field">
-            <label>Doctor</label>
-            <select (ngModel)="editingAppointment.doctor">
-              <option value="">Select Doctor</option>
-              <option *ngFor="let d of doctorNames" [value]="d">{{ d }}</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label>Date</label>
-            <input type="date" (ngModel)="editingAppointment.date" />
-          </div>
-          <div class="form-field">
-            <label>Time</label>
-            <input type="text" (ngModel)="editingAppointment.time" placeholder="e.g. 09:00 AM" />
-          </div>
-        </div>
-        <div class="form-field">
-          <label>Status</label>
-          <select (ngModel)="editingAppointment.status">
-            <option value="Scheduled">Scheduled</option>
-            <option value="Completed">Completed</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="cancel-btn" (click)="showAppointmentModal = false">Cancel</button>
-        <button class="save-btn" (click)="saveAppointment()">{{ isEditMode ? 'Update' : 'Schedule' }}</button>
-      </div>
+    <div class="max-w-xs">
+      <h3 class="text-lg font-semibold text-gray-900">Connection Error</h3>
+      <p class="text-sm text-gray-500 mt-1 leading-relaxed">
+        {{ error() }}
+      </p>
     </div>
+
+    <button 
+      (click)="loadAppointments()" 
+      class="mt-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors">
+      Retry Connection
+    </button>
   </div>
+}
+  @else {
+    <div>
+      <div class="section-header">
+        <div>
+          <h2>Manage Appointments</h2>
+          <p>Schedule and track all hospital appointments</p>
+        </div>
+        <button class="add-btn" (click)="openAddAppointment()">+ New Appointment</button>
+      </div>
+  
+      <app-data-table [columns]="appointmentColumns" [data]="appointments()" [actions]="appointmentActions"
+        [emptyStateMessage]="'No appointments found'"
+        (actionTriggered)="onAppointmentTableAction($event)"></app-data-table>
+    </div>
+  
+    <!-- Appointment Modal -->
+    @if(showAppointmentModal){
+      <app-modal-form
+        [config]="appointmentModalConfig"
+        [fields]="appointmentModalFields"
+        (submitted)="onSubmit($event)"
+        (cancelled)="showAppointmentModal = false"
+        (backdropClicked)="showAppointmentModal = false"
+      >
+      </app-modal-form>
+    }
   }
+</div>

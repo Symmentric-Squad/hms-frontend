@@ -1,5 +1,3 @@
-import { ValidatorFn } from '@angular/forms';
-
 export interface FormField {
   key: string;                                    // Object property key
   label: string;                                  // Field label

@@ -15,6 +15,7 @@ export class PublicService {
 
   // GET /api/users/:id
   getUserById(id: number): Observable<UserResponse> {
+    
     return this.http.get<UserResponse>(`${this.baseUrl}/users/${id}`);
   }
 
