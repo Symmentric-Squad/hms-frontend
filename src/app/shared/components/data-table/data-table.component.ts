@@ -11,7 +11,7 @@ import { RowActionEvent, TableAction, TableColumn } from '../../models/data-tabl
       <table class="w-full border-collapse text-sm">
         <thead>
           <tr class="bg-[var(--brand-accent)]">
-            <th class="px-4 py-3 text-left font-bold text-gray-700">#</th>
+            <!-- <th class="px-4 py-3 text-left font-bold text-gray-700">S.No</th> -->
             @for(col of columns; track $index) {
               <th
                 class="px-4 py-3 text-left font-bold text-gray-700"
@@ -33,7 +33,7 @@ import { RowActionEvent, TableAction, TableColumn } from '../../models/data-tabl
                 [style]="{ 'border-bottom-color': 'var(--brand-accent-hover)' }"
               >
               <!-- Index Column -->
-              <td class="px-4 py-3 font-semibold text-gray-600">{{ $index + 1 }}</td>
+              <!-- <td class="px-4 py-3 font-semibold text-gray-600">{{ $index + 1 }}</td> -->
 
             <!-- Data Columns -->
              @for(col of columns;track $index) {
@@ -64,15 +64,25 @@ import { RowActionEvent, TableAction, TableColumn } from '../../models/data-tabl
                <div class="flex gap-2 flex-wrap">
                 @for(action of actions; track $index) {
                   <button
-                  class="px-3 py-1 rounded text-xs font-semibold border-none cursor-pointer whitespace-nowrap hover:opacity-80"
-                  [ngClass]="getActionButtonClass(action.actionColor)"
-                  (click)="onActionClick(action.id, row)"
+                    class="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold border-none cursor-pointer whitespace-nowrap hover:opacity-90"
+                    [ngClass]="getActionButtonClass(action.actionColor)"
+                    (click)="onActionClick(action.id, row)"
                   >
-                  @if(action.icon){
-                    <span class="mr-1">{{ action.icon }}</span>
-                  }
-                  {{ action.label }}
-                </button>
+                    @if(action.icon){
+                      <span 
+                        [style.mask-image]="'url(' + action.icon + ')'"
+                        [style.webkit-mask-image]="'url(' + action.icon + ')'"
+                        [style.background-color]="action.actionColor"
+                        class="brand-icon inline-block w-[14px] h-[14px] shrink-0"
+                        style="
+                          mask-size: contain;
+                          mask-repeat: no-repeat;
+                          mask-position: center;
+                        "
+                      ></span> 
+                    }
+                    <span>{{ action.label }}</span>
+                  </button>
               }
               </div>
             </td>

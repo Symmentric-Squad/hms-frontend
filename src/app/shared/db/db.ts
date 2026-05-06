@@ -34,3 +34,19 @@ export const activeTab: 'dashboard' | 'doctors' | 'patients' | 'appointments' = 
     { id: 4, patientName: 'Deepa Krishnan', bloodPressure: 'Dr. Shalini Rao', weight: 65, bloodSugar: 95, bodyTemp: 36, medicalPrescription: 'Inhaler, Avoid allergens', reportDate: '2026-04-21' },
     { id: 5, patientName: 'Anand Velu', bloodPressure: 'Dr. Vikram Patel', weight: 70, bloodSugar: 105, bodyTemp: 37, medicalPrescription: 'Medication D, Nasal spray', reportDate: '2026-04-19' },
   ];
+
+  
+export interface Specialisation{
+    id:number;
+    specialization: string;
+    creationDate: string;
+    updationDate: string;
+}
+
+  export const specialisations: Specialisation[] = [
+    {id: 1,specialization: "Cardiology",creationDate: new Date().toISOString(),updationDate: new Date().toISOString()},
+    {id: 2,specialization: "Neurology",creationDate: new Date().toISOString(),updationDate: new Date().toISOString()},
+    {id: 3,specialization: "Orthopedics",creationDate: new Date().toISOString(),updationDate: new Date().toISOString()},
+    {id: 4,specialization: "Pediatrics",creationDate: new Date().toISOString(),updationDate: new Date().toISOString()},
+    {id: 5,specialization: "Cardiology",creationDate: new Date().toISOString(),updationDate: new Date().toISOString()}
+  ]

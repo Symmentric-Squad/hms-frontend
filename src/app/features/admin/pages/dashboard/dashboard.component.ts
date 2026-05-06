@@ -12,16 +12,16 @@ export class AdminDashboardPage {
   appointments = appointments;
   patients = patients;
   reports = reports;
-  //TODO: change the card details as per doctor
+  //TODO: change the card details as per admin
   cardDetails: DashboardCardStats[] = [
     {
-        icon: "doctor.svg",
+        icon: "steth.svg",
         value: this.stats.totalDoctors,
         label: "Total Doctors",
         FocusedStatus: "Active",
         StatusCount: 4,
         cardColor: "blue",
-        link: '/doctor'
+        link: '/admin/doctors'
     },
     {
         icon: "patient.svg",
@@ -30,7 +30,7 @@ export class AdminDashboardPage {
         FocusedStatus: "Active",
         StatusCount: 4,
         cardColor: "green",
-        link: '/doctor'
+        link: '/admin/patients'
     },
     {
         icon: "calender.svg",
@@ -39,7 +39,7 @@ export class AdminDashboardPage {
         FocusedStatus: "Completed",
         StatusCount: 4,
         cardColor: "orange",
-        link: '/doctor'
+        link: '/admin/appointments'
       },
       {
         icon: "tick_file.svg",
@@ -47,7 +47,7 @@ export class AdminDashboardPage {
         label: "Total Reports",
         FocusedStatus: "All time",
         cardColor: "red",
-        link: '/doctor'
+        link: '/admin/reports'
     }
   ]
 

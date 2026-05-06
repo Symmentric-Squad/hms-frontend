@@ -28,6 +28,10 @@ export class SidebarComponent {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
+  togglelogout(){
+    console.log("LOGOUT")
+  }
+
   logout() {
     this.auth.clearCurrentUser();
     this.router.navigate(['/'], { replaceUrl: true });

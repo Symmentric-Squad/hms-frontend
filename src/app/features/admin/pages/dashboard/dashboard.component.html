@@ -12,7 +12,7 @@
   <div class="dash-panel">
     <div class="panel-header">
       <h3>Recent Appointments</h3>
-      <button class="view-all-btn">View All →</button>
+      <button class="view-all-btn" routerLink="/admin/appointments">View All →</button>
     </div>
     <table class="data-table">
       <thead>
@@ -38,8 +38,8 @@
 
   <div class="dash-panel">
     <div class="panel-header">
-      <h3>Dcotor Overview</h3>
-      <button class="view-all-btn">View All →</button>
+      <h3>Doctor Overview</h3>
+      <button class="view-all-btn" routerLink="/admin/doctors">View All →</button>
     </div>
     <div class="doctor-list">
       <div class="doctor-item" *ngFor="let doctor of doctors">

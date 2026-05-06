@@ -28,24 +28,24 @@ export class AdminReportsPage {
     {
       id: 'view',
       label: 'View',
-      icon: '👁️',
-      type: 'primary',
+      icon: 'eye.svg',
+      type: 'secondary',
       actionColor: 'gray'
     },
     {
       id: 'edit',
       label: 'Edit',
-      icon: '✏️',
+      icon: 'edit.svg',
       type: 'primary',
       actionColor: 'blue'
     },
     {
       id: 'delete',
       label: 'Delete',
-      icon: '🗑️',
+      icon: 'trash.svg',
       type: 'danger',
       actionColor: 'red'
-    },
+    }
   ];
 
   showReportModal = false;

@@ -3,6 +3,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { appointments, doctors, patients } from '../../../../shared/db/db';
 import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
 import { Action } from 'rxjs/internal/scheduler/Action';
+import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
 
 
 
@@ -37,82 +38,78 @@ export class AdminAppointmentsPage {
   ];
 
   appointmentActions: TableAction[] = [
-    { id: 'edit', label: 'Edit', icon: '✏️', type: 'primary', actionColor: 'blue' },
-    { id: 'cancel', label: 'Cancel', icon: '🗑️', type: 'danger', actionColor: 'red' },
-  ];
-
-  doctorColumns: TableColumn[] = [
-    { key: 'name', label: 'Name' },
-    { key: 'specialty', label: 'Specialty' },
-    { key: 'phone', label: 'Phone' },
-    { key: 'email', label: 'Email' },
-    {
-      key: 'status',
-      label: 'Status',
-      type: 'badge',
-      tagColors: {
-        'Active': { bg: '#d1fae5', text: '#065f46' },
-        'Inactive': { bg: '#fee2e2', text: '#991b1b' },
-      },
+        {
+      id: 'view',
+      label: 'View',
+      icon: 'eye.svg',
+      type: 'secondary',
+      actionColor: 'gray'
     },
-  ];
-
-  doctorActions: TableAction[] = [
     {
       id: 'edit',
       label: 'Edit',
-      icon: '✏️',
+      icon: 'edit.svg',
       type: 'primary',
       actionColor: 'blue'
     },
     {
       id: 'delete',
       label: 'Delete',
-      icon: '🗑️',
+      icon: 'trash.svg',
       type: 'danger',
       actionColor: 'red'
-    },
+    }
   ];
 
-  patientColumns: TableColumn[] = [
-    { key: 'name', label: 'Name' },
-    { key: 'age', label: 'Age' },
-    { key: 'phone', label: 'Phone' },
-    { key: 'bloodGroup', label: 'Blood Group' },
-    { key: 'doctor', label: 'Doctor' },
+  appointmentModalConfig: ModalConfig = {
+    title: 'Add Appointment',
+    submitButtonText: 'Save Details',
+    cancelButtonText: 'Cancel',
+    size: 'medium',
+    mode: 'create',
+  }
+
+  appointmentModalFields: FormField[] = [
+    {
+      key: 'patient name',
+      label: 'Patient Name',
+      type: 'text',
+      required:true
+    },
+    {
+      key: 'doctor',
+      label: 'Doctor Name',
+      type: 'text',
+      required:true
+    },
+    {
+      key: 'date',
+      label: 'Appointment Date',
+      type: 'date',
+      required:true
+    },
+    {
+      key: 'time',
+      label: 'Appointment Time',
+      type: 'time',
+      required:true
+    },
     {
       key: 'status',
       label: 'Status',
-      type: 'badge',
-      tagColors: {
-        'Active': { bg: '#d1fae5', text: '#065f46' },
-        'Discharged': { bg: '#fef3c7', text: '#92400e' },
-      },
+      type: 'select',
+      required:true,
+      options: [
+        {label:"Scheduled", value: "Scheduled"},
+        {label:"Completed", value: "Completed"},
+        {label:"Cancelled", value: "Cancelled"},
+      ]
     },
-  ];
+    
+  ]
 
-  patientActions: TableAction[] = [
-    {
-      id: 'edit',
-      label: 'Edit',
-      icon: '✏️',
-      type: 'primary',
-      actionColor: 'blue'
-    },
-    {
-      id: 'delete',
-      label: 'Delete',
-      icon: '🗑️',
-      type: 'danger',
-      actionColor: 'red'
-    },
-  ];
 
-  showDoctorModal = false;
-  showPatientModal = false;
   showAppointmentModal = false;
-  editingDoctor: Partial<Doctor> = {};
-  editingPatient: Partial<Patient> = {};
   editingAppointment: Partial<Appointment> = {};
   isEditMode = false;
 
@@ -120,13 +117,26 @@ export class AdminAppointmentsPage {
   get recentAppointments() { return this.appointments.slice(0, 4); }
   get doctorNames() { return this.doctors.map(d => d.name); }
 
+  onSubmit(event: ModalSubmitEvent): void {
+    if (!event.isValid) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+    console.log('Form submitted:', event.formData);
+    this.showAppointmentModal = false;
+  }
+
   openAddAppointment() { 
     console.log('Opening add appointment modal');
     this.editingAppointment = { status: 'Scheduled' };
     this.isEditMode = false;
     this.showAppointmentModal = true;
   }
-  openEditAppointment(a: Appointment) { this.editingAppointment = { ...a }; this.isEditMode = true; this.showAppointmentModal = true; }
+  openEditAppointment(a: Appointment) {
+    this.editingAppointment = { ...a };
+    this.isEditMode = true;
+    this.showAppointmentModal = true;
+  }
   saveAppointment() {
     if (this.isEditMode) {
       const idx = this.appointments.findIndex(a => a.id === this.editingAppointment.id);
@@ -136,56 +146,20 @@ export class AdminAppointmentsPage {
     }
     this.showAppointmentModal = false;
   }
-  deleteAppointment(id: number) { if (confirm('Cancel this appointment?')) this.appointments = this.appointments.filter(a => a.id !== id); }
-
-  // Handle table actions
-  onTableAction(event: RowActionEvent, type: 'appointment' | 'doctor' | 'patient'): void {
-    const { action, rowData } = event;
-
-    switch (type) {
-      case 'appointment':
-        this.handleAppointmentAction(action, rowData);
-        break;
-      // case 'doctor':
-      //   this.handleDoctorAction(action, rowData);
-      //   break;
-      // case 'patient':
-      //   this.handlePatientAction(action, rowData);
-      //   break;
+  deleteAppointment(id: number) {
+    if (confirm('Cancel this appointment?')){
+      this.appointments = this.appointments.filter(a => a.id !== id);
     }
   }
 
-  private handleAppointmentAction(action: string, rowData: Appointment): void {
+  onAppointmentTableAction(event: RowActionEvent): void {
+    const { action, rowData } = event;
     if (action === 'edit') {
       this.openEditAppointment(rowData);
     } else if (action === 'cancel') {
       this.deleteAppointment(rowData.id);
     }
   }
-
-  // private handleDoctorAction(action: string, rowData: Doctor): void {
-  //   if (action === 'edit') {
-  //     this.editingDoctor = { ...rowData };
-  //     this.isEditMode = true;
-  //     this.showDoctorModal = true;
-  //   } else if (action === 'delete') {
-  //     if (confirm(`Delete doctor ${rowData.name}?`)) {
-  //       this.doctors = this.doctors.filter(d => d.id !== rowData.id);
-  //     }
-  //   }
-  // }
-
-  // private handlePatientAction(action: string, rowData: Patient): void {
-  //   if (action === 'edit') {
-  //     this.editingPatient = { ...rowData };
-  //     this.isEditMode = true;
-  //     this.showPatientModal = true;
-  //   } else if (action === 'delete') {
-  //     if (confirm(`Delete patient ${rowData.name}?`)) {
-  //       this.patients = this.patients.filter(p => p.id !== rowData.id);
-  //     }
-  //   }
-  // }
 
   constructor(private auth: AuthService) {}
 }

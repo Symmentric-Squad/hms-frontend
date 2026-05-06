@@ -37,20 +37,27 @@ export class DoctorAppointmentsPage {
   ];
 
   appointmentActions: TableAction[] = [
+    // {
+    //   id: 'view',
+    //   label: 'View',
+    //   icon: 'eye.svg',
+    //   type: 'secondary',
+    //   actionColor: 'gray'
+    // },
     {
       id: 'edit',
       label: 'Edit',
-      icon: '✏️',
+      icon: 'edit.svg',
       type: 'primary',
       actionColor: 'blue'
     },
     {
-      id: 'cancel',
-      label: 'Cancel',
-      icon: '🗑️',
+      id: 'delete',
+      label: 'Delete',
+      icon: 'trash.svg',
       type: 'danger',
       actionColor: 'red'
-    },
+    }
   ];
 
   doctorColumns: TableColumn[] = [

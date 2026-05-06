@@ -4,8 +4,8 @@
           class="brand-icon inline-block cursor-pointer bg-white w-[24px] h-[24px]"
           (click)="toggleSidebar()"
           style="
-            mask-image: url('hospital.svg'); 
-            -webkit-mask-image: url('hospital.svg');
+            mask-image: url('hospital_2.svg'); 
+            -webkit-mask-image: url('hospital_2.svg');
             mask-size: contain;
             mask-repeat: no-repeat;
           "
@@ -33,7 +33,16 @@
 
         <div class="sidebar-footer">
           <button class="logout-btn" (click)="logout()" [title]="'Logout'">
-            <span class="nav-icon">🚪</span>
+            <span 
+              class="brand-icon inline-block cursor-pointer bg-red-600 w-[24px] h-[24px]"
+              (click)="togglelogout()"
+              style="
+                mask-image: url('logout.svg'); 
+                -webkit-mask-image: url('logout.svg');
+                mask-size: contain;
+                mask-repeat: no-repeat;
+              "
+            ></span>
             <span class="nav-label" *ngIf="!isSidebarCollapsed">Logout</span>
           </button>
         </div>
