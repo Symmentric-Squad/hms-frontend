@@ -29,9 +29,9 @@ export const routes: Routes = [
         path: 'register',
         component: RegisterComponent
       },
-      {
-        path: '**',
-        loadComponent: () => import('./shared/pages/not-found/not-found.component')
-        .then(m => m.NotFoundComponent)
-      }
+      // {
+      //   path: '**',
+      //   loadComponent: () => import('./shared/pages/not-found/not-found.component')
+      //   .then(m => m.NotFoundComponent)
+      // }
 ];

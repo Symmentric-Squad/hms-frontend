@@ -1,14 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { patients, doctors } from '../../../../shared/db/db';
-import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
-import { Router } from '@angular/router';
-import { PublicService } from '../../../../core/services/public.service';
-import { DoctorService } from '../../service/doctor.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { RowActionEvent } from '../../../../shared/models/data-table.models';
+import { ModalSubmitEvent } from '../../../../shared/models/form.models';
 import { CreatePatientRequest, PatientResponse } from '../../models/doctor.model';
-import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
+import { DoctorService } from '../../service/doctor.service';
+import { patientActions, patientColumns, patientModalConfig, patientModalFields } from './patient.config';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -18,8 +15,6 @@ import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/mod
   styleUrl: '../../../../../styles.css',
 })
 export class DoctorPatientsPage {
-
-  private readonly patientService = inject(PublicService);
   private readonly doctorPatientService = inject(DoctorService);
   private readonly auth = inject(AuthService);
 
@@ -30,6 +25,8 @@ export class DoctorPatientsPage {
   ngOnInit(): void {
     this.loadPatients();
   }
+
+  constructor (private router: Router) {}
 
   // ── Load 
   loadPatients(doctorId: number = 1): void {
@@ -67,57 +64,10 @@ export class DoctorPatientsPage {
   }
 
   // Table Configuration
-  patientColumns: TableColumn[] = [
-    // { key: "doctorId", label: "Doctor Id" },
-    { key: "patientName", label: "Patient Name" },
-    { key: "patientContactNo", label: "Patient Contact No" },
-    // { key: "patientEmail", label: "Patient Email" },
-    { key: "patientGender", label: "Patient Gender" },
-    // { key: "patientAddress", label: "Patient Address" },
-    { key: "patientAge", label: "Patient Age" },
-    { key: "patientMedicalHistory", label: "Patient Medical History" },
-    // { key: "creationDate", label: "Creation Date" },
-    // { key: "updationDate", label: "Updation Date" }
-
-    // { key: 'name', label: 'Name' },
-    // { key: 'age', label: 'Age' },
-    // { key: 'phone', label: 'Phone' },
-    // { key: 'bloodGroup', label: 'Blood Group' },
-    // { key: 'doctor', label: 'Assigned Doctor' },
-    // {
-    //   key: 'status',
-    //   label: 'Status',
-    //   type: 'badge',
-    //   tagColors: {
-    //     'Admitted': { bg: '#d1fae5', text: '#065f46' },
-    //     'Discharged': { bg: '#fef3c7', text: '#92400e' },
-    //   },
-    // },
-  ];
-
-  patientActions: TableAction[] = [
-    // { id: 'view', label: 'View', icon: 'eye.svg', type: 'secondary', actionColor: 'gray' },
-    // { id: 'edit', label: 'Edit', icon: 'edit.svg', type: 'primary', actionColor: 'blue'},
-    // { id: 'delete', label: 'Delete', icon: 'trash.svg', type: 'danger', actionColor: 'red'}
-  ];
-
-  patientModalConfig: ModalConfig = {
-    title: 'Add Patient',
-    submitButtonText: 'Save Patient',
-    cancelButtonText: 'Cancel',
-    size: 'medium',
-    mode: 'create',
-  }
-
-  patientModalFields: FormField[] = [
-    { key: "fullName", label: "Full Name",type: 'text',required: true },
-    { key: "email", label: "E Mail",type: 'email',required: true },
-    { key: "password", label: "Password",type: 'text',required: true },
-    { key: "gender", label: "Gender",type: 'text',required: true },
-    { key: "address", label: "Address",type: 'text',required: true },
-    { key: "city", label: "City",type: 'text',required: true }
-  ]
-
+  patientColumns = patientColumns;
+  patientActions = patientActions;
+  patientModalConfig = patientModalConfig;
+  patientModalFields = patientModalFields;
 
   showPatientModal = false;
   editingPatient: Partial<PatientResponse> = {};
@@ -137,12 +87,26 @@ export class DoctorPatientsPage {
   }
 
   onPatientTableAction(event: RowActionEvent): void {
-    const { action, rowData } = event;
-    console.log(rowData)
-    if (action === 'edit') {
+  const { action, rowData } = event;
+
+  switch (action) {
+    case 'edit':
       this.editingPatient = { ...rowData };
       this.showPatientModal = true;
-    }
-    // TODO: implement delete and view features
+      break;
+
+    case 'view':
+      const patientId = rowData.patientId; 
+      
+      if (patientId) {
+        this.router.navigate(['/doctor/patient', patientId]);
+      } else {
+        console.error('Patient ID is missing in rowData', rowData);
+      }
+      break;
+
+    default:
+      console.warn(`Unhandled action type: ${action}`);
   }
+}
 }

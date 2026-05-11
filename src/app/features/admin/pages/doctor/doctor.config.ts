@@ -1,4 +1,5 @@
 import { TableAction, TableColumn } from "../../../../shared/models/data-table.models";
+import { FormField, ModalConfig } from "../../../../shared/models/form.models";
 
 
 // Table Configuration
@@ -21,3 +22,20 @@ export var doctorActions: TableAction[] = [
     { id: 'edit', label: 'Edit', icon: 'edit.svg', type: 'primary', actionColor: 'blue' },
     { id: 'delete', label: 'Delete', icon: 'trash.svg', type: 'danger', actionColor: 'red' }
 ];
+
+export var doctorModalConfig: ModalConfig = {
+    title: 'Add Doctor',
+    submitButtonText: 'Save Doctor',
+    cancelButtonText: 'Cancel',
+    size: 'medium',
+    mode: 'create',
+}
+
+export var doctorModalFields: FormField[] = [
+    { key: "specializationId", label: "specializationId", type: 'text', required: true },
+    { key: "doctorName", label: "doctorName", type: 'email', required: true },
+    { key: "address", label: "address", type: 'text', required: true },
+    { key: "doctorFees", label: "doctorFees", type: 'text', required: true },
+    { key: "doctorEmail", label: "doctorEmail", type: 'text', required: true },
+    { key: "contactNo", label: "contactNo", type: 'text', required: true }
+]

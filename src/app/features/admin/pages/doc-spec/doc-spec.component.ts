@@ -33,8 +33,8 @@ export class AdminSpecialisationPage {
   }
   
   showSpecializationModal = false;
-  specializationModalData: Partial<SpecializationRequest> = {};
-  isEditMode = signal(false);
+  specializationModalData: Partial<SpecializationRequest> | null = null;
+  editingId = signal<number | null>(null);
 
   // ── Load 
   loadSpecialization(): void {
@@ -64,68 +64,66 @@ export class AdminSpecialisationPage {
     });
   }
 
-  // ── Book 
-  addSpecialization(request: SpecializationRequest): void {
-    this.loading.set(true);
+openAddSpecialization(): void {
+  this.specializationModalData = null;   // clears form via ngOnChanges
+  this.editingId.set(null);
+  this.showSpecializationModal = true;
+}
 
-    this.adminSpecializationService.createSpecialization(request).subscribe({
-      next: (newSpecialization) => {
-        this.specializations.update((prev) => [...prev, newSpecialization]);
-        this.loading.set(false);
-        this.showSpecializationModal = false;
-      },
-      error: () => {
-        this.error.set('Failed to Book Appointment');
-        this.loading.set(false);
-      },
-    });
+onSubmit(event: ModalSubmitEvent): void {
+  if (!event.isValid) {
+    alert('Please fill in all required fields.');
+    return;
   }
 
-  // ── Edit
-  editspecialization(id: number = 1, request: SpecializationRequest){
-    this.loading.set(true);
-    this.adminSpecializationService.updateSpecialization(id,request).subscribe({
-      next: (newSpecialization) => {
-        this.specializations.update((prev) => [...prev, newSpecialization]);
-        this.loading.set(false);
-        this.showSpecializationModal = false;
-      },
-      error: () => {
-        this.error.set('Failed to Book Appointment');
-        this.loading.set(false);
-      },
-    });
-  }
-
-  // ── Modal state
-
-  openAddSpecialization(): void {
-    this.specializationModalData = {};
-    this.showSpecializationModal = true;
-  }
-
-  onSubmit(event: ModalSubmitEvent): void {
-    if (!event.isValid) {
-      alert('Please fill in all required fields.');
-      return;
-    }
-
-    // if(this.isEditMode()){
-    //   this.editspecialization(event.formData as SpecializationRequest);
-    // }
-
+  const id = this.editingId();
+  if (id !== null) {
+    this.editSpecialization(id, event.formData as SpecializationRequest);
+  } else {
     this.addSpecialization(event.formData as SpecializationRequest);
   }
+}
 
-  // ── Row actions
-  onDocSpecTableAction(event: RowActionEvent): void {
-    const { action, rowData } = event;
-    console.log(rowData)
-    if (action === 'edit') {
-      this.specializationModalData = { ...rowData };
-      this.isEditMode.set(true);
-      this.showSpecializationModal = true;
-    }
+addSpecialization(request: SpecializationRequest): void {
+  this.loading.set(true);
+  this.adminSpecializationService.createSpecialization(request).subscribe({
+    next: (newSpec) => {
+      this.specializations.update((prev) => [...prev, newSpec]);
+      this.loading.set(false);
+      this.showSpecializationModal = false;
+    },
+    error: () => {
+      this.error.set('Failed to Add Specialization');
+      this.loading.set(false);
+    },
+  });
+}
+
+editSpecialization(id: number, request: SpecializationRequest): void {
+  // this.loading.set(true);
+  // this.adminSpecializationService.updateSpecialization(id, request).subscribe({
+  //   next: (updated) => {
+  //     // replace the item in the list instead of appending
+  //     this.specializations.update((prev) =>
+  //       prev.map((s) => (s.id === id ? updated : s))
+  //     );
+  //     this.loading.set(false);
+  //     this.showSpecializationModal = false;
+  //   },
+  //   error: () => {
+  //     this.error.set('Failed to Update Specialization');
+  //     this.loading.set(false);
+  //   },
+  // });
+}
+
+onDocSpecTableAction(event: RowActionEvent): void {
+  const { action, rowData } = event;
+  if (action === 'edit') {
+    this.editingId.set(rowData.id);
+    this.specializationModalData = { ...rowData }; // pre-fills form
+    this.showSpecializationModal = true;
   }
+}
 
 }

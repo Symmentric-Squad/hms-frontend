@@ -4,7 +4,8 @@ import { doctors } from '../../../../shared/db/db';
 import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
 import { AdminService } from '../../service/admin.service';
 import { CreateDoctorRequest, DoctorResponse } from '../../models/admin.model';
-import { doctorActions, doctorColumns } from './doctor.config';
+import { doctorActions, doctorColumns, doctorModalConfig, doctorModalFields } from './doctor.config';
+import { ModalSubmitEvent } from '../../../../shared/models/form.models';
 
 @Component({
   selector: 'app-admin-doctor',
@@ -13,100 +14,114 @@ import { doctorActions, doctorColumns } from './doctor.config';
   styleUrl: '../../../../../styles.css',
 })
 export class AdminDoctorsPage {
-
   private readonly adminService = inject(AdminService);
 
   doctors = signal<DoctorResponse[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+  editingId = signal<number | null>(null);
 
   doctorColumns = doctorColumns;
   doctorActions = doctorActions;
+  doctorModalConfig = doctorModalConfig;
+  doctorModalFields = doctorModalFields;
+
+  // ── Modal state
+  showDoctorModal = false;
+  isViewMode = signal(false);
+  doctorModalData: Partial<DoctorResponse> | null = null;
 
   ngOnInit(): void {
     this.loadDoctors();
   }
 
-  loadDoctors():void {
+  // ── Load
+  loadDoctors(): void {
     this.loading.set(true);
     this.error.set(null);
-
     this.adminService.getAllDoctors().subscribe({
-      next: (data) => {
-        this.doctors.set(data);
-        console.log(data)
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set('Failed to Load Reports');
-        this.loading.set(false);
-      },
+      next: (data) => { this.doctors.set(data); this.loading.set(false); },
+      error: () => { this.error.set('Failed to Load Doctors'); this.loading.set(false); },
     });
   }
 
-  // ── Add 
-  // addDoctor(request: CreateDoctorRequest): void {
-  //   this.loading.set(true);
-
-  //   console.log("req",request)
-
-  //   this.adminService.createPatient(request).subscribe({
-  //     next: (newPatient) => {
-  //       console.log(newPatient)
-  //       this.doctors.update((prev) => [...prev, newPatient]);
-  //       this.loading.set(false);
-  //       this.showPatientModal = false;
-  //     },
-  //     error: () => {
-  //       this.error.set('Failed to Add Patient');
-  //       this.loading.set(false);
-  //     },
-  //   });
-  // }
-
-  
-
-  showDoctorModal = false;
-  editingDoctor: Partial<Doctor> = {};
-  isEditMode = false;
-
-  openAddDoctor(): void {
-    this.editingDoctor = { status: 'Active' };
-    this.isEditMode = false;
-    this.showDoctorModal = true;
+  // ── Add
+  addDoctor(request: CreateDoctorRequest): void {
+    this.loading.set(true);
+    this.adminService.createDoctor(request).subscribe({
+      next: (newDoctor) => {
+        this.doctors.update((prev) => [...prev, newDoctor]);
+        this.loading.set(false);
+        this.showDoctorModal = false;
+      },
+      error: () => { this.error.set('Failed to Add Doctor'); this.loading.set(false); },
+    });
   }
 
-  openEditDoctor(d: Doctor): void {
-    this.editingDoctor = { ...d };
-    this.isEditMode = true;
-    this.showDoctorModal = true;
+  // ── Edit
+  editDoctor(id: number, request: CreateDoctorRequest): void {
+    this.loading.set(true);
+    this.adminService.updateDoctor(id, request).subscribe({
+      next: (updated) => {
+        this.doctors.update((prev) =>
+          prev.map((d) => (d.id === id ? updated : d))
+        );
+        this.loading.set(false);
+        this.showDoctorModal = false;
+      },
+      error: () => { this.error.set('Failed to Update Doctor'); this.loading.set(false); },
+    });
   }
 
-  saveDoctor(): void {
-    // if (this.isEditMode) {
-    //   const idx = this.doctors.findIndex(d => d.id === this.editingDoctor.id);
-    //   if (idx > -1) {
-    //     this.doctors[idx] = { ...this.doctors[idx], ...this.editingDoctor } as Doctor;
-    //   }
-    // } else {
-    //   this.doctors.push({ ...this.editingDoctor, id: Date.now() } as Doctor);
-    // }
-    // this.showDoctorModal = false;
-  }
-
+  // ── Delete
   deleteDoctor(id: number): void {
-    // if (confirm('Delete this doctor?')) {
-    //   this.doctors = this.doctors.filter(d => d.id !== id);
-    // }
+    // if (!confirm('Delete this doctor?')) return;
+    // this.adminService.deleteDoctor(id).subscribe({
+    //   next: () => {
+    //     this.doctors.update((prev) => prev.filter((d) => d.id !== id));
+    //   },
+    //   error: () => this.error.set('Failed to Delete Doctor'),
+    // });
   }
 
+  // ── Open modal helpers
+  openAddDoctor(): void {
+    this.editingId.set(null);
+    this.isViewMode.set(false);
+    this.doctorModalData = null;       // clears form
+    this.showDoctorModal = true;
+  }
+
+  openEditDoctor(rowData: DoctorResponse): void {
+    this.editingId.set(rowData.id);
+    this.isViewMode.set(false);
+    this.doctorModalData = { ...rowData };
+    this.showDoctorModal = true;
+  }
+
+  openViewDoctor(rowData: DoctorResponse): void {
+    this.editingId.set(null);
+    this.isViewMode.set(true);
+    this.doctorModalData = { ...rowData };
+    this.showDoctorModal = true;
+  }
+
+  // ── Submit
+  onSubmit(event: ModalSubmitEvent): void {
+    if (!event.isValid) { alert('Please fill in all required fields.'); return; }
+    const id = this.editingId();
+    if (id !== null) {
+      this.editDoctor(id, event.formData as CreateDoctorRequest);
+    } else {
+      this.addDoctor(event.formData as CreateDoctorRequest);
+    }
+  }
+
+  // ── Row actions
   onTableAction(event: RowActionEvent): void {
     const { action, rowData } = event;
-
-    if (action === 'edit') {
-      this.openEditDoctor(rowData);
-    } else if (action === 'delete') {
-      this.deleteDoctor(rowData.id);
-    }
+    if (action === 'edit') this.openEditDoctor(rowData);
+    if (action === 'view') this.openViewDoctor(rowData);
+    // if (action === 'delete') this.deleteDoctor(rowData.id);
   }
 }

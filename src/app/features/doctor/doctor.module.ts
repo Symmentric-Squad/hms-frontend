@@ -12,6 +12,7 @@ import { DoctorReportsPage } from "./pages/report/report.component";
 import { DoctorPatientsPage } from "./pages/patient/patient.component";
 import { ModalFormComponent } from "../../shared/components/dialog-form/dialog-form.component";
 import { DashboardCard } from "../../shared/components/dashboard-card/dashboard-card.component";
+import { PatientDetails } from "./pages/patient-details/patient-details.component";
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { DashboardCard } from "../../shared/components/dashboard-card/dashboard-
     DoctorAppointmentsPage,
     DoctorPatientsPage,
     DoctorReportsPage,
+    PatientDetails
   ],
   imports: [
     ModalFormComponent,

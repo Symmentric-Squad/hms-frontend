@@ -31,9 +31,9 @@ const routes: Routes = [
         component: DoctorReportsPage
       },
       {
-        path: 'patients/:id',
+        path: 'patient/:id',
         component: PatientDetails
-      }
+      },
     ],
   },
 ];

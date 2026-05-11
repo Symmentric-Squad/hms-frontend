@@ -4,7 +4,7 @@
 </div>
 
 <div class="stat-grid">
-  @for(cardDetail of cardDetails; track $index){
+  @for(cardDetail of cardDetails(); track $index){
     <app-dashboard-card
       [cardStats] = cardDetail
     ></app-dashboard-card>
@@ -26,12 +26,12 @@
         </tr>
       </thead>
       <tbody>
-        @for(a of recentAppointments; track $index){
+        @for(a of appointments().slice(0,4); track $index){
           <tr>
-            <td>{{ a.patient }}</td>
-            <td>{{ a.doctor }}</td>
-            <td>{{ a.date }}</td>
-            <td><span class="status-badge" [class]="'status-' + a.status.toLowerCase()">{{ a.status }}</span></td>
+            <td>{{ a.patientName }}</td>
+            <td>{{ a.doctorName }}</td>
+            <td>{{ a.appointmentDate }}</td>
+            <td><span class="status-badge" [class]="'status-' + a.currentStatus">{{ a.status }}</span></td>
           </tr>
         }
       </tbody>
@@ -44,13 +44,13 @@
       <button class="view-all-btn" routerLink="/doctor/patients">View All →</button>
     </div>
     <div class="doctor-list">
-      <div class="doctor-item" *ngFor="let patient of patients">
-        <div class="doctor-avatar">{{ patient.name[0] }}</div>
+      <div class="doctor-item" *ngFor="let patient of patients()">
+        <div class="doctor-avatar">{{ patient.patientGender[0] }}</div>
         <div class="doctor-meta">
-          <span class="doctor-name">{{ patient.name }}</span>
-          <span class="doctor-specialty">{{ patient.doctor }}</span>
+          <span class="doctor-name">{{ patient.patientName }}</span>
+          <span class="doctor-specialty">Age : {{ patient.patientAge }}</span>
         </div>
-        <span class="status-badge" [class]="'status-' + patient.status.toLowerCase()">{{ patient.status }}</span>
+        <span class="status-badge">{{ patient.patientContactNo }}</span>
       </div>
     </div>
   </div>

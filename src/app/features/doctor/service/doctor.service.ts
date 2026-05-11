@@ -52,6 +52,11 @@ export class DoctorService {
     );
   }
 
+  //GET /api/appointments/user/:userId
+  getAppointmentHistory(userId: string): Observable<AppointmentResponse[]> {
+    return this.http.get<AppointmentResponse[]>(`${this.baseUrl}/appointments/user/${userId}`);
+  }
+
   // GET /api/patients/doctor/:doctorId
   getMyPatients(doctorId: number): Observable<PatientResponse[]> {
     return this.http.get<PatientResponse[]>(`${this.baseUrl}/patients/doctor/${doctorId}`);

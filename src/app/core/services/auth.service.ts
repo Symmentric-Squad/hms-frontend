@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { LoginRequest, LoginResponse, RegisterUserRequest, RegisterUserResponse } from '../models/auth.model';
+import { Router } from '@angular/router';
 
 
 
@@ -17,7 +18,7 @@ export class AuthService {
   }
   private baseUrl = 'http://localhost:8082/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   // POST /api/auth/users/register
   registerUser(request: RegisterUserRequest): Observable<RegisterUserResponse> {
@@ -54,6 +55,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.clear();
+    this.router.navigate(['./login']);
   }
 
   isLoggedIn(): boolean {

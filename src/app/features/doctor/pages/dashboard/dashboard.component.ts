@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { appointments, doctors, patients, reports } from '../../../../shared/db/db';
+import { Component,computed, inject, signal } from '@angular/core';
+import { DoctorService } from '../../service/doctor.service';
+import { AppointmentResponse, PatientResponse } from '../../models/doctor.model';
 
 @Component({
   selector: 'app-doctor-dashboard',
@@ -8,61 +9,69 @@ import { appointments, doctors, patients, reports } from '../../../../shared/db/
   styleUrl: '../../../../../styles.css'
 })
 export class DoctorDashboardPage {
-  doctors = doctors;
-  appointments = appointments;
-  patients = patients;
-  reports = reports
+
+  private readonly doctorService = inject(DoctorService);
+
+  appointments = signal<AppointmentResponse[]>([]);
+  patients = signal<PatientResponse[]>([]);
+  loading = signal(false);
+  error = signal<string | null>(null);
+
+  ngOnInit(){
+
+    this.loadAppointments();
+
+    this.loadPatients();
+  }
+
+  loadAppointments(doctorId: number = 1): void {
+    this.loading.set(true);
+    this.doctorService.getAppointments(doctorId).subscribe({
+      next: (data) => {
+        this.appointments.set(data);
+        console.log(data)
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Failed to Load Appointments');
+        this.loading.set(false);
+      },
+    });
+  }
+
+  loadPatients(doctorId: number = 1): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.doctorService.getMyPatients(doctorId).subscribe({
+      next: (data) => {
+        this.patients.set(data);
+        console.log(data)
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Failed to Load Reports');
+        this.loading.set(false);
+      },
+    });
+  }
+
   //TODO: change the card details as per doctor
-  cardDetails: DashboardCardStats[] = [
-    // {
-    //     icon: "doctor.svg",
-    //     value: this.stats.totalDoctors,
-    //     label: "Total Doctors",
-    //     FocusedStatus: "Active",
-    //     StatusCount: 4,
-    //     cardColor: "blue",
-    //     link: '/doctor'
-    // },
+  cardDetails = computed<DashboardCardStats[]>(() => [
     {
         icon: "patient.svg",
-        value: this.stats.totalPatients,
-        label: "Patients",
-        FocusedStatus: "Active",
-        StatusCount: 4,
+        value: this.patients().length,
+        label: "My Patients",
         cardColor: "green",
-        link: '/doctor'
+        link: '/doctor/patients'
     },
     {
         icon: "calender.svg",
-        value: this.stats.totalAppointments,
-        label: "Appointments",
-        FocusedStatus: "Completed",
-        StatusCount: 4,
+        value: this.appointments().length,
+        label: "My Appointments",
         cardColor: "orange",
-        link: '/doctor'
+        link: '/doctor/appointments'
       },
-    //   {
-    //     icon: "tick_file.svg",
-    //     value: this.stats.totalReports,
-    //     label: "Total Reports",
-    //     FocusedStatus: "All time",
-    //     cardColor: "red",
-    //     link: '/doctor'
-    // }
-  ]
+  ]);
 
-  get recentAppointments() { return this.appointments.slice(0, 4); }
-
-  get stats() {
-    return {
-      totalDoctors: this.doctors.length,
-      activeDoctors: this.doctors.filter(d => d.status === 'Active').length,
-      totalPatients: this.patients.length,
-      activePatients: this.patients.filter(p => p.status === 'Admitted').length,
-      totalAppointments: this.appointments.length,
-      scheduledAppointments: this.appointments.filter(a => a.status === 'Scheduled').length,
-      completedAppointments: this.appointments.filter(a => a.status === 'Completed').length,
-      totalReports: this.reports.length
-    };
-  }
 }

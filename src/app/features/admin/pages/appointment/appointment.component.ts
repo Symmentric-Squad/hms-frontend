@@ -39,7 +39,7 @@ export class AdminAppointmentsPage {
   }
 
   // ── Load 
-  loadAppointments(userId: number = 1): void {
+  loadAppointments(): void {
     this.loading.set(true);
     this.error.set(null);
 
@@ -104,10 +104,7 @@ export class AdminAppointmentsPage {
   onAppointmentTableAction(event: RowActionEvent): void {
     const { action, rowData } = event;
     console.log(rowData)
-    if (action === 'edit') {
-      this.editingAppointment = { ...rowData };
-      this.showAppointmentModal = true;
-    } else if (action === 'cancel') {
+    if (action === 'cancel') {
       this.cancelAppointment(rowData.appointmentId);
     }
   }
