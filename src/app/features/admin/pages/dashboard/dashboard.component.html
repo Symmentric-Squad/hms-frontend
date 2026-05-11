@@ -4,7 +4,7 @@
 </div>
 
 <div class="stat-grid">
-  @for(cardDetail of cardDetails; track $index){
+  @for(cardDetail of cardDetails(); track $index){
     <app-dashboard-card [cardStats]=cardDetail></app-dashboard-card>
   }
 </div>
@@ -14,26 +14,10 @@
       <h3>Recent Appointments</h3>
       <button class="view-all-btn" routerLink="/admin/appointments">View All →</button>
     </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Patient</th>
-          <th>Doctor</th>
-          <th>Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for(a of recentAppointments; track $index){
-        <tr>
-          <td>{{ a.patient }}</td>
-          <td>{{ a.doctor }}</td>
-          <td>{{ a.date }}</td>
-          <td><span class="status-badge" [class]="'status-' + a.status.toLowerCase()">{{ a.status }}</span></td>
-        </tr>
-        }
-      </tbody>
-    </table>
+
+    <app-data-table [columns]="appointmentColumns" [data]="appointments().slice(0,4)" [actions]="appointmentActions"
+      [emptyStateMessage]="'No appointments found'"></app-data-table>
+
   </div>
 
   <div class="dash-panel">
@@ -42,13 +26,13 @@
       <button class="view-all-btn" routerLink="/admin/doctors">View All →</button>
     </div>
     <div class="doctor-list">
-      <div class="doctor-item" *ngFor="let doctor of doctors">
-        <div class="doctor-avatar">{{ doctor.name[0].toUpperCase() }}</div>
+      <div class="doctor-item" *ngFor="let doctor of doctors().slice(0,4)">
+        <div class="doctor-avatar">{{ doctor.doctorName[0].toUpperCase() }}</div>
         <div class="doctor-meta">
-          <span class="doctor-name">{{ doctor.name }}</span>
-          <span class="doctor-specialty">{{ doctor.speciality }}</span>
+          <span class="doctor-name">{{ doctor.doctorName }}</span>
+          <span class="doctor-specialty">{{ doctor.specializationName }}</span>
         </div>
-        <span class="status-badge" [class]="'status-' + doctor.status.toLowerCase()">{{ doctor.status }}</span>
+        <!-- <span class="status-badge" [class]="'status-' + doctor.status.toLowerCase()">{{ doctor.status }}</span> -->
       </div>
     </div>
   </div>

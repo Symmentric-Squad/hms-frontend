@@ -143,6 +143,16 @@ export class AdminService {
     return this.http.post<AppointmentResponse>(`${this.baseUrl}/appointments`, request);
   }
 
+  //GET /api/appointments
+  getAllAppointments(): Observable<AppointmentResponse[]> {
+    return this.http.get<AppointmentResponse[]>(`${this.baseUrl}/appointments`);
+  }
+
+  //GET /api/appointments/user/:userId
+  getAppointmentHistory(userId: string): Observable<AppointmentResponse[]> {
+    return this.http.get<AppointmentResponse[]>(`${this.baseUrl}/appointments/user/${userId}`);
+  }
+
   // GET /api/users/:id
   getUserById(id: number): Observable<UserResponse> {
     return this.http.get<UserResponse>(`${this.baseUrl}/users/${id}`);

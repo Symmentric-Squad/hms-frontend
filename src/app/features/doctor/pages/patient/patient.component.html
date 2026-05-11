@@ -1,4 +1,44 @@
 <div>
+  @if(loading()){
+    <div class="flex items-center justify-center min-h-screen">
+    <h1 class="absolute
+    -translate-x-1/2 
+    -translate-y-1/2 
+    text-3xl font-bold">
+        Loading...
+      </h1>
+    </div>
+  }
+  @else if(error()){
+    <div class="flex flex-col items-center justify-center space-y-4 p-6 text-center">
+      <!-- Icon (Optional but recommended for UX) -->
+      <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+        <span 
+            class="brand-icon inline-block cursor-pointer bg-red-900 w-[24px] h-[24px]"
+            style="
+              mask-image: url('close.svg'); 
+              -webkit-mask-image: url('close.svg');
+              mask-size: contain;
+              mask-repeat: no-repeat;
+            "
+          ></span>
+      </div>
+
+      <div class="max-w-xs">
+        <h3 class="text-lg font-semibold text-gray-900">Connection Error</h3>
+        <p class="text-sm text-gray-500 mt-1 leading-relaxed">
+          {{ error() }}
+        </p>
+      </div>
+
+      <button 
+        (click)="loadPatients()" 
+        class="mt-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors">
+        Retry Connection
+      </button>
+    </div>
+  }
+  @else {
   <div class="section-header">
     <div>
       <h2>Manage Patients</h2>
@@ -9,72 +49,23 @@
 
   <app-data-table
     [columns]="patientColumns"
-    [data]="patients"
+    [data]="patients()"
     [actions]="patientActions"
     [emptyStateMessage]="'No patients found'"
-    (actionTriggered)="onTableAction($event)"
+    (actionTriggered)="onPatientTableAction($event)"
   ></app-data-table>
 
-  <!-- Patient Modal -->
-  @if(showPatientModal) {
-  <div class="modal-overlay" (click)="showPatientModal = false">
-    <div class="modal-box" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h3>{{ isEditMode ? 'Edit Patient' : 'Add Patient' }}</h3>
-        <button class="modal-close" (click)="showPatientModal = false">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="form-field">
-            <label>Name</label>
-            <input type="text" (ngModel)="editingPatient.name" placeholder="Patient name" />
-          </div>
-          <div class="form-field">
-            <label>Age</label>
-            <input type="number" (ngModel)="editingPatient.age" placeholder="Age" />
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label>Phone</label>
-            <input type="text" (ngModel)="editingPatient.phone" placeholder="Phone number" />
-          </div>
-          <div class="form-field">
-            <label>Blood Group</label>
-            <select (ngModel)="editingPatient.bloodGroup">
-              <option value="">Select Blood Group</option>
-              <option value="A+">A+</option>
-              <option value="A-">A-</option>
-              <option value="B+">B+</option>
-              <option value="B-">B-</option>
-              <option value="AB+">AB+</option>
-              <option value="AB-">AB-</option>
-              <option value="O+">O+</option>
-              <option value="O-">O-</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-field">
-          <label>Assigned Doctor</label>
-          <select (ngModel)="editingPatient.doctor">
-            <option value="">Select Doctor</option>
-            <option *ngFor="let d of doctorNames" [value]="d">{{ d }}</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label>Status</label>
-          <select (ngModel)="editingPatient.status">
-            <option value="Active">Active</option>
-            <option value="Discharged">Discharged</option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="cancel-btn" (click)="showPatientModal = false">Cancel</button>
-        <button class="save-btn" (click)="savePatient()">{{ isEditMode ? 'Update' : 'Add' }}</button>
-      </div>
-    </div>
-  </div>
+    <!-- Patient Modal -->
+    @if(showPatientModal) {
+      <app-modal-form
+        [config]="patientModalConfig"
+        [fields]="patientModalFields"
+        (submitted)="onSubmit($event)"
+        (cancelled)="showPatientModal = false"
+        (backdropClicked)="showPatientModal = false"
+      >
+      </app-modal-form>
+    }
   }
 </div>
 

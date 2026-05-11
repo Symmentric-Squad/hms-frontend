@@ -15,6 +15,7 @@ import { AdminDashboardPage } from "./pages/dashboard/dashboard.component";
 import { AdminDoctorsPage } from "./pages/doctor/doctor.component";
 import { AdminSpecialisationPage } from "./pages/doc-spec/doc-spec.component";
 import { AdminReportsPage } from "./pages/report/report.component";
+import { PatientDetails } from "./pages/patient-details/patient-details.component";
 
 
 @NgModule({
@@ -26,7 +27,7 @@ import { AdminReportsPage } from "./pages/report/report.component";
     AdminDoctorsPage,
     AdminSpecialisationPage,
     AdminReportsPage,
-
+    PatientDetails
   ],
   imports: [
     CommonModule,

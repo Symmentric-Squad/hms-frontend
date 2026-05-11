@@ -135,6 +135,7 @@ export interface AppointmentRequest {
 }
 
 export interface AppointmentResponse {
+  appointmentId: number;
   patientName: string;
   doctorName: string;
   specialization: string;

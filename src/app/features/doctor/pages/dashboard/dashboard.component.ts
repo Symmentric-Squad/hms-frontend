@@ -26,7 +26,7 @@ export class DoctorDashboardPage {
     {
         icon: "patient.svg",
         value: this.stats.totalPatients,
-        label: "Total Patients",
+        label: "Patients",
         FocusedStatus: "Active",
         StatusCount: 4,
         cardColor: "green",
@@ -35,20 +35,20 @@ export class DoctorDashboardPage {
     {
         icon: "calender.svg",
         value: this.stats.totalAppointments,
-        label: "Total Appointments",
+        label: "Appointments",
         FocusedStatus: "Completed",
         StatusCount: 4,
         cardColor: "orange",
         link: '/doctor'
       },
-      {
-        icon: "tick_file.svg",
-        value: this.stats.totalReports,
-        label: "Total Reports",
-        FocusedStatus: "All time",
-        cardColor: "red",
-        link: '/doctor'
-    }
+    //   {
+    //     icon: "tick_file.svg",
+    //     value: this.stats.totalReports,
+    //     label: "Total Reports",
+    //     FocusedStatus: "All time",
+    //     cardColor: "red",
+    //     link: '/doctor'
+    // }
   ]
 
   get recentAppointments() { return this.appointments.slice(0, 4); }

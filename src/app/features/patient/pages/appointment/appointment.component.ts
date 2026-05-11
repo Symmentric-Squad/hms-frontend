@@ -28,7 +28,7 @@ export class PatientAppointmentsPage {
     this.loadAppointments();
   }
 
-  // ── Load ──────────────────────────────────────────────────────────────────
+  // ── Load 
   loadAppointments(userId: number = 1): void {
     this.loading.set(true);
     this.error.set(null);
@@ -46,7 +46,7 @@ export class PatientAppointmentsPage {
     });
   }
 
-  // ── Book ──────────────────────────────────────────────────────────────────
+  // ── Book 
   bookAppointment(request: AppointmentRequest): void {
     this.loading.set(true);
 
@@ -63,14 +63,14 @@ export class PatientAppointmentsPage {
     });
   }
 
-  // ── Cancel ────────────────────────────────────────────────────────────────
+  // ── Cancel
   cancelAppointment(appointmentId: number): void {
   if (!confirm('Cancel this appointment?')) return;
 
   console.log(appointmentId)
 
   this.appointmentService.cancelAppointment(appointmentId).subscribe({
-    next: () => this.loadAppointments(), // 👈 just refetch, no type juggling
+    next: () => this.loadAppointments(),
     error: () => this.error.set('Failed to Cancel Appointment'),
   });
 }
@@ -97,9 +97,7 @@ export class PatientAppointmentsPage {
   ];
 
   appointmentActions: TableAction[] = [
-    // { id: 'view',   label: 'View',   icon: 'eye.svg',   type: 'secondary', actionColor: 'gray' },
-    // { id: 'edit',   label: 'Edit',   icon: 'edit.svg',  type: 'primary',   actionColor: 'blue' },
-    { id: 'delete', label: 'Delete', icon: 'trash.svg', type: 'danger',    actionColor: 'red'  },
+    { id: 'cancel', label: 'Cancel', icon: 'close.svg', type: 'danger',    actionColor: 'red'  },
   ];
 
   appointmentModalConfig: ModalConfig = {
@@ -149,7 +147,7 @@ export class PatientAppointmentsPage {
     if (action === 'edit') {
       this.editingAppointment = { ...rowData };
       this.showAppointmentModal = true;
-    } else if (action === 'delete') {
+    } else if (action === 'cancel') {
       this.cancelAppointment(rowData.id);
     }
   }

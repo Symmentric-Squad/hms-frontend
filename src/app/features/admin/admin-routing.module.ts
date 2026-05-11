@@ -9,6 +9,7 @@ import { AdminReportsPage } from './pages/report/report.component';
 import { AdminDoctorsPage } from './pages/doctor/doctor.component';
 import { AdminSpecialisationPage } from './pages/doc-spec/doc-spec.component';
 import { AdminContactUsPage } from './pages/contact-us/contact-us.component';
+import { PatientDetails } from './pages/patient-details/patient-details.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
       {
         path: 'patients',
         component: AdminPatientsPage
+      },
+      {
+        path: 'patient/:id',
+        component:PatientDetails,
       },
       {
         path: 'doctors',

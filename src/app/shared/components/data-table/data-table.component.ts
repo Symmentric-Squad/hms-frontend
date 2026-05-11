@@ -9,7 +9,6 @@ import { RowActionEvent, TableAction, TableColumn } from '../../models/data-tabl
   template: `
   <div class="bg-white rounded-[16px] px-5 py-5 shadow-[0_2px_12px_rgba(0,0,0,0.07)] overflow-x-auto">
     <table class="w-full border-collapse text-sm">
-      <!-- Table Header -->
       <thead>
         <tr class="bg-[#f8faff]">
           @for(col of columns; track $index) {
@@ -28,21 +27,17 @@ import { RowActionEvent, TableAction, TableColumn } from '../../models/data-tabl
         </tr>
       </thead>
 
-      <!-- Table Body -->
       <tbody>
         @for(row of data; track $index) {
           <tr class="border-b border-[#f5f5f5] hover:bg-[#f8faff] transition-colors duration-150">
 
-            <!-- Data Columns -->
             @for(col of columns; track $index) {
               <td class="px-[14px] py-3 text-gray-600 align-middle" [style]="{ 'width': col.width }">
 
-                <!-- Text Column -->
                 @if(col.type === 'text' || !col.type) {
                   <span>{{ row[col.key] }}</span>
                 }
 
-                <!-- Tag/Badge Column -->
                 @if(col.type === 'tag' || col.type === 'badge') {
                   <span
                     class="inline-block px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
@@ -58,7 +53,6 @@ import { RowActionEvent, TableAction, TableColumn } from '../../models/data-tabl
               </td>
             }
 
-            <!-- Actions Column -->
             @if(actions.length > 0) {
               <td class="px-[14px] py-3 align-middle">
                 <div class="flex gap-2 flex-wrap">
@@ -91,7 +85,6 @@ import { RowActionEvent, TableAction, TableColumn } from '../../models/data-tabl
           </tr>
         }
 
-        <!-- Empty State -->
         @if (data.length === 0) {
           <tr>
             <td
@@ -124,16 +117,15 @@ export class DataTableComponent {
   }
 
   getActionButtonClass(type: string = 'blue'): string {
-  // Define full strings so Tailwind can "find" them during build time
   const themeMap: Record<string, string> = {
     blue: 'text-blue-600 bg-blue-100 hover:bg-blue-300',
     red: 'text-red-600 bg-red-100 hover:bg-red-300',
     green: 'text-green-600 bg-green-100 hover:bg-green-300',
     yellow: 'text-yellow-600 bg-yellow-100 hover:bg-yellow-300',
     gray: 'text-gray-600 bg-gray-100 hover:bg-gray-300',
+    black: 'text-black-600 bg-black-300 hover:bg-black-300',
   };
 
-  // Return the mapped classes, or a default if the type doesn't exist
   return themeMap[type] || themeMap['blue'];
 }
 }

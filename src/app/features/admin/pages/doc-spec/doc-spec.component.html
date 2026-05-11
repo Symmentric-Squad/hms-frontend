@@ -1,0 +1,27 @@
+<div>
+    <!-- Appointments Tab -->
+    <div>
+        <div class="section-header">
+            <div>
+                <h2>Manage Specialisations</h2>
+                <p>Track all Specializations in hospital</p>
+            </div>
+            <button class="add-btn" (click)="openAddSpecialization()">+ New Appointment</button>
+        </div>
+
+        <div>
+            <app-data-table [columns]="specializationColumns" [data]="specializations()" [actions]="specializationActions"
+                [emptyStateMessage]="'No appointments found'"
+                (actionTriggered)="onDocSpecTableAction($event)"></app-data-table>
+        </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    @if(showSpecializationModal){
+    <app-modal-form [config]="specializationModalConfig" [fields]="specializationModalFields"
+        (submitted)="onSubmit($event)" (cancelled)="showSpecializationModal = false"
+        (backdropClicked)="showSpecializationModal = false"
+        [initialData]="specializationModalData">
+    </app-modal-form>
+    }
+</div>

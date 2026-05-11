@@ -2,9 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth.service';
 import { PublicService } from '../../../../core/services/public.service';
 import { doctors, patients } from '../../../../shared/db/db';
-import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
-import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
+import { RowActionEvent } from '../../../../shared/models/data-table.models';
+import { ModalSubmitEvent } from '../../../../shared/models/form.models';
 import { AppointmentRequest, AppointmentResponse } from '../../models/admin.model';
+import { AdminService } from '../../service/admin.service';
+import { appointmentActions, appointmentColumns, appointmentModalConfig, appointmentModalFields } from './appointment.config';
+import { formatDate } from '@angular/common';
 
 
 @Component({
@@ -16,6 +19,7 @@ import { AppointmentRequest, AppointmentResponse } from '../../models/admin.mode
 export class AdminAppointmentsPage {
 
   private readonly appointmentService = inject(PublicService);
+  private readonly adminAppointmentService = inject(AdminService);
   private readonly auth = inject(AuthService);
 
   appointments = signal<AppointmentResponse[]>([]);
@@ -25,16 +29,21 @@ export class AdminAppointmentsPage {
   doctors = doctors;
   patients = patients;
 
+  appointmentColumns = appointmentColumns;
+  appointmentActions = appointmentActions;
+  appointmentModalConfig = appointmentModalConfig;
+  appointmentModalFields = appointmentModalFields;
+
   ngOnInit(): void {
     this.loadAppointments();
   }
 
-  // ── Load ──────────────────────────────────────────────────────────────────
+  // ── Load 
   loadAppointments(userId: number = 1): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.appointmentService.getMyAppointments(userId).subscribe({
+    this.adminAppointmentService.getAllAppointments().subscribe({
       next: (data) => {
         this.appointments.set(data);
         console.log(data)
@@ -47,7 +56,7 @@ export class AdminAppointmentsPage {
     });
   }
 
-  // ── Book ──────────────────────────────────────────────────────────────────
+  // ── Book 
   bookAppointment(request: AppointmentRequest): void {
     this.loading.set(true);
 
@@ -74,56 +83,6 @@ export class AdminAppointmentsPage {
   });
 }
 
-  // ── Table config ──────────────────────────────────────────────────────────
-  appointmentColumns: TableColumn[] = [
-    { key: "patientName", label: "Patient Name"},
-    { key: "doctorName", label: "Doctor Name"},
-    // { key: "specialization", label: "Specialization"},
-    // { key: "consultancyFees", label: "Consultancy Fees"},
-    { key: "appointmentDate", label: "Appointment Date"},
-    { key: "appointmentTime", label: "Appointment Time"},
-    // { key: "creationDate", label: "Creation Date"},
-    { 
-      key: "currentStatus",
-      label: "Current Status",
-      type: 'badge',
-      tagColors: {
-        Active: { bg: '#dbeafe', text: '#1e40af' },
-        Completed: { bg: '#d1fae5', text: '#065f46' },
-        Cancelled:  { bg: '#fee2e2', text: '#991b1b' },
-      }
-    }
-  ];
-
-  appointmentActions: TableAction[] = [
-    { id: 'view',   label: 'View',   icon: 'eye.svg',   type: 'secondary', actionColor: 'gray' },
-    { id: 'edit',   label: 'Edit',   icon: 'edit.svg',  type: 'primary',   actionColor: 'blue' },
-    { id: 'delete', label: 'Delete', icon: 'trash.svg', type: 'danger',    actionColor: 'red'  },
-  ];
-
-  appointmentModalConfig: ModalConfig = {
-    title: 'Add Appointment',
-    submitButtonText: 'Save Details',
-    cancelButtonText: 'Cancel',
-    size: 'medium',
-    mode: 'create',
-  };
-
-  appointmentModalFields: FormField[] = [
-    { key: 'patientName', label: 'Patient Name',      type: 'text',   required: true },
-    { key: 'doctor',      label: 'Doctor Name',        type: 'text',   required: true },
-    { key: 'date',        label: 'Appointment Date',   type: 'date',   required: true },
-    { key: 'time',        label: 'Appointment Time',   type: 'time',   required: true },
-    {
-      key: 'status', label: 'Status', type: 'select', required: true,
-      options: [
-        { label: 'Scheduled', value: 'Scheduled' },
-        { label: 'Completed', value: 'Completed' },
-        { label: 'Cancelled', value: 'Cancelled' },
-      ],
-    },
-  ];
-
   // ── Modal state ───────────────────────────────────────────────────────────
   showAppointmentModal = false;
   editingAppointment: Partial<AppointmentRequest> = {};
@@ -144,11 +103,12 @@ export class AdminAppointmentsPage {
   // ── Row actions ───────────────────────────────────────────────────────────
   onAppointmentTableAction(event: RowActionEvent): void {
     const { action, rowData } = event;
+    console.log(rowData)
     if (action === 'edit') {
       this.editingAppointment = { ...rowData };
       this.showAppointmentModal = true;
-    } else if (action === 'delete') {
-      this.cancelAppointment(rowData.id);
+    } else if (action === 'cancel') {
+      this.cancelAppointment(rowData.appointmentId);
     }
   }
 }

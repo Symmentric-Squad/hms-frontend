@@ -24,7 +24,7 @@ export class PatientReportsPage {
     this.loadReports();
   }
 
-  // ── Load ──────────────────────────────────────────────────────────────────
+  // ── Load 
   loadReports(userId: number = 1): void {
     this.loading.set(true);
     this.error.set(null);
@@ -50,7 +50,7 @@ export class PatientReportsPage {
     { key: "weight", label: "Weight" },
     { key: "temperature", label: "Temperature" },
     { key: "medicalPrescription", label: "Medical Prescription" },
-    { key: "creationDate", label: "Report Date" },
+    // { key: "creationDate", label: "Report Date" },
   ];
 
   reportActions: TableAction[] = [

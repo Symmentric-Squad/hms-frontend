@@ -7,6 +7,7 @@ import { AdminService } from '../../../admin/service/admin.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { MedicalHistoryRequest, MedicalHistoryResponse } from '../../models/doctor.model';
 import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
+import { DoctorService } from '../../service/doctor.service';
 
 @Component({
   selector: 'app-report-management',
@@ -16,7 +17,7 @@ import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/mod
 })
 export class DoctorReportsPage {
   private readonly reportService = inject(PublicService);
-  private readonly adminReportService = inject(AdminService);
+  private readonly adminReportService = inject(DoctorService);
   private readonly auth = inject(AuthService);
 
   reports = signal<MedicalHistoryResponse[]>([]);
@@ -27,12 +28,12 @@ export class DoctorReportsPage {
     this.loadReports();
   }
 
-  // ── Load ──────────────────────────────────────────────────────────────────
+  // ── Load 
   loadReports(userId: number = 1): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.reportService.getMedicalHistory(userId).subscribe({
+    this.adminReportService.getMedicalHistory(userId).subscribe({
       next: (data) => {
         this.reports.set(data);
         console.log(data)
@@ -45,7 +46,7 @@ export class DoctorReportsPage {
     });
   }
 
-  // ── Add ──────────────────────────────────────────────────────────────────
+  // ── Add 
     addMedicalHistory(patientId: number, request: MedicalHistoryRequest): void {
       this.loading.set(true);
   
@@ -64,13 +65,13 @@ export class DoctorReportsPage {
 
   // Table Configuration
   reportColumns: TableColumn[] = [
-    // { key: "patientName", label: "Patient Name" },
+    { key: "patientName", label: "Patient Name" },
     { key: "bloodPressure", label: "Blood Pressure" },
     { key: "bloodSugar", label: "Blood Sugar" },
     { key: "weight", label: "Weight" },
     { key: "temperature", label: "Temperature" },
     { key: "medicalPrescription", label: "Medical Prescription" },
-    { key: "creationDate", label: "Report Date" },
+    // { key: "creationDate", label: "Report Date" },
   ];
 
   reportActions: TableAction[] = [

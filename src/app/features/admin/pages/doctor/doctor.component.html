@@ -9,13 +9,13 @@
 
   <app-data-table
     [columns]="doctorColumns"
-    [data]="doctors"
+    [data]="doctors()"
     [actions]="doctorActions"
     [emptyStateMessage]="'No doctors found'"
     (actionTriggered)="onTableAction($event)"
   ></app-data-table>
 
-  <!-- Patient Modal -->
+  <!-- TODO: Modal for both edit and create  -->
   @if(showDoctorModal) {
   <div class="modal-overlay" (click)="showDoctorModal = false">
     <div class="modal-box" (click)="$event.stopPropagation()">

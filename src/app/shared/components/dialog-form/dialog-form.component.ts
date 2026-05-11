@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormField, ModalConfig, ModalSubmitEvent } from '../../models/form.models';
@@ -22,7 +22,6 @@ import { FormField, ModalConfig, ModalSubmitEvent } from '../../models/form.mode
         (click)="$event.stopPropagation()"
       >
 
-        <!-- Header -->
         <div class="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
           <h3 class="text-[19px] font-bold text-slate-800 m-0">{{ config.title }}</h3>
           <button
@@ -31,7 +30,6 @@ import { FormField, ModalConfig, ModalSubmitEvent } from '../../models/form.mode
           >✕</button>
         </div>
 
-        <!-- Body -->
         <form
           class="px-6 py-5 overflow-y-auto flex-1"
           (ngSubmit)="onSubmit()"
@@ -43,13 +41,13 @@ import { FormField, ModalConfig, ModalSubmitEvent } from '../../models/form.mode
                 class="flex flex-col gap-[5px]"
                 [ngClass]="{ 'col-span-2': last && fields.length % 2 !== 0 }"
               >
-                <!-- Label -->
+                
                 <label class="text-[13px] font-semibold text-gray-700">
                   {{ field.label }}
                   <span *ngIf="field.required" class="text-red-600">*</span>
                 </label>
 
-                <!-- Text / Email / Number / Date / Time -->
+                
                 <input
                   *ngIf="['text','email','number','date','time'].includes(field.type)"
                   class="px-[13px] py-[10px] border-[1.5px] border-gray-200 rounded-lg text-sm font-[inherit] outline-none transition-colors duration-200 bg-white text-gray-700 focus:border-[#0891B2] focus:shadow-[0_0_0_3px_rgba(8,145,178,0.1)] disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
@@ -65,7 +63,7 @@ import { FormField, ModalConfig, ModalSubmitEvent } from '../../models/form.mode
                   [attr.pattern]="field.pattern || null"
                 />
 
-                <!-- Select -->
+                
                 <select
                   *ngIf="field.type === 'select'"
                   class="px-[13px] py-[10px] border-[1.5px] border-gray-200 rounded-lg text-sm font-[inherit] outline-none transition-colors duration-200 bg-white text-gray-700 focus:border-[#0891B2] focus:shadow-[0_0_0_3px_rgba(8,145,178,0.1)] disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
@@ -80,7 +78,7 @@ import { FormField, ModalConfig, ModalSubmitEvent } from '../../models/form.mode
                   </option>
                 </select>
 
-                <!-- Textarea -->
+                
                 <textarea
                   *ngIf="field.type === 'textarea'"
                   class="px-[13px] py-[10px] border-[1.5px] border-gray-200 rounded-lg text-sm font-[inherit] outline-none transition-colors duration-200 bg-white text-gray-700 resize-y focus:border-[#0891B2] focus:shadow-[0_0_0_3px_rgba(8,145,178,0.1)] disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
@@ -97,7 +95,7 @@ import { FormField, ModalConfig, ModalSubmitEvent } from '../../models/form.mode
           </div>
         </form>
 
-        <!-- Footer -->
+        
         <div class="flex gap-3 justify-end px-6 pt-4 pb-5 border-t border-gray-100">
           <button
             class="px-[22px] py-[10px] border-[1.5px] border-gray-200 bg-white rounded-lg text-sm font-semibold cursor-pointer text-gray-500 transition-all duration-200 hover:bg-gray-100"
@@ -130,16 +128,34 @@ export class ModalFormComponent {
 
   @Input() fields: FormField[] = [];
   @Input() isOpen = false;
+  @Input() initialData: Record<string, any> | null = null;  // ← ADD THIS
 
   @Output() submitted = new EventEmitter<ModalSubmitEvent>();
   @Output() cancelled = new EventEmitter<void>();
   @Output() backdropClicked = new EventEmitter<void>();
+
+  // ← ADD THIS LIFECYCLE HOOK
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialData'] && this.initialData) {
+      // Populate fields with initial data (EDIT MODE)
+      this.fields.forEach(field => {
+        field.value = this.initialData?.[field.key] ?? '';
+      });
+    } else if (changes['initialData'] && !this.initialData) {
+      // Clear fields (CREATE MODE)
+      this.fields.forEach(field => {
+        field.value = '';
+      });
+    }
+  }
 
   onSubmit(): void {
     this.submitted.emit({
       formData: this.getFormData(),
       isValid: this.validateForm(),
     });
+    console.log(this.getFormData());
+    console.log(this.validateForm())
   }
 
   onCancel(): void {

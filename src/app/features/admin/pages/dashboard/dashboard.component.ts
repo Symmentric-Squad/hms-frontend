@@ -1,68 +1,119 @@
-import { Component } from '@angular/core';
-import { appointments, doctors, patients, reports } from '../../../../shared/db/db';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { AppointmentResponse } from '../../../../core/models/public.model';
+import { TableColumn } from '../../../../shared/models/data-table.models';
+import { DashboardResponse, DoctorResponse } from '../../models/admin.model'; // Ensure DashboardCardStats is imported
+import { AdminService } from '../../service/admin.service';
 
 @Component({
   selector: 'app-admin-dashboard',
-  standalone:false,
+  standalone: false,
   templateUrl: './dashboard.component.html',
   styleUrl: '../../../../../styles.css'
 })
-export class AdminDashboardPage {
-  doctors = doctors;
-  appointments = appointments;
-  patients = patients;
-  reports = reports;
-  //TODO: change the card details as per admin
-  cardDetails: DashboardCardStats[] = [
+export class AdminDashboardPage implements OnInit {
+  loading = signal(false);
+  error = signal<string | null>(null);
+
+  doctors = signal<DoctorResponse[]>([]);
+  appointments = signal<AppointmentResponse[]>([]);
+  dashboardDetails = signal<DashboardResponse | null>(null);
+  
+
+  private readonly adminService = inject(AdminService);
+
+  cardDetails = computed<DashboardCardStats[]>(() => [
     {
-        icon: "steth.svg",
-        value: this.stats.totalDoctors,
-        label: "Total Doctors",
-        FocusedStatus: "Active",
-        StatusCount: 4,
-        cardColor: "blue",
-        link: '/admin/doctors'
+      icon: "steth.svg",
+      value: this.dashboardDetails()?.doctorCount ?? 0,
+      label: "Total Doctors",
+      cardColor: "blue",
+      link: '/admin/doctors'
     },
     {
-        icon: "patient.svg",
-        value: this.stats.totalPatients,
-        label: "Total Patients",
-        FocusedStatus: "Active",
-        StatusCount: 4,
-        cardColor: "green",
-        link: '/admin/patients'
+      icon: "patient.svg",
+      value: this.dashboardDetails()?.userCount ?? 0,
+      label: "Total Patients",
+      cardColor: "green",
+      link: '/admin/patients'
     },
     {
-        icon: "calender.svg",
-        value: this.stats.totalAppointments,
-        label: "Total Appointments",
-        FocusedStatus: "Completed",
-        StatusCount: 4,
-        cardColor: "orange",
-        link: '/admin/appointments'
-      },
-      {
-        icon: "tick_file.svg",
-        value: this.stats.totalReports,
-        label: "Total Reports",
-        FocusedStatus: "All time",
-        cardColor: "red",
-        link: '/admin/reports'
+      icon: "calender.svg",
+      value: this.dashboardDetails()?.appointmentCount ?? 0,
+      label: "Total Appointments",
+      cardColor: "orange",
+      link: '/admin/appointments'
+    },
+    {
+      icon: "tick_file.svg",
+      value: this.dashboardDetails()?.queriesCount ?? 0,
+      label: "Total Queries",
+      cardColor: "red",
+      link: '/admin/reports'
     }
-  ]
+  ]);
 
-  get recentAppointments() { return this.appointments.slice(0, 4); }
+  appointmentColumns: TableColumn[] = [
+    { key: "patientName", label: "Patient" },
+    { key: "doctorName", label: "Doctor" },
+    { key: "appointmentDate", label: "Appt. Date" },
+    { key: "currentStatus", label: "Status", type: 'badge',
+      tagColors: {
+        Active: { bg: '#dbeafe', text: '#1e40af' },
+        Completed: { bg: '#d1fae5', text: '#065f46' },
+        Cancelled: { bg: '#fee2e2', text: '#991b1b' },
+      }
+    }
+  ];
 
-  get stats() {
-    return {
-      totalDoctors: this.doctors.length,
-      activeDoctors: this.doctors.filter(d => d.status === 'Active').length,
-      totalPatients: this.patients.length,
-      activePatients: this.patients.filter(p => p.status === 'Admitted').length,
-      totalAppointments: this.appointments.length,
-      scheduledAppointments: this.appointments.filter(a => a.status === 'Scheduled').length,
-      completedAppointments: this.appointments.filter(a => a.status === 'Completed').length,
-      totalReports: this.reports.length
-    };
+  appointmentActions = [];
+
+  ngOnInit(): void {
+    // 3. You MUST call both or you won't get any data!
+    this.loadDashboardDetails(); 
+    this.loadAppointments();
+    this.loadDoctors();
+  }
+
+  loadDashboardDetails() {
+    this.loading.set(true);
+    this.adminService.getDashboard().subscribe({
+      next: (data) => {
+        this.dashboardDetails.set(data);
+        console.log(this.dashboardDetails());
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Failed to Load Dashboard Details');
+        this.loading.set(false);
+      },
+    });
+  }
+
+  loadAppointments(): void {
+    this.loading.set(true);
+    this.adminService.getAllAppointments().subscribe({
+      next: (data) => {
+        this.appointments.set(data);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Failed to Load Appointments');
+        this.loading.set(false);
+      },
+    });
+  }
+
+  loadDoctors(){
+    this.loading.set(true);
+    this.adminService.getAllDoctors().subscribe({
+      next: (data) => {
+        this.doctors.set(data);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Failed to Load Doctors');
+        this.loading.set(false);
+      },
+    })
   }
 }

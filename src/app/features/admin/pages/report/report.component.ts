@@ -25,7 +25,7 @@ export class AdminReportsPage {
     this.loadReports();
   }
 
-  // ── Load ──────────────────────────────────────────────────────────────────
+  // ── Load 
   loadReports(userId: number = 1): void {
     this.loading.set(true);
     this.error.set(null);
@@ -43,7 +43,7 @@ export class AdminReportsPage {
     });
   }
 
-  // ── Add ──────────────────────────────────────────────────────────────────
+  // ── Add 
     addMedicalHistory(patientId: number, request: MedicalHistoryRequest): void {
       this.loading.set(true);
   
@@ -68,7 +68,7 @@ export class AdminReportsPage {
     { key: "weight", label: "Weight" },
     { key: "temperature", label: "Temperature" },
     { key: "medicalPrescription", label: "Medical Prescription" },
-    { key: "creationDate", label: "Report Date" },
+    // { key: "creationDate", label: "Report Date" },
   ];
 
   reportActions: TableAction[] = [
