@@ -10,6 +10,7 @@ import { SidebarComponent } from "../../shared/components/sidebar/sidebar.compon
 import { FormsModule } from "@angular/forms";
 import { DashboardCard } from "../../shared/components/dashboard-card/dashboard-card.component";
 import { ModalFormComponent } from "../../shared/components/dialog-form/dialog-form.component";
+import { TitleCasePipe } from "../../shared/pipe/custom-title-case.pipe";
 
 @NgModule({
   declarations: [
@@ -27,6 +28,9 @@ import { ModalFormComponent } from "../../shared/components/dialog-form/dialog-f
     DashboardCard,
     ModalFormComponent
     // SharedModule
+  ],
+  providers:[
+    TitleCasePipe
   ]
 })
 export class PatientModule { }

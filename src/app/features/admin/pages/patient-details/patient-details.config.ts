@@ -23,11 +23,7 @@ export var appointmentColumns: TableColumn[] = [
     }
 ];
 
-export var appointmentActions: TableAction[] = [
-    // { id: 'view',   label: 'View',   icon: 'eye.svg',   type: 'secondary', actionColor: 'gray' },
-    { id: 'edit', label: 'Edit', icon: 'edit.svg', type: 'primary', actionColor: 'blue' },
-    { id: 'cencel', label: 'Cancel', icon: 'close.svg', type: 'danger', actionColor: 'red' },
-];
+export var appointmentActions: TableAction[] = [];
 
 export var reportColumns: TableColumn[] = [
     // { key: "patientName", label: "Patient Name" },

@@ -22,7 +22,7 @@ export var patientColumns: TableColumn[] = [
 ];
 
 export var patientActions: TableAction[] = [
-    { id: 'view', label: 'View', icon: 'eye.svg', type: 'secondary', actionColor: 'gray' },
+    { id: 'view', label: 'View', icon: 'eye.svg', type: 'secondary', actionColor: 'green' },
     // { id: 'edit', label: 'Edit', icon: 'edit.svg', type: 'primary', actionColor: 'blue'},
     // { id: 'delete', label: 'Delete', icon: 'trash.svg', type: 'danger', actionColor: 'red'}
 ];

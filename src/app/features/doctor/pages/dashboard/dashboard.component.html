@@ -16,26 +16,10 @@
       <h3>Recent Appointments</h3>
       <button class="view-all-btn" routerLink="/doctor/appointments">View All →</button>
     </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Patient</th>
-          <th>Doctor</th>
-          <th>Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for(a of appointments().slice(0,4); track $index){
-          <tr>
-            <td>{{ a.patientName }}</td>
-            <td>{{ a.doctorName }}</td>
-            <td>{{ a.appointmentDate }}</td>
-            <td><span class="status-badge" [class]="'status-' + a.currentStatus">{{ a.status }}</span></td>
-          </tr>
-        }
-      </tbody>
-    </table>
+
+    <app-data-table [columns]="appointmentColumns" [data]="appointments().slice(0,4)" [actions]="appointmentActions"
+      [emptyStateMessage]="'No appointments found'"></app-data-table>
+
   </div>
 
   <div class="dash-panel">
@@ -45,10 +29,10 @@
     </div>
     <div class="doctor-list">
       <div class="doctor-item" *ngFor="let patient of patients()">
-        <div class="doctor-avatar">{{ patient.patientGender[0] }}</div>
+        <div class="doctor-avatar">{{ patient.patientName[0] }}</div>
         <div class="doctor-meta">
           <span class="doctor-name">{{ patient.patientName }}</span>
-          <span class="doctor-specialty">Age : {{ patient.patientAge }}</span>
+          <span class="doctor-specialty">{{ patient.patientAge }} - {{patient.patientGender}}</span>
         </div>
         <span class="status-badge">{{ patient.patientContactNo }}</span>
       </div>

@@ -9,95 +9,13 @@ import { formatDate } from "@angular/common";
 @Component({
     selector: 'doctor-patient-details',
     standalone: false,
-    template: `
-    <h1 class="text-2xl">Details of {{patientDetails()?.patientName}}</h1>
-
-    <div class="w-full bg-gray-50 border border-gray-200 rounded-lg overflow-hidden shadow-sm p-4">
-        <!-- Header -->
-        <div class="px-8 py-5 border-b border-gray-200 bg-white">
-            <div class="flex justify-between items-end">
-            <div>
-                <h2 class="text-2xl font-light text-gray-800 uppercase tracking-tight">Patient Record</h2>
-                <p class="text-sm text-gray-500">Doctor ID: {{patientDetails()?.doctorId}}</p>
-            </div>
-            <div class="text-right text-xs text-gray-400">
-                <p>Created: {{patientDetails()?.creationDate}}</p>
-                <p>Last Updated: {{patientDetails()?.updationDate}}</p>
-            </div>
-            </div>
-        </div>
-
-        <!-- Content Body -->
-        <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <!-- Primary Info -->
-            <div class="md:col-span-1 space-y-4">
-            <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase">Full Name</label>
-                <p class="text-lg font-medium text-gray-900">{{patientDetails()?.patientName}}</p>
-            </div>
-            <div class="flex gap-10">
-                <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase">Age</label>
-                <p class="text-gray-700">{{patientDetails()?.patientAge}} Years</p>
-                </div>
-                <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase">Gender</label>
-                <p class="text-gray-700 capitalize">{{patientDetails()?.patientGender}}</p>
-                </div>
-            </div>
-            </div>
-
-            <!-- Contact Info -->
-            <div class="md:col-span-1 space-y-4 border-l border-gray-200 pl-8">
-            <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase">Contact Number</label>
-                <p class="text-gray-700">{{patientDetails()?.patientContactNo}}</p>
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase">Email Address</label>
-                <p class="text-gray-700">{{patientDetails()?.patientEmail}}</p>
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase">Residential Address</label>
-                <p class="text-gray-700 leading-relaxed">{{patientDetails()?.patientAddress}}</p>
-            </div>
-            </div>
-
-            <!-- Medical History -->
-            <div class="md:col-span-1 bg-white p-5 rounded border border-gray-200">
-            <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">Medical History</label>
-            <p class="text-gray-600 text-sm leading-relaxed italic">
-                {{patientDetails()?.patientMedicalHistory || 'No medical history recorded.'}}
-            </p>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="flex w-full gap-4 pt-4">
-        <div class="flex-1">
-            <app-data-table 
-            [columns]="appointmentColumns" 
-            [data]="patientAppointmentHistory()" 
-            [actions]="appointmentActions"
-            [emptyStateMessage]="'No appointments found'">
-            </app-data-table>
-        </div>
-
-        <div class="flex-1">
-            <app-data-table 
-            [columns]="reportColumns" 
-            [data]="patientMedicalHistory()" 
-            [actions]="reportActions"
-            [emptyStateMessage]="'No Medical History found'">
-            </app-data-table>
-        </div>
-    </div>
-    `
+    templateUrl: 'patient-details.component.html'
 })
 
 export class PatientDetails {
+    // TODO: implement the user edit and delete features using user endpoint (not patient)
+    // show as user doesnt exist anymore if deleted
+
     patientId: number = 0;
 
     private readonly adminService = inject(AdminService);
@@ -119,11 +37,8 @@ export class PatientDetails {
     ngOnInit(): void {
         this.patientId = Number(this.route.snapshot.paramMap.get('id'));
         this.loadPatientDetails()
-
         this.loadMedicalHistory()
-
         this.loadAppointmentHistory()
-
     }
 
     loadPatientDetails() {

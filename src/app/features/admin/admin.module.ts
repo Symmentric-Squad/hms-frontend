@@ -16,6 +16,7 @@ import { AdminDoctorsPage } from "./pages/doctor/doctor.component";
 import { AdminSpecialisationPage } from "./pages/doc-spec/doc-spec.component";
 import { AdminReportsPage } from "./pages/report/report.component";
 import { PatientDetails } from "./pages/patient-details/patient-details.component";
+import { TitleCasePipe } from "../../shared/pipe/custom-title-case.pipe";
 
 
 @NgModule({
@@ -27,7 +28,7 @@ import { PatientDetails } from "./pages/patient-details/patient-details.componen
     AdminDoctorsPage,
     AdminSpecialisationPage,
     AdminReportsPage,
-    PatientDetails
+    PatientDetails,
   ],
   imports: [
     CommonModule,
@@ -38,7 +39,10 @@ import { PatientDetails } from "./pages/patient-details/patient-details.componen
     FormsModule,
     AdminRoutingModule,
     AdminSidebarComponent,
-    AdminLayoutComponent
+    AdminLayoutComponent,
+  ],
+  providers:[
+    TitleCasePipe
   ]
 })
 export class AdminModule { }

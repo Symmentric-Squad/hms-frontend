@@ -1,6 +1,7 @@
 import { Component,computed, inject, signal } from '@angular/core';
 import { DoctorService } from '../../service/doctor.service';
 import { AppointmentResponse, PatientResponse } from '../../models/doctor.model';
+import { TableColumn } from '../../../../shared/models/data-table.models';
 
 @Component({
   selector: 'app-doctor-dashboard',
@@ -56,7 +57,6 @@ export class DoctorDashboardPage {
     });
   }
 
-  //TODO: change the card details as per doctor
   cardDetails = computed<DashboardCardStats[]>(() => [
     {
         icon: "patient.svg",
@@ -74,4 +74,18 @@ export class DoctorDashboardPage {
       },
   ]);
 
+  appointmentActions = [];
+
+  appointmentColumns: TableColumn[] = [
+      { key: "patientName", label: "Patient" },
+      { key: "doctorName", label: "Doctor" },
+      { key: "appointmentDate", label: "Appt. Date" },
+      { key: "currentStatus", label: "Status", type: 'badge',
+        tagColors: {
+          Active: { bg: '#dbeafe', text: '#1e40af' },
+          'Cancel by Doctor': { bg: '#fee2e2', text: '#991b1b' },
+          'Cancel by User': { bg: '#fee2e2', text: '#991b1b' },
+        }
+      }
+    ];
 }

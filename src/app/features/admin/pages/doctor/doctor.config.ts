@@ -1,5 +1,6 @@
 import { TableAction, TableColumn } from "../../../../shared/models/data-table.models";
-import { FormField, ModalConfig } from "../../../../shared/models/form.models";
+import { FieldOption, FormField, ModalConfig } from "../../../../shared/models/form.models";
+import { DoctorResponse } from "../../models/admin.model";
 
 
 // Table Configuration
@@ -18,24 +19,68 @@ export var doctorColumns: TableColumn[] = [
 ];
 
 export var doctorActions: TableAction[] = [
-    // { id: 'view', label: 'View', icon: 'eye.svg', type: 'secondary', actionColor: 'gray' },
-    { id: 'edit', label: 'Edit', icon: 'edit.svg', type: 'primary', actionColor: 'blue' },
-    { id: 'delete', label: 'Delete', icon: 'trash.svg', type: 'danger', actionColor: 'red' }
+    { id: 'edit', label: 'Edit', icon: 'edit.svg', type: 'primary', actionColor: 'blue' },  
 ];
 
-export var doctorModalConfig: ModalConfig = {
-    title: 'Add Doctor',
-    submitButtonText: 'Save Doctor',
-    cancelButtonText: 'Cancel',
-    size: 'medium',
-    mode: 'create',
-}
+// export var doctorModalConfig: ModalConfig = {
+//     title: 'Add Doctor',
+//     submitButtonText: 'Save Doctor',
+//     cancelButtonText: 'Cancel',
+//     size: 'medium',
+//     mode: 'create',
+// }
 
-export var doctorModalFields: FormField[] = [
-    { key: "specializationId", label: "specializationId", type: 'text', required: true },
-    { key: "doctorName", label: "doctorName", type: 'email', required: true },
-    { key: "address", label: "address", type: 'text', required: true },
-    { key: "doctorFees", label: "doctorFees", type: 'text', required: true },
-    { key: "doctorEmail", label: "doctorEmail", type: 'text', required: true },
-    { key: "contactNo", label: "contactNo", type: 'text', required: true }
-]
+// export var doctorModalFields: FormField[] = [
+//     { key: "specializationId", label: "specializationId", type: 'text', required: true },
+//     { key: "doctorName", label: "doctorName", type: 'email', required: true },
+//     { key: "address", label: "address", type: 'text', required: true },
+//     { key: "doctorFees", label: "doctorFees", type: 'text', required: true },
+//     { key: "doctorEmail", label: "doctorEmail", type: 'text', required: true },
+//     { key: "contactNo", label: "contactNo", type: 'text', required: true }
+// ]
+
+export function buildDoctorFields(specializationFieldOptions:FieldOption[],source?: Partial<DoctorResponse>): FormField[] {
+  return [
+    {
+      key: 'name',
+      label: 'Doctor Name',
+      type: 'text',
+      value: source?.doctorName ?? '',
+      placeholder: 'Jane Doe',
+      required: true,
+    },
+    {
+      key: 'email',
+      label: 'Email',
+      type: 'email',
+      value: source?.doctorEmail ?? '',
+      placeholder: 'doctor@hms.in',
+      required: true,
+    },
+    {
+      key: 'specialization',
+      label: 'Specialization',
+      type: 'select',
+      value: source?.specializationName ?? '',
+      placeholder: 'Select specialization',
+      required: true,
+      options: specializationFieldOptions
+    },
+    {
+      key: 'phone number',
+      label: 'Phone Number',
+      type: 'number',
+      value: source?.contactNo ?? '',
+      placeholder: '98XXXXXXXX',
+      required: true,
+    },
+    {
+      key: 'address',
+      label: 'Address',
+      type: 'textarea',
+      value: source?.address ?? '',
+      placeholder: 'Address of the Doctor',
+      rows: 3,
+    },
+  ];
+}

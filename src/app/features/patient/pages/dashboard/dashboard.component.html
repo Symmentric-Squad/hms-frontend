@@ -1,6 +1,6 @@
 <div class="section-header">
   <h2>Welcome Back, Patient</h2>
-  <p>Here's an overview of the hospital today</p>
+  <!-- <p>Here's an overview of the hospital today</p> -->
 </div>
 
 <div class="stat-grid">
@@ -10,11 +10,11 @@
             [style.mask-image]="'url(' + cardDetail.icon + ')'"
             [style.webkit-mask-image]="'url(' + cardDetail.icon + ')'"
             [style.background-color]="cardDetail.cardColor"
-            [style.width.px]=48
-            [style.height.px]=48>
+            [style.width.px]=36
+            [style.height.px]=36>
         </div>
         <div class="stat-info">
-            <span class="stat-value">{{ cardDetail.value }}</span>
+            <span class="text-[24px] font-extrabold text-[#1e293b] leading-none">{{ cardDetail.value }}</span>
             <span class="stat-label">{{cardDetail.label}}</span>
         </div>
     </div>

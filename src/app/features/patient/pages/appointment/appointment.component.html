@@ -46,24 +46,16 @@
           <h2>Manage Appointments</h2>
           <p>Schedule and track all hospital appointments</p>
         </div>
-        <button class="add-btn" (click)="openAddAppointment()">+ New Appointment</button>
+        <button class="add-btn" (click)="handleOpenCreate()">+ New Appointment</button>
       </div>
   
       <app-data-table [columns]="appointmentColumns" [data]="appointments()" [actions]="appointmentActions"
         [emptyStateMessage]="'No appointments found'"
-        (actionTriggered)="onAppointmentTableAction($event)"></app-data-table>
+        (actionTriggered)="onTableAction($event)"></app-data-table>
     </div>
   
-    <!-- Appointment Modal -->
-    @if(showAppointmentModal){
-      <app-modal-form
-        [config]="appointmentModalConfig"
-        [fields]="appointmentModalFields"
-        (submitted)="onSubmit($event)"
-        (cancelled)="showAppointmentModal = false"
-        (backdropClicked)="showAppointmentModal = false"
-      >
-      </app-modal-form>
-    }
+  <app-modal-form [isOpen]="isModalOpen" [config]="modalConfig" [fields]="modalFields" (submitted)="handleSubmit($event)"
+    (cancelled)="handleCancel()" (backdropClicked)="handleBackdropClick()">
+  </app-modal-form>
   }
 </div>

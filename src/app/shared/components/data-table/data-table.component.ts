@@ -124,6 +124,15 @@ export class DataTableComponent {
     yellow: 'text-yellow-600 bg-yellow-100 hover:bg-yellow-300',
     gray: 'text-gray-600 bg-gray-100 hover:bg-gray-300',
     black: 'text-black-600 bg-black-300 hover:bg-black-300',
+    indigo: 'text-indigo-600 bg-indigo-100 hover:bg-indigo-300',
+    purple: 'text-purple-600 bg-purple-100 hover:bg-purple-300',
+    pink: 'text-pink-600 bg-pink-100 hover:bg-pink-300',
+    orange: 'text-orange-600 bg-orange-100 hover:bg-orange-300',
+    teal: 'text-teal-600 bg-teal-100 hover:bg-teal-300',
+    cyan: 'text-cyan-600 bg-cyan-100 hover:bg-cyan-300',
+    rose: 'text-rose-600 bg-rose-100 hover:bg-rose-300',
+    amber: 'text-amber-600 bg-amber-100 hover:bg-amber-300',
+    slate: 'text-slate-600 bg-slate-100 hover:bg-slate-300',
   };
 
   return themeMap[type] || themeMap['blue'];

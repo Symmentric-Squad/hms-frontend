@@ -47,13 +47,15 @@
       <!-- <button class="add-btn" (click)="openAddReport()">+ New Report</button> -->
     </div>
   
-    <app-data-table
-      [columns]="reportColumns"
-      [data]="reports()"
-      [actions]="reportActions"
-      [emptyStateMessage]="'No reports found'"
-      (actionTriggered)="onMedicalHistoryTableAction($event)"
-    ></app-data-table>
+    <div class="md:w-[840px] mx-auto">
+      <app-data-table
+        [columns]="reportColumns"
+        [data]="reports()"
+        [actions]="reportActions"
+        [emptyStateMessage]="'No reports found'"
+        (actionTriggered)="onMedicalHistoryTableAction($event)"
+      ></app-data-table>
+    </div>
   
     <!-- Report Modal -->
     @if(showReportModal) {

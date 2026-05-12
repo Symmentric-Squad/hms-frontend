@@ -6,10 +6,10 @@
                 <h2>Manage Specialisations</h2>
                 <p>Track all Specializations in hospital</p>
             </div>
-            <button class="add-btn" (click)="openAddSpecialization()">+ New Appointment</button>
+            <button class="add-btn" (click)="openAddSpecialization()">+ Add Specialization</button>
         </div>
 
-        <div>
+        <div class="md:w-[600px] sm:w-[300px] mx-auto">
             <app-data-table [columns]="specializationColumns" [data]="specializations()" [actions]="specializationActions"
                 [emptyStateMessage]="'No appointments found'"
                 (actionTriggered)="onDocSpecTableAction($event)"></app-data-table>
@@ -20,8 +20,7 @@
     @if(showSpecializationModal){
     <app-modal-form [config]="specializationModalConfig" [fields]="specializationModalFields"
         (submitted)="onSubmit($event)" (cancelled)="showSpecializationModal = false"
-        (backdropClicked)="showSpecializationModal = false"
-        [initialData]="specializationModalData">
+        (backdropClicked)="showSpecializationModal = false">
     </app-modal-form>
     }
 </div>

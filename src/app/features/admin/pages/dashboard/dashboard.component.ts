@@ -59,8 +59,8 @@ export class AdminDashboardPage implements OnInit {
     { key: "currentStatus", label: "Status", type: 'badge',
       tagColors: {
         Active: { bg: '#dbeafe', text: '#1e40af' },
-        Completed: { bg: '#d1fae5', text: '#065f46' },
-        Cancelled: { bg: '#fee2e2', text: '#991b1b' },
+        'Cancel by Doctor': { bg: '#fee2e2', text: '#991b1b' },
+        'Cancel by User': { bg: '#fee2e2', text: '#991b1b' },
       }
     }
   ];

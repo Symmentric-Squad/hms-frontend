@@ -13,7 +13,7 @@ export interface TableAction {
   label: string;
   icon?: string;
   type?: 'primary' | 'danger' | 'secondary';
-  actionColor: 'red' | 'blue' | 'gray' | 'black' | 'green'
+  actionColor: string;
 }
 
 export interface RowActionEvent {

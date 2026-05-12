@@ -48,13 +48,15 @@
     </div>
     
   
-    <app-data-table
-      [columns]="patientColumns"
-      [data]="patients()"
-      [actions]="patientActions"
-      [emptyStateMessage]="'No patients found'"
-      (actionTriggered)="onPatientTableAction($event)"
-    ></app-data-table>
+    <div class="mx-auto">
+      <app-data-table
+        [columns]="patientColumns"
+        [data]="patients()"
+        [actions]="patientActions"
+        [emptyStateMessage]="'No patients found'"
+        (actionTriggered)="onPatientTableAction($event)"
+      ></app-data-table>
+    </div>
   
     <!-- Patient Modal -->
     @if(showPatientModal) {

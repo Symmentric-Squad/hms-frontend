@@ -45,13 +45,8 @@ export class AdminSpecialisationPage {
       next: (data) => {
         const formattedData = data.map(apt => ({
           ...apt,
-          creationDate: formatDate(apt.creationDate, 'dd-MM-yyyy - HH:mm', 'en-US'),
+          creationDate: formatDate(apt.creationDate, 'dd-MM-yyyy', 'en-US'),
           // creationDate: new Date(apt.creationDate).toLocaleDateString(),
-
-          updationDate: apt.updationDate
-            ? formatDate(apt.updationDate, 'dd-MM-yyyy - HH:mm', 'en-US')
-            : 'N/A'
-          // updationDate: new Date(apt.updationDate).toLocaleDateString(),
         }));
         this.specializations.set(formattedData);
         console.log(formattedData)

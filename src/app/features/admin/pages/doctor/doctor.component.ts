@@ -1,11 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { doctors } from '../../../../shared/db/db';
-import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
+import { Component, computed, inject, signal } from '@angular/core';
+import { RowActionEvent } from '../../../../shared/models/data-table.models';
+import { FieldOption, FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
+import { CreateDoctorRequest, DoctorResponse, SpecializationResponse } from '../../models/admin.model';
 import { AdminService } from '../../service/admin.service';
-import { CreateDoctorRequest, DoctorResponse } from '../../models/admin.model';
-import { doctorActions, doctorColumns, doctorModalConfig, doctorModalFields } from './doctor.config';
-import { ModalSubmitEvent } from '../../../../shared/models/form.models';
+import { buildDoctorFields, doctorActions, doctorColumns } from './doctor.config';
+import { TitleCasePipe } from '../../../../shared/pipe/custom-title-case.pipe';
+
 
 @Component({
   selector: 'app-admin-doctor',
@@ -15,24 +15,30 @@ import { ModalSubmitEvent } from '../../../../shared/models/form.models';
 })
 export class AdminDoctorsPage {
   private readonly adminService = inject(AdminService);
+  private readonly titleCasePipe = inject(TitleCasePipe);
+
+  specializations = signal<SpecializationResponse[]>([]);
+  // specializationFieldOptions = signal<FieldOption[]>([]);
 
   doctors = signal<DoctorResponse[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
-  editingId = signal<number | null>(null);
 
   doctorColumns = doctorColumns;
   doctorActions = doctorActions;
-  doctorModalConfig = doctorModalConfig;
-  doctorModalFields = doctorModalFields;
 
-  // ── Modal state
-  showDoctorModal = false;
-  isViewMode = signal(false);
-  doctorModalData: Partial<DoctorResponse> | null = null;
+  specializationFieldOptions = computed(() => {
+    console.log('Computing options with:', this.specializations());
+
+    return this.specializations().map((specObj) => ({
+      label: this.titleCasePipe.transform(specObj.specialization),
+      value: specObj.specialization
+    }));
+  });
 
   ngOnInit(): void {
     this.loadDoctors();
+    this.loadSpecialization();
   }
 
   // ── Load
@@ -45,14 +51,30 @@ export class AdminDoctorsPage {
     });
   }
 
+
+  loadSpecialization(): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.adminService.getAllSpecializations().subscribe({
+      next: (data) => {
+        this.specializations.set(data);
+        console.log(data)
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Failed to Load specialization');
+        this.loading.set(false);
+      },
+    });
+  }
+
   // ── Add
   addDoctor(request: CreateDoctorRequest): void {
     this.loading.set(true);
     this.adminService.createDoctor(request).subscribe({
       next: (newDoctor) => {
         this.doctors.update((prev) => [...prev, newDoctor]);
-        this.loading.set(false);
-        this.showDoctorModal = false;
       },
       error: () => { this.error.set('Failed to Add Doctor'); this.loading.set(false); },
     });
@@ -66,62 +88,103 @@ export class AdminDoctorsPage {
         this.doctors.update((prev) =>
           prev.map((d) => (d.id === id ? updated : d))
         );
-        this.loading.set(false);
-        this.showDoctorModal = false;
       },
       error: () => { this.error.set('Failed to Update Doctor'); this.loading.set(false); },
     });
   }
+  isModalOpen = false;
+  modalConfig: ModalConfig = this.createConfig();
+  modalFields: FormField[] = [];
 
-  // ── Delete
-  deleteDoctor(id: number): void {
-    // if (!confirm('Delete this doctor?')) return;
-    // this.adminService.deleteDoctor(id).subscribe({
-    //   next: () => {
-    //     this.doctors.update((prev) => prev.filter((d) => d.id !== id));
-    //   },
-    //   error: () => this.error.set('Failed to Delete Doctor'),
-    // });
+  private editingId: number | null = null;
+  private nextId = 3;
+
+  // ── Handlers ───────────────────────────────────────────────────────────────
+
+  handleOpenCreate(): void {
+    this.editingId = null;
+    this.modalConfig = this.createConfig();
+    this.modalFields = buildDoctorFields(this.specializationFieldOptions());
+    this.isModalOpen = true;
   }
 
-  // ── Open modal helpers
-  openAddDoctor(): void {
-    this.editingId.set(null);
-    this.isViewMode.set(false);
-    this.doctorModalData = null;       // clears form
-    this.showDoctorModal = true;
+  handleOpenEdit(employee: DoctorResponse): void {
+    this.editingId = employee.id;
+    this.modalConfig = this.editConfig();
+    this.modalFields = buildDoctorFields(this.specializationFieldOptions(), employee);
+    this.isModalOpen = true;
   }
 
-  openEditDoctor(rowData: DoctorResponse): void {
-    this.editingId.set(rowData.id);
-    this.isViewMode.set(false);
-    this.doctorModalData = { ...rowData };
-    this.showDoctorModal = true;
-  }
+  // Modal only emits when form is valid — no isValid guard needed here
+  handleSubmit(event: ModalSubmitEvent): void {
+    const formData = event.formData as Omit<DoctorResponse, 'id'>;
 
-  openViewDoctor(rowData: DoctorResponse): void {
-    this.editingId.set(null);
-    this.isViewMode.set(true);
-    this.doctorModalData = { ...rowData };
-    this.showDoctorModal = true;
-  }
-
-  // ── Submit
-  onSubmit(event: ModalSubmitEvent): void {
-    if (!event.isValid) { alert('Please fill in all required fields.'); return; }
-    const id = this.editingId();
-    if (id !== null) {
-      this.editDoctor(id, event.formData as CreateDoctorRequest);
+    if (this.editingId === null) {
+      const newEmployee: DoctorResponse = {
+        id: this.nextId++,
+        ...formData,
+      };
+      this.doctors.update(currentDoctors => [...currentDoctors, newEmployee]);
     } else {
-      this.addDoctor(event.formData as CreateDoctorRequest);
+      this.doctors.update(currentDoctors =>
+        currentDoctors.map(doc =>
+          doc.id === this.editingId
+            ? { ...doc, ...formData }
+            : doc
+        )
+      );
     }
+
+    this.closeModal();
+  }
+
+  handleDelete(id: number): void {
+    // Use .update() with a filter to remove the item
+    this.doctors.update(currentDoctors =>
+      currentDoctors.filter(doc => doc.id !== id)
+    );
+  }
+
+  handleCancel(): void {
+    this.closeModal();
+  }
+
+  handleBackdropClick(): void {
+    this.closeModal();
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  private closeModal(): void {
+    this.isModalOpen = false;
+    this.editingId = null;
+  }
+
+  private createConfig(): ModalConfig {
+    return {
+      title: 'Add Doctor',
+      submitButtonText: 'Add Doctor',
+      cancelButtonText: 'Cancel',
+      size: 'medium',
+      mode: 'create',
+    };
+  }
+
+  private editConfig(): ModalConfig {
+    return {
+      title: 'Edit Doctor',
+      submitButtonText: 'Save Changes',
+      cancelButtonText: 'Cancel',
+      size: 'medium',
+      mode: 'edit',
+    };
   }
 
   // ── Row actions
   onTableAction(event: RowActionEvent): void {
     const { action, rowData } = event;
-    if (action === 'edit') this.openEditDoctor(rowData);
-    if (action === 'view') this.openViewDoctor(rowData);
-    // if (action === 'delete') this.deleteDoctor(rowData.id);
+    if (action === 'edit') this.handleOpenEdit(rowData);
+    // if (action === 'view') this.openViewDoctor(rowData);
+    // if (action === 'delete') this.deleteDoctor(rowData.id);  
   }
 }

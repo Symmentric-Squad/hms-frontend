@@ -1,39 +1,73 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth.service';
 import { PublicService } from '../../../../core/services/public.service';
 import { doctors, patients } from '../../../../shared/db/db';
 import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
 import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
-import { AppointmentRequest, AppointmentResponse } from '../../../../core/models/public.model';
+import { AppointmentRequest, AppointmentResponse, DoctorResponse } from '../../../../core/models/public.model';
+import { TitleCasePipe } from '../../../../shared/pipe/custom-title-case.pipe';
+import { appointmentActions, appointmentColumns, buildAppointmentFields } from './appointment.config';
 
 
 @Component({
   selector: 'app-appointment-history',
-  standalone:false,
+  standalone: false,
   templateUrl: './appointment.component.html',
   styleUrl: '../../../../../styles.css',
 })
 export class PatientAppointmentsPage {
-  private readonly appointmentService = inject(PublicService);
+  private readonly publicService = inject(PublicService);
   private readonly auth = inject(AuthService);
+  private readonly titleCasePipe = inject(TitleCasePipe);
 
   appointments = signal<AppointmentResponse[]>([]);
+  doctors = signal<DoctorResponse[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
 
-  doctors = doctors;
   patients = patients;
+  appointmentColumns = appointmentColumns;
+  appointmentActions = appointmentActions;
+
+  doctorFieldOptions = computed(() =>
+    this.doctors().map((docObj) => ({
+      label: this.titleCasePipe.transform(docObj.doctorName),
+      value: docObj.id,
+    }))
+  );
+
+  // ── Modal state ────────────────────────────────────────────────────────────
+
+  isModalOpen = false;
+  modalConfig: ModalConfig = this.createConfig();
+  modalFields: FormField[] = [];
+
+  private editingId: number | null = null;
+
+
 
   ngOnInit(): void {
     this.loadAppointments();
+    this.loadDoctors();
+
   }
 
-  // ── Load 
+  // ── Loaders ────────────────────────────────────────────────────────────────
+
+  loadDoctors(): void {
+    this.loading.set(true);
+    this.error.set(null);
+    this.publicService.getAllDoctors().subscribe({
+      next: (data) => { this.doctors.set(data); console.log(data); this.loading.set(false); },
+      error: () => { this.error.set('Failed to Load Doctors'); this.loading.set(false); },
+    });
+  }
+
   loadAppointments(userId: number = 1): void {
     this.loading.set(true);
     this.error.set(null);
 
-    this.appointmentService.getMyAppointments(userId).subscribe({
+    this.publicService.getMyAppointments(userId).subscribe({
       next: (data) => {
         this.appointments.set(data);
         console.log(data)
@@ -50,11 +84,11 @@ export class PatientAppointmentsPage {
   bookAppointment(request: AppointmentRequest): void {
     this.loading.set(true);
 
-    this.appointmentService.bookAppointment(request).subscribe({
+    this.publicService.bookAppointment(request).subscribe({
       next: (newAppointment) => {
         this.appointments.update((prev) => [...prev, newAppointment]);
         this.loading.set(false);
-        this.showAppointmentModal = false;
+        this.closeModal();
       },
       error: () => {
         this.error.set('Failed to Book Appointment');
@@ -65,90 +99,91 @@ export class PatientAppointmentsPage {
 
   // ── Cancel
   cancelAppointment(appointmentId: number): void {
-  if (!confirm('Cancel this appointment?')) return;
+    if (!confirm('Cancel this appointment?')) return;
 
-  console.log(appointmentId)
+    console.log(appointmentId)
 
-  this.appointmentService.cancelAppointment(appointmentId).subscribe({
-    next: () => this.loadAppointments(),
-    error: () => this.error.set('Failed to Cancel Appointment'),
-  });
-}
-
-  // ── Table config ──────────────────────────────────────────────────────────
-  appointmentColumns: TableColumn[] = [
-    // { key: "patientName", label: "Patient Name"},
-    { key: "doctorName", label: "Doctor Name"},
-    { key: "specialization", label: "Specialization"},
-    { key: "consultancyFees", label: "Consultancy Fees"},
-    { key: "appointmentDate", label: "Appointment Date"},
-    { key: "appointmentTime", label: "Appointment Time"},
-    // { key: "creationDate", label: "Creation Date"},
-    { 
-      key: "currentStatus",
-      label: "Current Status",
-      type: 'badge',
-      tagColors: {
-        Active: { bg: '#dbeafe', text: '#1e40af' },
-        Completed: { bg: '#d1fae5', text: '#065f46' },
-        Cancelled:  { bg: '#fee2e2', text: '#991b1b' },
-      }
-    }
-  ];
-
-  appointmentActions: TableAction[] = [
-    { id: 'cancel', label: 'Cancel', icon: 'close.svg', type: 'danger',    actionColor: 'red'  },
-  ];
-
-  appointmentModalConfig: ModalConfig = {
-    title: 'Add Appointment',
-    submitButtonText: 'Save Details',
-    cancelButtonText: 'Cancel',
-    size: 'medium',
-    mode: 'create',
-  };
-
-  appointmentModalFields: FormField[] = [
-    { key: 'patientName', label: 'Patient Name',      type: 'text',   required: true },
-    { key: 'doctor',      label: 'Doctor Name',        type: 'text',   required: true },
-    { key: 'date',        label: 'Appointment Date',   type: 'date',   required: true },
-    { key: 'time',        label: 'Appointment Time',   type: 'time',   required: true },
-    {
-      key: 'status', label: 'Status', type: 'select', required: true,
-      options: [
-        { label: 'Scheduled', value: 'Scheduled' },
-        { label: 'Completed', value: 'Completed' },
-        { label: 'Cancelled', value: 'Cancelled' },
-      ],
-    },
-  ];
-
-  // ── Modal state ───────────────────────────────────────────────────────────
-  showAppointmentModal = false;
-  editingAppointment: Partial<AppointmentRequest> = {};
-
-  openAddAppointment(): void {
-    this.editingAppointment = {};
-    this.showAppointmentModal = true;
+    this.publicService.cancelAppointment(appointmentId).subscribe({
+      next: () => this.loadAppointments(),
+      error: () => this.error.set('Failed to Cancel Appointment'),
+    });
   }
 
-  onSubmit(event: ModalSubmitEvent): void {
-    if (!event.isValid) {
-      alert('Please fill in all required fields.');
-      return;
-    }
-    this.bookAppointment(event.formData as AppointmentRequest);
+  // ── Modal handlers ─────────────────────────────────────────────────────────
+
+  handleOpenCreate(): void {
+    this.editingId = null;
+    this.modalConfig = this.createConfig();
+    this.modalFields = buildAppointmentFields(this.doctorFieldOptions());
+    this.isModalOpen = true;
   }
 
-  // ── Row actions ───────────────────────────────────────────────────────────
-  onAppointmentTableAction(event: RowActionEvent): void {
+  handleOpenEdit(appointment: AppointmentResponse): void {
+    // this.editingId = appointment.id;
+    // this.modalConfig = this.editConfig();
+    // this.modalFields = buildAppointmentFields(this.doctorFieldOptions(), appointment);
+    // this.isModalOpen = true;
+  }
+
+  handleSubmit(event: ModalSubmitEvent): void {
+    // const formData = event.formData as AppointmentRequest;
+
+    // if (this.editingId === null) {
+    //   // CREATE — delegate to API
+    //   this.bookAppointment(formData);
+    // } else {
+    //   // EDIT — TODO: wire up your update API call here
+    //   this.appointments.update(current =>
+    //     current.map(a => a.id === this.editingId ? { ...a, ...formData } : a)
+    //   );
+    //   this.closeModal();
+    // }
+  }
+
+  handleDelete(id: number): void {
+    // this.appointments.update(current => current.filter(a => a.id !== id));
+  }
+
+  handleCancel(): void {
+    this.closeModal();
+  }
+
+  handleBackdropClick(): void {
+    this.closeModal();
+  }
+
+  // ── Row action dispatcher ──────────────────────────────────────────────────
+
+  onTableAction(event: RowActionEvent): void {
     const { action, rowData } = event;
-    console.log(rowData)
-    if (action === 'edit') {
-      this.editingAppointment = { ...rowData };
-      this.showAppointmentModal = true;
-    } else if (action === 'cancel') {
-      this.cancelAppointment(rowData.id);
-    }
+    if (action === 'edit') this.handleOpenEdit(rowData as AppointmentResponse);
+    if (action === 'delete') this.handleDelete(rowData.id);
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  private closeModal(): void {
+    this.isModalOpen = false;
+    this.editingId = null;
+  }
+
+  private createConfig(): ModalConfig {
+    return {
+      title: 'Book Appointment',
+      submitButtonText: 'Book Appointment',
+      cancelButtonText: 'Cancel',
+      size: 'medium',
+      mode: 'create',
+    };
+  }
+
+  private editConfig(): ModalConfig {
+    return {
+      title: 'Edit Appointment',
+      submitButtonText: 'Save Changes',
+      cancelButtonText: 'Cancel',
+      size: 'medium',
+      mode: 'edit',
+    };
   }
 }

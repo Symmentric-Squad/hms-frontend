@@ -1,21 +1,18 @@
 import { TableAction, TableColumn } from "../../../../shared/models/data-table.models";
 import { FieldOption, FormField, ModalConfig } from "../../../../shared/models/form.models";
-import { AppointmentResponse } from "../../models/admin.model";
+import { AppointmentResponse } from "../../../admin/models/admin.model";
 
-
-// ── Table config ──────────────────────────────────────────────────────────
 export var appointmentColumns: TableColumn[] = [
-    // { key: "appointmentId", label: "Id" },
-    { key: "patientName", label: "Patient Name" },
+    // { key: "patientName", label: "Patient Name"},
     { key: "doctorName", label: "Doctor Name" },
-    { key: "specialization", label: "Specialization"},
-    { key: "consultancyFees", label: "Consultancy Fees"},
-    { key: "appointmentDate", label: "Appt. Date" },
-    { key: "appointmentTime", label: "Appt. Time" },
+    { key: "specialization", label: "Specialization" },
+    { key: "consultancyFees", label: "Consultancy Fees" },
+    { key: "appointmentDate", label: "Appointment Date" },
+    { key: "appointmentTime", label: "Appointment Time" },
     // { key: "creationDate", label: "Creation Date"},
     {
         key: "currentStatus",
-        label: "Status",
+        label: "Current Status",
         type: 'badge',
         tagColors: {
             Active: { bg: '#dbeafe', text: '#1e40af' },
@@ -26,9 +23,7 @@ export var appointmentColumns: TableColumn[] = [
 ];
 
 export var appointmentActions: TableAction[] = [
-    // { id: 'view',   label: 'View',   icon: 'eye.svg',   type: 'secondary', actionColor: 'gray' },
-    { id: 'edit', label: 'Edit', icon: 'edit.svg', type: 'primary', actionColor: 'blue' },
-    // { id: 'cencel', label: 'Cancel', icon: 'close.svg', type: 'danger', actionColor: 'red' },
+    { id: 'cancel', label: 'Cancel', icon: 'close.svg', type: 'danger', actionColor: 'red' },
 ];
 
 // export var appointmentModalConfig: ModalConfig = {
@@ -54,19 +49,9 @@ export var appointmentActions: TableAction[] = [
 //     },
 // ];
 
-
-export function buildAppointmentFields(patientFieldOptions:FieldOption[], doctorFieldOptions:FieldOption[],source?: Partial<AppointmentResponse>): FormField[] {
-    console.log(patientFieldOptions);
+export function buildAppointmentFields( doctorFieldOptions:FieldOption[],source?: Partial<AppointmentResponse>): FormField[] {
     console.log(doctorFieldOptions);
   return [
-    {
-      key: 'userId',
-      label: 'Patient Name',
-      type: 'select',
-      value: source?.patientName ?? '',
-      required: true,
-      options: patientFieldOptions
-    },
     {
       key: 'doctorId',
       label: 'Doctor Name',
