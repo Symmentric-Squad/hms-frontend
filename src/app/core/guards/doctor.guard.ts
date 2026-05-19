@@ -4,14 +4,16 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class DoctorGuard implements CanActivate {
-  constructor(private auth: AuthService, private router: Router) {}
-
+  constructor(private authService: AuthService, private router: Router) {}
+ 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    // if (this.auth.hasRole('DOCTOR')) return true;
-    // this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-    // return false;
-
-    // TODO: UNCOMMENT AFTER PROTOTYPING
-    return true;
+    // Check if user is logged in AND has DOCTOR role
+    if (this.authService.isLoggedIn() && this.authService.isDoctor()) {
+      return true;
+    }
+ 
+    // If not authenticated or wrong role, redirect to login
+    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    return false;
   }
 }

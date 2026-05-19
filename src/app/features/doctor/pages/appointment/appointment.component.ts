@@ -1,16 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth.service';
 import { PublicService } from '../../../../core/services/public.service';
 import { doctors } from '../../../../shared/db/db';
 import { RowActionEvent } from '../../../../shared/models/data-table.models';
 import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
-import { AppointmentRequest } from '../../../admin/models/admin.model';
 import { AppointmentResponse, PatientResponse } from '../../models/doctor.model';
 import { DoctorService } from '../../service/doctor.service';
 
 import { formatDate } from '@angular/common';
-import { buildAppointmentFields, patientAppointmentActions, patientAppointmentColumns} from './appointment.config';
 import { TitleCasePipe } from '../../../../shared/pipe/custom-title-case.pipe';
+import { buildAppointmentFields, patientAppointmentActions, patientAppointmentColumns } from './appointment.config';
 
 @Component({
   selector: 'app-appointment-history',
@@ -20,10 +20,9 @@ import { TitleCasePipe } from '../../../../shared/pipe/custom-title-case.pipe';
 })
 export class DoctorAppointmentsPage {
 
-  private readonly publicService = inject(PublicService);
   private readonly doctorService = inject(DoctorService);
   private readonly auth = inject(AuthService);
-    private readonly titleCasePipe = inject(TitleCasePipe);
+  private readonly titleCasePipe = inject(TitleCasePipe);
 
   appointments = signal<AppointmentResponse[]>([]);
   patients = signal<PatientResponse[]>([]);
@@ -68,7 +67,7 @@ export class DoctorAppointmentsPage {
     });
   }
 
-  loadAppointments(doctorId: number = 1): void {
+  loadAppointments(doctorId: number = 3): void {
     this.loading.set(true);
     this.error.set(null);
 
@@ -77,7 +76,6 @@ export class DoctorAppointmentsPage {
         const formattedData = data.map(apt => ({
           ...apt,
           creationDate: formatDate(apt.creationDate, 'dd-MM-yyyy - HH:mm', 'en-US'),
-          // creationDate: new Date(apt.creationDate).toLocaleDateString(),
         }));
         this.appointments.set(formattedData);
         console.log(formattedData)
@@ -90,92 +88,112 @@ export class DoctorAppointmentsPage {
     });
   }
 
+  // ── Status check helper ────────────────────────────────────────────────────
+  isAppointmentActive(appointment: AppointmentResponse): boolean {
+    return appointment.currentStatus === 'Active';
+  }
 
   // ── Cancel
   cancelAppointment(appointmentId: number): void {
     if (!confirm('Cancel this appointment?')) return;
 
-    this.publicService.cancelAppointment(appointmentId).subscribe({
+    this.doctorService.cancelAppointment(appointmentId).subscribe({
       next: () => this.loadAppointments(),
       error: () => this.error.set('Failed to Cancel Appointment'),
     });
   }
 
+  // ── Status badge styling ───────────────────────────────────────────────────
+  getStatusBadgeClass(status: string): string {
+    const baseClass = 'inline-block px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap';
+    
+    switch (status) {
+      case 'Active':
+        return `${baseClass} bg-blue-100 text-blue-800`;
+      case 'Cancel by Doctor':
+        return `${baseClass} bg-red-100 text-red-900`;
+      case 'Cancel by User':
+        return `${baseClass} bg-red-100 text-red-900`;
+      default:
+        return `${baseClass} bg-gray-100 text-gray-800`;
+    }
+  }
+
   // ── Modal handlers ─────────────────────────────────────────────────────────
   
-    handleOpenCreate(): void {
-      this.editingId = null;
-      this.modalConfig = this.createConfig();
-      this.modalFields = buildAppointmentFields(this.patientFieldOptions());
-      this.isModalOpen = true;
-    }
-  
-    handleOpenEdit(appointment: AppointmentResponse): void {
-      // this.editingId = appointment.id;
-      // this.modalConfig = this.editConfig();
-      // this.modalFields = buildAppointmentFields(this.patientFieldOptions(), this.doctorFieldOptions(), appointment);
-      // this.isModalOpen = true;
-    }
-  
-    handleSubmit(event: ModalSubmitEvent): void {
-      // const formData = event.formData as AppointmentRequest;
-  
-      // if (this.editingId === null) {
-      //   // CREATE — delegate to API
-      //   this.bookAppointment(formData);
-      // } else {
-      //   // EDIT — TODO: wire up your update API call here
-      //   this.appointments.update(current =>
-      //     current.map(a => a.id === this.editingId ? { ...a, ...formData } : a)
-      //   );
-      //   this.closeModal();
-      // }
-    }
-  
-    handleDelete(id: number): void {
-      // this.appointments.update(current => current.filter(a => a.id !== id));
-    }
-  
-    handleCancel(): void {
-      this.closeModal();
-    }
-  
-    handleBackdropClick(): void {
-      this.closeModal();
-    }
-  
-    // ── Row action dispatcher ──────────────────────────────────────────────────
-  
-    onTableAction(event: RowActionEvent): void {
-      const { action, rowData } = event;
-      if (action === 'edit') this.handleOpenEdit(rowData as AppointmentResponse);
-      if (action === 'delete') this.handleDelete(rowData.id);
-    }
-  
-    // ── Helpers ────────────────────────────────────────────────────────────────
-  
-    private closeModal(): void {
-      this.isModalOpen = false;
-      this.editingId = null;
-    }
-  
-    private createConfig(): ModalConfig {
-      return {
-        title: 'Book Appointment',
-        submitButtonText: 'Book Appointment',
-        cancelButtonText: 'Cancel',
-        size: 'medium',
-        mode: 'create',
-      };
-    }
-  
-    private editConfig(): ModalConfig {
-      return {
-        title: 'Edit Appointment',
-        submitButtonText: 'Save Changes',
-        cancelButtonText: 'Cancel',
-        size: 'medium',
-        mode: 'edit',
-      };
-    }
+  handleOpenCreate(): void {
+    this.editingId = null;
+    this.modalConfig = this.createConfig();
+    this.modalFields = buildAppointmentFields(this.patientFieldOptions());
+    this.isModalOpen = true;
+  }
+
+  handleOpenEdit(appointment: AppointmentResponse): void {
+    // this.editingId = appointment.id;
+    // this.modalConfig = this.editConfig();
+    // this.modalFields = buildAppointmentFields(this.patientFieldOptions(), this.doctorFieldOptions(), appointment);
+    // this.isModalOpen = true;
+  }
+
+  handleSubmit(event: ModalSubmitEvent): void {
+    // const formData = event.formData as AppointmentRequest;
+
+    // if (this.editingId === null) {
+    //   // CREATE — delegate to API
+    //   this.bookAppointment(formData);
+    // } else {
+    //   // EDIT — TODO: wire up your update API call here
+    //   this.appointments.update(current =>
+    //     current.map(a => a.id === this.editingId ? { ...a, ...formData } : a)
+    //   );
+    //   this.closeModal();
+    // }
+  }
+
+  handleDelete(id: number): void {
+    // this.appointments.update(current => current.filter(a => a.id !== id));
+  }
+
+  handleCancel(): void {
+    this.closeModal();
+  }
+
+  handleBackdropClick(): void {
+    this.closeModal();
+  }
+
+  // ── Row action dispatcher ──────────────────────────────────────────────────
+
+  onTableAction(event: RowActionEvent): void {
+    const { action, rowData } = event;
+    if (action === 'edit') this.handleOpenEdit(rowData as AppointmentResponse);
+    if (action === 'delete') this.handleDelete(rowData.id);
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  private closeModal(): void {
+    this.isModalOpen = false;
+    this.editingId = null;
+  }
+
+  private createConfig(): ModalConfig {
+    return {
+      title: 'Book Appointment',
+      submitButtonText: 'Book Appointment',
+      cancelButtonText: 'Cancel',
+      size: 'medium',
+      mode: 'create',
+    };
+  }
+
+  private editConfig(): ModalConfig {
+    return {
+      title: 'Edit Appointment',
+      submitButtonText: 'Save Changes',
+      cancelButtonText: 'Cancel',
+      size: 'medium',
+      mode: 'edit',
+    };
+  }
 }

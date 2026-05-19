@@ -24,6 +24,7 @@ export interface ChangePasswordRequest {
 }
 
 export interface AppointmentResponse {
+  appointmentId: number;
   patientName: string;
   doctorName: string;
   specialization: string;

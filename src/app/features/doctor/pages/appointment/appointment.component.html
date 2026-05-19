@@ -43,10 +43,84 @@
       <button class="add-btn" (click)="handleOpenCreate()">+ New Appointment</button>
     </div>
 
-    <div class="">
-      <app-data-table [columns]="appointmentColumns" [data]="appointments()" [actions]="appointmentActions"
-        [emptyStateMessage]="'No appointments found'"
-        (actionTriggered)="onTableAction($event)"></app-data-table>
+    <!-- Custom Table Rendering -->
+    <div class="bg-white rounded-[16px] px-5 py-5 shadow-[0_2px_12px_rgba(0,0,0,0.07)] overflow-x-auto">
+      @if(appointments().length === 0) {
+        <div class="text-center py-12 text-gray-500">
+          <p>No appointments found</p>
+        </div>
+      } @else {
+        <table class="w-full border-collapse text-sm">
+          <thead>
+            <tr class="bg-[#f8faff]">
+              <th class="px-[14px] py-3 text-left font-bold text-gray-700 text-[13px] border-b-2 border-[#e8f0fd]">
+                Patient Name
+              </th>
+              <th class="px-[14px] py-3 text-left font-bold text-gray-700 text-[13px] border-b-2 border-[#e8f0fd]">
+                Appt. Date
+              </th>
+              <th class="px-[14px] py-3 text-left font-bold text-gray-700 text-[13px] border-b-2 border-[#e8f0fd]">
+                Appt. Time
+              </th>
+              <th class="px-[14px] py-3 text-left font-bold text-gray-700 text-[13px] border-b-2 border-[#e8f0fd]">
+                Creation Date
+              </th>
+              <th class="px-[14px] py-3 text-left font-bold text-gray-700 text-[13px] border-b-2 border-[#e8f0fd]">
+                Status
+              </th>
+              <th class="px-[14px] py-3 text-left font-bold text-gray-700 text-[13px] border-b-2 border-[#e8f0fd]">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (appointment of appointments(); track appointment.appointmentId) {
+              <tr class="border-b border-[#f5f5f5] hover:bg-[#f8faff] transition-colors duration-150">
+                <td class="px-[14px] py-3 text-gray-600 align-middle">
+                  {{ appointment.patientName }}
+                </td>
+                <td class="px-[14px] py-3 text-gray-600 align-middle">
+                  {{ appointment.appointmentDate }}
+                </td>
+                <td class="px-[14px] py-3 text-gray-600 align-middle">
+                  {{ appointment.appointmentTime }}
+                </td>
+                <td class="px-[14px] py-3 text-gray-600 align-middle">
+                  {{ appointment.creationDate }}
+                </td>
+                <td class="px-[14px] py-3 text-gray-600 align-middle">
+                  <span [class]="getStatusBadgeClass(appointment.currentStatus || '')">
+                    {{ appointment.currentStatus }}
+                  </span>
+                </td>
+                <td class="px-[14px] py-3 align-middle">
+                  <div class="flex gap-2 flex-wrap">
+                    <!-- Only show cancel button if appointment is Active -->
+                    @if (isAppointmentActive(appointment)) {
+                      <button 
+                        (click)="cancelAppointment(appointment.appointmentId)"
+                        class="flex items-center gap-1 px-2 py-1 rounded text-xs font-bold border-none cursor-pointer whitespace-nowrap text-red-600 bg-red-100 hover:bg-red-300 transition-colors">
+                        <span class="inline-block w-[14px] h-[14px] shrink-0" style="
+                              mask-size: contain; 
+                              mask-repeat: no-repeat; 
+                              mask-position: center center; 
+                              mask-image: url('close.svg'); 
+                              background-color: red;
+                            "></span>
+                        <span>Cancel</span>
+                      </button>
+                    } @else {
+                      <span class="text-xs text-gray-400 px-2 py-1">
+                        No actions available
+                      </span>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
     </div>
   </div>
 

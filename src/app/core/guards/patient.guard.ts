@@ -4,14 +4,18 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class PatientGuard implements CanActivate {
-  constructor(private auth: AuthService, private router: Router) {}
-
+  constructor(private authService: AuthService, private router: Router) {}
+ 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    // if (this.auth.hasRole('PATIENT')) return true;
-    // this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-    // return false;
-
-    // TODO: UNCOMMENT AFTER PROTOTYPING
-    return true;
+    // Check if user is logged in AND has USER role
+    console.log(this.authService.isLoggedIn());
+    console.log(this.authService.isUser());
+    if (this.authService.isLoggedIn() && this.authService.isUser()) {
+      return true;
+    }
+ 
+    // If not authenticated or wrong role, redirect to login
+    this.router.navigate(['/#login'], { queryParams: { returnUrl: state.url } });
+    return false;
   }
 }
