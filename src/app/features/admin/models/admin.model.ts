@@ -70,6 +70,7 @@ export interface SpecializationRequest {
 }
 
 export interface SpecializationResponse {
+  id: number;
   specialization: string;
   creationDate: string;
   updationDate: string | null;
@@ -97,6 +98,7 @@ export interface UpdatePatientRequest {
 }
 
 export interface PatientResponse {
+  patientId: number;
   doctorId: number;
   patientName: string;
   patientContactNo: number;

@@ -8,7 +8,7 @@ import { SidebarComponent } from "../../../shared/components/sidebar/sidebar.com
     <app-sidebar [navItems]="navItems"></app-sidebar>
     `
 })
-export class DoctorSidebarComponent {
+export class PatientSidebarComponent {
     navItems = [
     { label: 'Dashboard', icon: 'home_2.svg', link: '/patient', exact: true },
     { label: 'Appointments', icon: 'calender.svg', link: '/patient/appointments', exact: false },

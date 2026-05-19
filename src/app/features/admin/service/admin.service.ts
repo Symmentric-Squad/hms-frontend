@@ -162,4 +162,9 @@ export class AdminService {
   updateUser(id: number, request: UpdateUserRequest): Observable<UserResponse> {
     return this.http.put<UserResponse>(`${this.baseUrl}/users/${id}`, request);
   }
+
+  //DELETE /api/users/:id
+  deleteUser(id: number): Observable<String>{
+    return this.http.delete<String>(`${this.baseUrl}/users/${id}`);
+  }
 }

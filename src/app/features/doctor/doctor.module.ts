@@ -24,19 +24,19 @@ import { DoctorReportsPage } from "./pages/report/report.component";
     PatientDetails
   ],
   imports: [
-    ModalFormComponent,
-    DoctorSidebarComponent,
     CommonModule,
-    DoctorRoutingModule,
-    SidebarComponent,
-    DoctorLayoutComponent,
-    ɵInternalFormsSharedModule,
-    DataTableComponent,
     FormsModule,
-    DashboardCard
+    ɵInternalFormsSharedModule,
+    ModalFormComponent,
+    DashboardCard,
+    DataTableComponent,
+    SidebarComponent,
+    DoctorRoutingModule,
+    DoctorSidebarComponent,
+    DoctorLayoutComponent,
   ],
   providers: [
-    TitleCasePipe
+    TitleCasePipe,
   ]
 })
 export class DoctorModule { }

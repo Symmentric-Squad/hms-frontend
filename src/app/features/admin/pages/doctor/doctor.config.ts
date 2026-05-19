@@ -3,8 +3,11 @@ import { FieldOption, FormField, ModalConfig } from "../../../../shared/models/f
 import { DoctorResponse } from "../../models/admin.model";
 
 
-// Table Configuration
-export var doctorColumns: TableColumn[] = [
+// ────────────────────────────────────────────────────────────────────────────
+// TABLE CONFIGURATION
+// ────────────────────────────────────────────────────────────────────────────
+
+export const doctorColumns: TableColumn[] = [
     { key: 'doctorName', label: 'Name' },
     { key: 'specializationName', label: 'Speciality' },
     { key: 'contactNo', label: 'Phone' },
@@ -18,69 +21,195 @@ export var doctorColumns: TableColumn[] = [
     // },
 ];
 
-export var doctorActions: TableAction[] = [
-    { id: 'edit', label: 'Edit', icon: 'edit.svg', type: 'primary', actionColor: 'blue' },  
+export const doctorActions: TableAction[] = [
+    { id: 'edit', label: 'Edit', icon: 'edit.svg', type: 'primary', actionColor: 'blue' },
+    // { id: 'view', label: 'View', icon: 'view.svg', type: 'secondary', actionColor: 'gray' },
+    // { id: 'delete', label: 'Delete', icon: 'delete.svg', type: 'danger', actionColor: 'red' },
 ];
 
-// export var doctorModalConfig: ModalConfig = {
-//     title: 'Add Doctor',
-//     submitButtonText: 'Save Doctor',
-//     cancelButtonText: 'Cancel',
-//     size: 'medium',
-//     mode: 'create',
-// }
 
-// export var doctorModalFields: FormField[] = [
-//     { key: "specializationId", label: "specializationId", type: 'text', required: true },
-//     { key: "doctorName", label: "doctorName", type: 'email', required: true },
-//     { key: "address", label: "address", type: 'text', required: true },
-//     { key: "doctorFees", label: "doctorFees", type: 'text', required: true },
-//     { key: "doctorEmail", label: "doctorEmail", type: 'text', required: true },
-//     { key: "contactNo", label: "contactNo", type: 'text', required: true }
-// ]
+// ────────────────────────────────────────────────────────────────────────────
+// MODAL CONFIGURATIONS
+// ────────────────────────────────────────────────────────────────────────────
 
-export function buildDoctorFields(specializationFieldOptions:FieldOption[],source?: Partial<DoctorResponse>): FormField[] {
-  return [
-    {
-      key: 'name',
-      label: 'Doctor Name',
-      type: 'text',
-      value: source?.doctorName ?? '',
-      placeholder: 'Jane Doe',
-      required: true,
-    },
-    {
-      key: 'email',
-      label: 'Email',
-      type: 'email',
-      value: source?.doctorEmail ?? '',
-      placeholder: 'doctor@hms.in',
-      required: true,
-    },
-    {
-      key: 'specialization',
-      label: 'Specialization',
-      type: 'select',
-      value: source?.specializationName ?? '',
-      placeholder: 'Select specialization',
-      required: true,
-      options: specializationFieldOptions
-    },
-    {
-      key: 'phone number',
-      label: 'Phone Number',
-      type: 'number',
-      value: source?.contactNo ?? '',
-      placeholder: '98XXXXXXXX',
-      required: true,
-    },
-    {
-      key: 'address',
-      label: 'Address',
-      type: 'textarea',
-      value: source?.address ?? '',
-      placeholder: 'Address of the Doctor',
-      rows: 3,
-    },
-  ];
+/**
+ * Config for CREATE mode - Adding a new doctor
+ */
+export const createDoctorModalConfig: ModalConfig = {
+    title: 'Add New Doctor',
+    submitButtonText: 'Add Doctor',
+    cancelButtonText: 'Cancel',
+    size: 'medium',
+    mode: 'create',
+};
+
+/**
+ * Config for EDIT mode - Updating an existing doctor
+ */
+export const editDoctorModalConfig: ModalConfig = {
+    title: 'Edit Doctor',
+    submitButtonText: 'Save Changes',
+    cancelButtonText: 'Cancel',
+    size: 'medium',
+    mode: 'edit',
+};
+
+
+// ────────────────────────────────────────────────────────────────────────────
+// FORM FIELD BUILDERS
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Build form fields for CREATE mode
+ * - All fields are empty
+ * - Password field is REQUIRED for new doctors
+ * - Maps to CreateDoctorRequest interface
+ */
+export function buildCreateDoctorFields(
+    specializationFieldOptions: FieldOption[]
+): FormField[] {
+    return [
+        {
+            key: 'doctorName',
+            label: 'Doctor Name',
+            type: 'text',
+            value: '',
+            placeholder: 'Jane Doe',
+            required: true,
+        },
+        {
+            key: 'doctorEmail',
+            label: 'Email',
+            type: 'email',
+            value: '',
+            placeholder: 'doctor@hms.in',
+            required: true,
+        },
+        {
+            key: 'password',
+            label: 'Password',
+            type: 'text',
+            value: '',
+            placeholder: 'Enter a secure password',
+            required: true,
+        },
+        {
+            key: 'specializationId',
+            label: 'Specialization',
+            type: 'select',
+            value: '',
+            placeholder: 'Select specialization',
+            required: true,
+            options: specializationFieldOptions,
+        },
+        {
+            key: 'contactNo',
+            label: 'Phone Number',
+            type: 'number',
+            value: '',
+            placeholder: '98XXXXXXXX',
+            required: true,
+        },
+        {
+            key: 'doctorFees',
+            label: 'Doctor Fees',
+            type: 'number',
+            value: '',
+            placeholder: 'Rs. xxx',
+            required: true,
+        },
+        {
+            key: 'address',
+            label: 'Address',
+            type: 'textarea',
+            value: '',
+            placeholder: 'Address of the Doctor',
+            rows: 3,
+            required: true,
+        },
+    ];
+}
+
+/**
+ * Build form fields for EDIT mode
+ * - Fields are populated with existing doctor data
+ * - Password field is EXCLUDED (use separate password change flow)
+ * - Maps to UpdateDoctorRequest interface
+ * - Specialization value matches the option's value property (string name)
+ */
+export function buildEditDoctorFields(
+    specializationFieldOptions: FieldOption[],
+    doctor: DoctorResponse,
+    specializationId?: string 
+): FormField[] {
+    return [
+        {
+            key: 'doctorName',
+            label: 'Doctor Name',
+            type: 'text',
+            value: doctor.doctorName ?? '',
+            placeholder: 'Jane Doe',
+            required: true,
+        },
+        {
+            key: 'doctorEmail',
+            label: 'Email',
+            type: 'email',
+            value: doctor.doctorEmail ?? '',
+            placeholder: 'doctor@hms.in',
+            required: true,
+        },
+        {
+            key: 'specializationId',
+            label: 'Specialization',
+            type: 'select',
+            value: specializationId ?? '',  // value property sends specialization name string
+            placeholder: 'Select specialization',
+            required: true,
+            options: specializationFieldOptions,
+        },
+        {
+            key: 'contactNo',
+            label: 'Phone Number',
+            type: 'number',
+            value: doctor.contactNo ?? '',
+            placeholder: '98XXXXXXXX',
+            required: true,
+        },
+        {
+            key: 'doctorFees',
+            label: 'Doctor Fees',
+            type: 'number',
+            value: doctor.doctorFees ?? '',
+            placeholder: '500',
+            required: true,
+        },
+        {
+            key: 'address',
+            label: 'Address',
+            type: 'textarea',
+            value: doctor.address ?? '',
+            placeholder: 'Address of the Doctor',
+            rows: 3,
+            required: true,
+        },
+    ];
+}
+
+/**
+ * Unified builder - maintains backward compatibility
+ * Automatically detects if source data is provided to determine create vs edit mode
+ * 
+ * @param specializationFieldOptions - Available specialization options
+ * @param source - Optional doctor data; if provided, builds edit fields; otherwise builds create fields
+ * @returns FormField[] configured for either create or edit mode
+ */
+export function buildDoctorFields(
+    specializationFieldOptions: FieldOption[],
+    source?: Partial<DoctorResponse>
+): FormField[] {
+    if (source) {
+        return buildEditDoctorFields(specializationFieldOptions, source as DoctorResponse);
+    }
+    return buildCreateDoctorFields(specializationFieldOptions);
 }

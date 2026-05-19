@@ -36,6 +36,7 @@ export interface AppointmentResponse {
 }
 
 export interface PatientResponse {
+  patientId: number;
   doctorId: number;
   patientName: string;
   patientContactNo: number;

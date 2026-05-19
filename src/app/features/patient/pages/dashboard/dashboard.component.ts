@@ -11,7 +11,7 @@ import { appointmentColumns, appointmentModalFields, bookAppointmentModalConfig,
   selector: 'app-doctor-dashboard',
   standalone: false,
   templateUrl: './dashboard.component.html',
-  styleUrl: '../../../../../styles.css'
+  // styleUrl: '../../../../../styles.css'
 })
 export class PatientDashboardPage {
 

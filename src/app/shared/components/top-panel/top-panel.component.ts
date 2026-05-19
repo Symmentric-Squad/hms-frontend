@@ -24,9 +24,9 @@ export interface ProfileUser {
       @if(currentUser) {
         <div class="flex items-center gap-2.5 cursor-pointer" (click)="showProfileModal = true">
           @if(currentUser.role === 'ADMIN') {
-            <span class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-[20px] text-sm font-semibold px-2 inline-flex items-center">
+            <span class="bg-linear-to-r from-blue-600 to-blue-800 text-white rounded-[20px] text-sm font-semibold px-2 inline-flex items-center">
               <!-- <span 
-                class="brand-icon inline-block cursor-pointer bg-white w-[13px] h-[13px] m-0"
+                class="brand-icon inline-block cursor-pointer bg-white w-3.25 h-3.25 m-0"
                 style="
                   mask-image: url('admin.svg'); 
                   -webkit-mask-image: url('admin.svg');
@@ -36,9 +36,9 @@ export interface ProfileUser {
               ></span>  -->
               {{ currentUser.role }}</span>
           } @else if (currentUser.role === 'DOCTOR') {
-            <span class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-[20px] text-sm font-semibold px-2 inline-flex items-center">
+            <span class="bg-linear-to-r from-blue-600 to-blue-800 text-white rounded-[20px] text-sm font-semibold px-2 inline-flex items-center">
               <!-- <span 
-                class="brand-icon inline-block cursor-pointer bg-white w-[13px] h-[13px] m-0"
+                class="brand-icon inline-block cursor-pointer bg-white w-3.25 h-3.25 m-0"
                 style="
                   mask-image: url('doctor.svg'); 
                   -webkit-mask-image: url('doctor.svg');
@@ -48,9 +48,9 @@ export interface ProfileUser {
               ></span>  -->
               {{ currentUser.role }}</span>
           } @else {
-            <span class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-[20px] text-sm font-semibold px-2 inline-flex items-center">
+            <span class="bg-linear-to-r from-blue-600 to-blue-800 text-white rounded-[20px] text-sm font-semibold px-2 inline-flex items-center">
               <!-- <span 
-                class="brand-icon inline-block cursor-pointer bg-white w-[13px] h-[13px] m-0"
+                class="brand-icon inline-block cursor-pointer bg-white w-3.25 h-3.25 m-0"
                 style="
                   mask-image: url('patient.svg'); 
                   -webkit-mask-image: url('patient.svg');

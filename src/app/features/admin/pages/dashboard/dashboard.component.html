@@ -22,17 +22,17 @@
 
   <div class="dash-panel">
     <div class="panel-header">
-      <h3>Doctor Overview</h3>
-      <button class="view-all-btn" routerLink="/admin/doctors">View All →</button>
+      <h3>Patient Overview</h3>
+      <button class="view-all-btn" routerLink="/admin/patients">View All →</button>
     </div>
     <div class="doctor-list">
-      <div class="doctor-item" *ngFor="let doctor of doctors().slice(0,4)">
-        <div class="doctor-avatar">{{ doctor.doctorName[4].toUpperCase() }}</div>
+      <div class="doctor-item" *ngFor="let patient of patients().slice(0,4)">
+        <div class="doctor-avatar">{{ patient.patientName[0] }}</div>
         <div class="doctor-meta">
-          <span class="doctor-name">{{ doctor.doctorName }}</span>
-          <span class="doctor-specialty">{{ doctor.specializationName }}</span>
+          <span class="doctor-name">{{ patient.patientName }}</span>
+          <span class="doctor-specialty">{{ patient.patientAge }} - {{patient.patientGender}}</span>
         </div>
-        <!-- <span class="status-badge" [class]="'status-' + doctor.status.toLowerCase()">{{ doctor.status }}</span> -->
+        <span class="status-badge">{{ patient.patientContactNo }}</span>
       </div>
     </div>
   </div>

@@ -10,7 +10,7 @@ import { RouterModule } from "@angular/router";
             [style.border-left-color]="colorMap[cardStats.cardColor]"
         >
             <div
-                class="inline-block [mask-size:contain] [mask-repeat:no-repeat] text-3xl flex-shrink-0"
+                class="inline-block mask-contain mask-no-repeat text-3xl shrink-0"
                 [style.mask-image]="'url(' + cardStats.icon + ')'"
                 [style.webkit-mask-image]="'url(' + cardStats.icon + ')'"
                 [style.background-color]="colorMap[cardStats.cardColor]"

@@ -28,7 +28,11 @@ export class AdminPatientsPage {
   patientModalConfig = patientModalConfig;
   patientModalFields = patientModalFields;
 
-  constructor(private router:Router){}
+  constructor(private authService: AuthService, private router : Router) {
+    // Add this in constructor:
+    console.log('Token from AuthService:', this.authService.getToken());
+    console.log('Role from AuthService:', this.authService.getRole());
+  }
 
   ngOnInit(): void {
     this.loadPatients();

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { DoctorSidebarComponent } from './component/patient-sidebar.component';
+import { PatientSidebarComponent } from './component/patient-sidebar.component';
 import { TopPanelComponent } from '../../shared/components/top-panel/top-panel.component';
 
 @Component({
   selector: 'app-doctor-layout',
   standalone: true,
-  imports: [RouterModule, DoctorSidebarComponent,TopPanelComponent],
+  imports: [RouterModule, PatientSidebarComponent,TopPanelComponent],
   template: `
     <div class="relative flex min-h-screen">
       <app-patient-sidebar></app-patient-sidebar>
