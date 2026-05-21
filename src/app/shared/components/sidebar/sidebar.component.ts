@@ -33,7 +33,7 @@ export class SidebarComponent {
   }
 
   logout() {
-    // this.auth.clearCurrentUser();
+    this.auth.clearCurrentUser();
     this.router.navigate(['/'], { replaceUrl: true });
   }
 

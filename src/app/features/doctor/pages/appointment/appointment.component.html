@@ -27,7 +27,7 @@
       </p>
     </div>
 
-    <button (click)="loadAppointments()"
+    <button (click)="loadAppointments(doctorId)"
       class="mt-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors">
       Retry Connection
     </button>
@@ -40,7 +40,7 @@
         <h2>Manage Appointments</h2>
         <p>Schedule and track all hospital appointments</p>
       </div>
-      <button class="add-btn" (click)="handleOpenCreate()">+ New Appointment</button>
+      <!-- <button class="add-btn" (click)="handleOpenCreate()">+ New Appointment</button> -->
     </div>
 
     <!-- Custom Table Rendering -->

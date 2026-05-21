@@ -240,12 +240,6 @@ export class RegisterComponent {
       this.validationErrors.push({ field: 'password', message: 'Password is required' });
     } else if (this.user.password.length < 8) {
       this.validationErrors.push({ field: 'password', message: 'Password must be at least 8 characters' });
-    } else if (!/[A-Z]/.test(this.user.password)) {
-      this.validationErrors.push({ field: 'password', message: 'Password must contain at least one uppercase letter' });
-    } else if (!/[a-z]/.test(this.user.password)) {
-      this.validationErrors.push({ field: 'password', message: 'Password must contain at least one lowercase letter' });
-    } else if (!/[0-9]/.test(this.user.password)) {
-      this.validationErrors.push({ field: 'password', message: 'Password must contain at least one number' });
     }
 
     // Gender validation

@@ -21,13 +21,14 @@ import { buildAppointmentFields, patientAppointmentActions, patientAppointmentCo
 export class DoctorAppointmentsPage {
 
   private readonly doctorService = inject(DoctorService);
-  private readonly auth = inject(AuthService);
   private readonly titleCasePipe = inject(TitleCasePipe);
 
   appointments = signal<AppointmentResponse[]>([]);
   patients = signal<PatientResponse[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+
+  doctorId :number = 0; 
 
   doctors = doctors;
   appointmentColumns = patientAppointmentColumns;
@@ -51,7 +52,12 @@ export class DoctorAppointmentsPage {
 
 
   ngOnInit(): void {
-    this.loadAppointments();
+    this.doctorId = Number(localStorage.getItem('userId'));
+    if (!this.doctorId || this.doctorId === 0) {
+      this.error.set('Invalid User ID');
+      return;
+    }
+    this.loadAppointments(this.doctorId);
     this.loadPatients();
   }
 
@@ -60,14 +66,13 @@ export class DoctorAppointmentsPage {
   loadPatients(): void {
     this.loading.set(true);
     this.error.set(null);
-    // TODO: pass the doctorId here from auth
-    this.doctorService.getMyPatients(1).subscribe({
+    this.doctorService.getMyPatients(this.doctorId).subscribe({
       next: (data) => { this.patients.set(data);console.log(data); this.loading.set(false); },
       error: () => { this.error.set('Failed to Load Patients'); this.loading.set(false); },
     });
   }
 
-  loadAppointments(doctorId: number = 3): void {
+  loadAppointments(doctorId: number): void {
     this.loading.set(true);
     this.error.set(null);
 
@@ -98,7 +103,7 @@ export class DoctorAppointmentsPage {
     if (!confirm('Cancel this appointment?')) return;
 
     this.doctorService.cancelAppointment(appointmentId).subscribe({
-      next: () => this.loadAppointments(),
+      next: () => this.loadAppointments(this.doctorId),
       error: () => this.error.set('Failed to Cancel Appointment'),
     });
   }

@@ -15,7 +15,7 @@ import { LoginRequest } from '../../../core/models/auth.model';
       <h2 class="text-3xl font-bold text-blue-600">Portal Login</h2>
       <h6 class="text-xs text-gray-500 mt-1 mb-12">Select your role and sign in to access your dashboard</h6>
 
-      <div class="mx-auto flex w-full max-w-[1100px] flex-wrap items-start justify-center gap-7">
+      <div class="mx-auto flex w-full max-w-[1100px] flex-nowrap items-start justify-center gap-7 overflow-x-auto">
         <app-login-card
           *ngFor="let config of roles"
           [role]="config.role"

@@ -1,56 +1,51 @@
-import { TableAction, TableColumn } from "../../../../shared/models/data-table.models"
-import { FormField, ModalConfig } from "../../../../shared/models/form.models"
+import { TableColumn } from "../../../../shared/models/data-table.models"
+import { FieldOption, FormField, ModalConfig } from "../../../../shared/models/form.models"
+import { AppointmentResponse } from "../../../admin/models/admin.model"
 
-export var bookAppointmentModalConfig: ModalConfig = {
-    title: 'New Appointment',
+// ── Modal Configurations ──
+
+export const bookAppointmentModalConfig: ModalConfig = {
+    title: 'Book Appointment',
     submitButtonText: 'Book Appointment',
     cancelButtonText: 'Cancel',
-    size: 'small',
+    size: 'medium',
     mode: 'create',
-}
+};
 
-export var appointmentModalFields: FormField[] = [
-    { key: 'patient name', label: 'Patient Name', type: 'text', required: true },
-    { key: 'doctor', label: 'Doctor Name', type: 'text', required: true },
-    { key: 'date', label: 'Appointment Date', type: 'date', required: true },
-    { key: 'time', label: 'Appointment Time', type: 'time', required: true },
-    {
-        key: 'status', label: 'Status', type: 'select', required: true,
-        options: [
-            { label: "Scheduled", value: "Scheduled" },
-            { label: "Completed", value: "Completed" },
-            { label: "Cancelled", value: "Cancelled" },
-        ]
-    },
-]
-
-export var editProfileModalConfig: ModalConfig = {
+export const editProfileModalConfig: ModalConfig = {
     title: 'Edit Profile',
-    submitButtonText: 'Edit Profile',
+    submitButtonText: 'Update Profile',
     cancelButtonText: 'Cancel',
-    size: 'small',
-    mode: 'create',
-}
+    size: 'medium',
+    mode: 'edit',
+};
 
-export var profileModalFields: FormField[] = [
-    { key: 'name', label: 'Name', type: 'text', required: true },
-    { key: 'gender', label: 'Gender', type: 'text', required: true },
-    { key: 'address', label: 'Address', type: 'text', required: true },
-    { key: 'city', label: 'City', type: 'text', required: true },
-    { key: 'email', label: 'Email', type: 'email', required: true, },
-]
+// ── Table Configuration ──
 
-export var appointmentColumns: TableColumn[] = [
-    // { key: "patientName", label: "Patient Name"},
-    { key: "doctorName", label: "Doctor Name" },
-    { key: "specialization", label: "Specialization" },
-    { key: "consultancyFees", label: "Consultancy Fees" },
-    { key: "appointmentDate", label: "Appointment Date" },
-    { key: "appointmentTime", label: "Appointment Time" },
-    // { key: "creationDate", label: "Creation Date"},
+export const appointmentColumns: TableColumn[] = [
+    { 
+        key: "doctorName", 
+        label: "Doctor Name" 
+    },
+    { 
+        key: "specialization", 
+        label: "Specialization" 
+    },
+    { 
+        key: "consultancyFees", 
+        label: "Consultancy Fees" 
+    },
+    { 
+        key: "appointmentDate", 
+        label: "Appointment Date" 
+    },
+    { 
+        key: "appointmentTime", 
+        label: "Appointment Time" 
+    },
     {
         key: "currentStatus",
-        label: "Current Status",
+        label: "Status",
         type: 'badge',
         tagColors: {
             Active: { bg: '#dbeafe', text: '#1e40af' },
@@ -59,3 +54,125 @@ export var appointmentColumns: TableColumn[] = [
         }
     }
 ];
+
+// ── Form Field Builders ──
+
+/**
+ * Builds appointment booking form fields
+ * @param doctorFieldOptions - Available doctor options for the select field
+ * @param source - Optional existing appointment data to pre-fill form
+ * @returns Array of form fields for appointment booking
+ */
+export function buildAppointmentFields(
+    doctorFieldOptions: FieldOption[],
+    source?: Partial<AppointmentResponse>
+): FormField[] {
+    return [
+        {
+            key: 'appointmentDate',
+            label: 'Appointment Date',
+            type: 'date',
+            value: source?.appointmentDate ?? '',
+            required: true,
+        },
+        {
+            key: 'appointmentTime',
+            label: 'Appointment Time',
+            type: 'time',
+            value: source?.appointmentTime ?? '',
+            required: true,
+        },
+        // {
+        //     key: 'doctorId',
+        //     label: 'Doctor Name',
+        //     type: 'select',
+        //     value: source?.doctorName ?? '',
+        //     required: true,
+        //     options: doctorFieldOptions,
+        // },
+        // {
+        //     key: 'consultancyFees',
+        //     label: 'Consultancy Fees',
+        //     type: 'number',
+        //     value: source?.consultancyFees ?? '',
+        //     placeholder: '100',
+        //     required: true,
+        // },
+    ];
+}
+
+/**
+ * Builds profile update form fields
+ * - Pre-fills fields with user data from UserResponse
+ * - Follows the doctor page pattern for edit workflows
+ * 
+ * @param userData - UserResponse object containing current user profile data
+ * @returns Array of form fields for profile update with pre-filled values
+ */
+export function buildProfileFields(userData?: any): FormField[] {
+    return [
+        {
+            key: 'fullName',
+            label: 'Full Name',
+            type: 'text',
+            value: userData?.fullName ?? '',
+            placeholder: 'Jane Doe',
+            required: true,
+        },
+        {
+            key: 'email',
+            label: 'Email',
+            type: 'email',
+            value: userData?.email ?? '',
+            placeholder: 'patient@hms.in',
+            required: true,
+        },
+        {
+            key: 'gender',
+            label: 'Gender',
+            type: 'select',
+            value: userData?.gender ?? '',
+            required: true,
+            options: [
+                { label: 'Male', value: 'Male' },
+                { label: 'Female', value: 'Female' },
+                { label: 'Other', value: 'Other' },
+            ],
+        },
+        {
+            key: 'address',
+            label: 'Address',
+            type: 'textarea',
+            value: userData?.address ?? '',
+            placeholder: 'Street address',
+            rows: 3,
+            required: false,
+        },
+        {
+            key: 'city',
+            label: 'City',
+            type: 'text',
+            value: userData?.city ?? '',
+            placeholder: 'Chennai',
+            required: false,
+        },
+        {
+            key: 'regDate',
+            label: 'Registration Date',
+            type: 'text',
+            value: userData?.regDate ?? '',
+            required: false,
+            disabled: true,
+            placeholder: 'Auto-populated',
+        },
+        // {
+        //     key: 'updationDate',
+        //     label: 'Last Updated',
+        //     type: 'text',
+        //     value: userData?.updationDate ?? 'Never',
+        //     required: false,
+        //     disabled: true,
+        //     placeholder: 'Auto-populated',
+        // },
+    ];
+}

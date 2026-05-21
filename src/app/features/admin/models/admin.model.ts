@@ -7,11 +7,13 @@ export interface DashboardResponse {
 }
 
 export interface ContactQueryListResponse {
+  contactQueryId: number;
   fullName: string;
   email: string;
   contactNo: number;
   message: string;
   postingDate: string;
+  read?: boolean;
 }
 
 export interface ContactQueryDetailResponse {

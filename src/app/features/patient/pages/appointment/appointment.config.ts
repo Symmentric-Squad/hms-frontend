@@ -50,7 +50,6 @@ export var appointmentActions: TableAction[] = [
 // ];
 
 export function buildAppointmentFields( doctorFieldOptions:FieldOption[],source?: Partial<AppointmentResponse>): FormField[] {
-    console.log(doctorFieldOptions);
   return [
     {
       key: 'doctorId',

@@ -143,16 +143,19 @@ export class AdminDoctorsPage {
     this.editingId = doctor.id;
     this.modalConfig = editDoctorModalConfig;
     this.modalFields = buildEditDoctorFields(this.specializationFieldOptions(), doctor);
+    
     // Fetch specialization ID from specializations array at modal open time
-    const specializationId = this.specializations().find(
+    const specializationId: number = this.specializations().find(
         s => s.specialization === doctor.specializationName
-    )?.specialization;
+    )?.id || 0; // 💡 Changed ?.specialization to ?.id, and fallback to 0
+    
+    console.log(specializationId)
 
     // Pass it to buildEditDoctorFields
     this.modalFields = buildEditDoctorFields(
         this.specializationFieldOptions(),
         doctor,
-        specializationId || doctor.specializationName
+        specializationId
     );
     this.isModalOpen = true;
   }

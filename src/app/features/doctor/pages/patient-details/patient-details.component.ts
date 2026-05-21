@@ -1,5 +1,5 @@
 import { formatDate } from "@angular/common";
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormField, ModalConfig, ModalSubmitEvent } from "../../../../shared/models/form.models";
 import { appointmentActions, appointmentColumns, reportActions, reportColumns } from "./patient-details.config";
@@ -21,9 +21,9 @@ export class PatientDetails implements OnInit {
     private readonly router = inject(Router);
 
     // Data - simple properties
-    patientDetails: PatientResponse | null = null;
-    patientMedicalHistory: MedicalHistoryResponse[] = [];
-    patientAppointmentHistory: AppointmentResponse[] = [];
+    patientDetails = signal<PatientResponse | null>(null);
+    patientMedicalHistory = signal<MedicalHistoryResponse[]>([]);
+    patientAppointmentHistory = signal<AppointmentResponse[]>([]);
 
     loading = false;
     error: string | null = null;
@@ -181,7 +181,7 @@ export class PatientDetails implements OnInit {
                         ? formatDate(data.updationDate, 'dd-MM-yyyy - HH:mm', 'en-US')
                         : 'N/A'
                 };
-                this.patientDetails = formattedData;
+                this.patientDetails.set(formattedData);
                 console.log(formattedData);
                 this.loading = false;
             },
@@ -199,7 +199,7 @@ export class PatientDetails implements OnInit {
 
         this.doctorService.getMedicalHistory(this.patientId).subscribe({
             next: (data) => {
-                this.patientMedicalHistory = data;
+                this.patientMedicalHistory.set(data);
                 console.log(data);
                 this.loading = false;
             },
@@ -217,7 +217,7 @@ export class PatientDetails implements OnInit {
 
         this.doctorService.getAppointmentHistory(this.patientId.toString()).subscribe({
             next: (data) => {
-                this.patientAppointmentHistory = data;
+                this.patientAppointmentHistory.set(data);
                 console.log(data);
                 this.loading = false;
             },
@@ -356,14 +356,15 @@ export class PatientDetails implements OnInit {
 
     // ── Helper Methods ──────────────────────────────────────────────────
     private getFieldValue(fieldKey: string): any {
-        if (!this.patientDetails) return '';
-        
+        const details =this.patientDetails();
+
+        if (!details) return '';
         const fieldMap: Record<string, any> = {
-            'fullName': this.patientDetails.patientName,
-            'email': this.patientDetails.patientEmail,
-            'address': this.patientDetails.patientAddress,
-            'city': this.patientDetails.patientId,
-            'gender': this.patientDetails.patientGender,
+            'fullName': details.patientName,
+            'email': details.patientEmail,
+            'address': details.patientAddress,
+            'city': details.patientId,
+            'gender': details.patientGender,
             'password': ''
         };
 

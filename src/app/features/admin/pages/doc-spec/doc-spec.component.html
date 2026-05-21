@@ -1,26 +1,37 @@
 <div>
-    <!-- Appointments Tab -->
-    <div>
-        <div class="section-header">
-            <div>
-                <h2>Manage Specialisations</h2>
-                <p>Track all Specializations in hospital</p>
-            </div>
-            <button class="add-btn" (click)="openAddSpecialization()">+ Add Specialization</button>
-        </div>
-
-        <div class="md:w-[600px] sm:w-[300px] mx-auto">
-            <app-data-table [columns]="specializationColumns" [data]="specializations()" [actions]="specializationActions"
-                [emptyStateMessage]="'No appointments found'"
-                (actionTriggered)="onDocSpecTableAction($event)"></app-data-table>
-        </div>
+  <!-- Specializations Section -->
+  <div>
+    <div class="section-header">
+      <div>
+        <h2>Manage Specialisations</h2>
+        <p>Track all Specializations in hospital</p>
+      </div>
+      <button class="add-btn" (click)="handleOpenCreate()">+ Add Specialization</button>
     </div>
 
-    <!-- Appointment Modal -->
-    @if(showSpecializationModal){
-    <app-modal-form [config]="specializationModalConfig" [fields]="specializationModalFields"
-        (submitted)="onSubmit($event)" (cancelled)="showSpecializationModal = false"
-        (backdropClicked)="showSpecializationModal = false">
-    </app-modal-form>
-    }
+    <div class="md:w-[600px] sm:w-[300px] mx-auto">
+      <app-data-table
+        [columns]="specializationColumns"
+        [data]="specializations()"
+        [actions]="specializationActions"
+        [emptyStateMessage]="'No specializations found'"
+        (actionTriggered)="onTableAction($event)"
+      ></app-data-table>
+    </div>
+
+    <!-- Error Message Display -->
+    <div *ngIf="error()" class="error-message">
+      {{ error() }}
+    </div>
+  </div>
+
+  <!-- Modal Form -->
+  <app-modal-form
+    [isOpen]="isModalOpen"
+    [config]="modalConfig"
+    [fields]="modalFields"
+    (submitted)="handleSubmit($event)"
+    (cancelled)="handleCancel()"
+    (backdropClicked)="handleBackdropClick()"
+  ></app-modal-form>
 </div>

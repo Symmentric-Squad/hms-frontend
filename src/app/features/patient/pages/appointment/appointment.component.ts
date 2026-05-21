@@ -25,6 +25,8 @@ export class PatientAppointmentsPage {
   loading = signal(false);
   error = signal<string | null>(null);
 
+  userId:number = 0;
+
   patients = patients;
   appointmentColumns = appointmentColumns;
   appointmentActions = appointmentActions;
@@ -44,10 +46,14 @@ export class PatientAppointmentsPage {
 
   private editingId: number | null = null;
 
-
-
   ngOnInit(): void {
-    this.loadAppointments();
+    this.userId = Number(localStorage.getItem('userId'));
+    if (!this.userId || this.userId === 0) {
+      this.error.set('Invalid User ID');
+      return;
+    }
+
+    this.loadAppointments(this.userId);
     this.loadDoctors();
 
   }
@@ -63,7 +69,7 @@ export class PatientAppointmentsPage {
     });
   }
 
-  loadAppointments(userId: number = 1): void {
+  loadAppointments(userId: number): void {
     this.loading.set(true);
     this.error.set(null);
 
@@ -104,9 +110,30 @@ export class PatientAppointmentsPage {
     console.log(appointmentId)
 
     this.publicService.cancelAppointment(appointmentId).subscribe({
-      next: () => this.loadAppointments(),
+      next: () => this.loadAppointments(this.userId),
       error: () => this.error.set('Failed to Cancel Appointment'),
     });
+  }
+
+  // ── Status badge styling ───────────────────────────────────────────────────
+  getStatusBadgeClass(status: string): string {
+    const baseClass = 'inline-block px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap';
+    
+    switch (status) {
+      case 'Active':
+        return `${baseClass} bg-blue-100 text-blue-800`;
+      case 'Cancel by Doctor':
+        return `${baseClass} bg-red-100 text-red-900`;
+      case 'Cancel by User':
+        return `${baseClass} bg-red-100 text-red-900`;
+      default:
+        return `${baseClass} bg-gray-100 text-gray-800`;
+    }
+  }
+  
+  // ── Status check helper ────────────────────────────────────────────────────
+  isAppointmentActive(appointment: AppointmentResponse): boolean {
+    return appointment.currentStatus === 'Active';
   }
 
   // ── Modal handlers ─────────────────────────────────────────────────────────

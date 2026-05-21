@@ -11,7 +11,7 @@
     <!-- Icon Wrapper (Forced to 64px / size-16) -->
     <div class="flex items-center justify-center size-16 shrink-0">
       <!-- SVG Mask with Dynamic Color Matching the Card -->
-      <div class="w-full h-full bg-[length:contain] bg-center bg-no-repeat"
+      <div class="w-full h-full bg-contain bg-center bg-no-repeat"
         [style.background-color]="cardDetail.cardColor" [style.mask-image]="'url(' + cardDetail.icon + ')'"
         [style.webkit-mask-image]="'url(' + cardDetail.icon + ')'">
       </div>
@@ -34,19 +34,30 @@
     <h3>Recent Appointments</h3>
     <button class="view-all-btn">View All →</button>
   </div>
-  <app-data-table [columns]="appointmentColumns" [data]="appointments()" [actions]="[]"
-    [emptyStateMessage]="'No appointments found'"></app-data-table>
+  <app-data-table 
+    [columns]="appointmentColumns" 
+    [data]="appointments()" 
+    [actions]="[]"
+    [emptyStateMessage]="'No appointments found'">
+  </app-data-table>
 </div>
 
-@if(showBookAppointmentModal){
-<app-modal-form [config]="bookAppointmentModalConfig" [fields]="appointmentModalFields"
-  (submitted)="onSubmitAppointment($event)" (cancelled)="showBookAppointmentModal = false"
-  (backdropClicked)="showBookAppointmentModal = false">
-</app-modal-form>
-}
+<!-- Appointment Booking Modal -->
+<app-modal-form 
+  [isOpen]="isAppointmentModalOpen"
+  [config]="appointmentModalConfig"
+  [fields]="appointmentModalFields"
+  (submitted)="handleAppointmentSubmit($event)"
+  (cancelled)="handleAppointmentCancel()"
+  (backdropClicked)="handleAppointmentBackdropClick()"
+/>
 
-@if(showEditProfileModal){
-<app-modal-form [config]="editProfileModalConfig" [fields]="profileModalFields" (submitted)="onUpdateProfile($event)"
-  (cancelled)="showEditProfileModal = false" (backdropClicked)="showEditProfileModal = false">
-</app-modal-form>
-}
+<!-- Profile Update Modal -->
+<app-modal-form 
+  [isOpen]="isProfileModalOpen"
+  [config]="profileModalConfig"
+  [fields]="profileModalFields"
+  (submitted)="handleProfileSubmit($event)"
+  (cancelled)="handleProfileCancel()"
+  (backdropClicked)="handleProfileBackdropClick()"
+/>

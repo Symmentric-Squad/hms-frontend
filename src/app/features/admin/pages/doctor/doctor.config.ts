@@ -140,7 +140,7 @@ export function buildCreateDoctorFields(
 export function buildEditDoctorFields(
     specializationFieldOptions: FieldOption[],
     doctor: DoctorResponse,
-    specializationId?: string 
+    specializationId?: number
 ): FormField[] {
     return [
         {

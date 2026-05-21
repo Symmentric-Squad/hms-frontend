@@ -20,8 +20,8 @@ export const appointmentColumns: TableColumn[] = [
         type: 'badge',
         tagColors: {
             'Active': { bg: '#dbeafe', text: '#1e40af' },
-            'Completed': { bg: '#d1fae5', text: '#065f46' },
-            'Cancelled': { bg: '#fee2e2', text: '#991b1b' },
+            'Cancel by User': { bg: '#fef0e1', text: '#c06311' },
+            'Cancel by Doctor': { bg: '#fee2e2', text: '#991b1b' },
         }
     }
 ];
@@ -32,13 +32,6 @@ export const appointmentActions: TableAction[] = [
 ];
 
 
-// ────────────────────────────────────────────────────────────────────────────
-// MODAL CONFIGURATIONS
-// ────────────────────────────────────────────────────────────────────────────
-
-/**
- * Config for CREATE mode - Booking a new appointment
- */
 export const createAppointmentModalConfig: ModalConfig = {
     title: 'Book New Appointment',
     submitButtonText: 'Book Appointment',
@@ -47,9 +40,7 @@ export const createAppointmentModalConfig: ModalConfig = {
     mode: 'create',
 };
 
-/**
- * Config for EDIT mode - Updating an existing appointment
- */
+
 export const editAppointmentModalConfig: ModalConfig = {
     title: 'Edit Appointment',
     submitButtonText: 'Save Changes',
@@ -59,17 +50,6 @@ export const editAppointmentModalConfig: ModalConfig = {
 };
 
 
-// ────────────────────────────────────────────────────────────────────────────
-// FORM FIELD BUILDERS
-// ────────────────────────────────────────────────────────────────────────────
-
-/**
- * Build form fields for CREATE mode
- * - All fields are empty
- * - Maps to AppointmentRequest interface
- * - userId field will be filled from selected patient
- * - doctorId field will be filled from selected doctor
- */
 export function buildCreateAppointmentFields(
     patientFieldOptions: FieldOption[],
     doctorFieldOptions: FieldOption[]
@@ -120,12 +100,6 @@ export function buildCreateAppointmentFields(
     ];
 }
 
-/**
- * Build form fields for EDIT mode
- * - Fields are populated with existing appointment data
- * - Maps to AppointmentRequest interface (same as create)
- * - Patient name and doctor name need to be mapped to their IDs
- */
 export function buildEditAppointmentFields(
     patientFieldOptions: FieldOption[],
     doctorFieldOptions: FieldOption[],
@@ -138,7 +112,7 @@ export function buildEditAppointmentFields(
             key: 'userId',
             label: 'Patient Name',
             type: 'select',
-            value: patientId?.toString() ?? '',  // Should be patient ID
+            value: patientId?.toString() ?? '',
             placeholder: 'Select a patient',
             required: true,
             options: patientFieldOptions,
@@ -147,7 +121,7 @@ export function buildEditAppointmentFields(
             key: 'doctorId',
             label: 'Doctor Name',
             type: 'select',
-            value: doctorId?.toString() ?? '',  // Should be doctor ID
+            value: doctorId?.toString() ?? '',
             placeholder: 'Select a doctor',
             required: true,
             options: doctorFieldOptions,
@@ -179,17 +153,7 @@ export function buildEditAppointmentFields(
     ];
 }
 
-/**
- * Unified builder - maintains backward compatibility
- * Automatically detects if source data is provided to determine create vs edit mode
- * 
- * @param patientFieldOptions - Available patient options
- * @param doctorFieldOptions - Available doctor options
- * @param source - Optional appointment data; if provided, builds edit fields; otherwise builds create fields
- * @param patientId - Optional patient ID for edit mode
- * @param doctorId - Optional doctor ID for edit mode
- * @returns FormField[] configured for either create or edit mode
- */
+
 export function buildAppointmentFields(
     patientFieldOptions: FieldOption[],
     doctorFieldOptions: FieldOption[],

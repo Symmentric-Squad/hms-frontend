@@ -18,14 +18,21 @@ export class DoctorDashboardPage {
   loading = signal(false);
   error = signal<string | null>(null);
 
+  doctorId:number = 0;
+
   ngOnInit(){
+    this.doctorId = Number(localStorage.getItem('userId'));
+    if (!this.doctorId || this.doctorId === 0) {
+      this.error.set('Invalid User ID');
+      return;
+    }
 
-    this.loadAppointments();
+    this.loadAppointments(this.doctorId);
 
-    this.loadPatients();
+    this.loadPatients(this.doctorId);
   }
 
-  loadAppointments(doctorId: number = 1): void {
+  loadAppointments(doctorId: number): void {
     this.loading.set(true);
     this.doctorService.getAppointments(doctorId).subscribe({
       next: (data) => {
@@ -40,7 +47,7 @@ export class DoctorDashboardPage {
     });
   }
 
-  loadPatients(doctorId: number = 1): void {
+  loadPatients(doctorId: number): void {
     this.loading.set(true);
     this.error.set(null);
 
@@ -78,8 +85,9 @@ export class DoctorDashboardPage {
 
   appointmentColumns: TableColumn[] = [
       { key: "patientName", label: "Patient" },
-      { key: "doctorName", label: "Doctor" },
+      // { key: "doctorName", label: "Doctor" },
       { key: "appointmentDate", label: "Appt. Date" },
+      { key: "appointmentTime", label: "Appt. Time"},
       { key: "currentStatus", label: "Status", type: 'badge',
         tagColors: {
           Active: { bg: '#dbeafe', text: '#1e40af' },

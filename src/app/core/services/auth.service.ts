@@ -11,7 +11,10 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   clearCurrentUser() {
-    throw new Error('Method not implemented.');
+    localStorage.removeItem('email');
+    localStorage.removeItem('role');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('token');
   }
   setCurrentUser(appUser: any) {
     throw new Error('Method not implemented.');

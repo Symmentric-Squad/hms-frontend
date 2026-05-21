@@ -1,372 +1,325 @@
-import { Component, inject, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { AdminService } from "../../service/admin.service";
-import { AppointmentResponse, MedicalHistoryResponse, PatientResponse, MedicalHistoryRequest, UpdateUserRequest } from "../../models/admin.model";
-import { appointmentColumns, appointmentActions, reportActions, reportColumns } from "./patient-details.config"
-import { formatDate } from "@angular/common";
-import { FormField, ModalConfig, ModalSubmitEvent } from "../../../../shared/models/form.models";
+import { formatDate } from '@angular/common';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
+import {
+    AppointmentResponse,
+    MedicalHistoryRequest,
+    MedicalHistoryResponse,
+    PatientResponse,
+    UpdatePatientRequest,
+} from '../../models/admin.model';
+import { AdminService } from '../../service/admin.service';
+import {
+    appointmentActions,
+    appointmentColumns,
+    reportActions,
+    reportColumns,
+} from './patient-details.config';
 
 @Component({
-    selector: 'doctor-patient-details',
-    standalone: false,
-    templateUrl: 'patient-details.component.html',
-    styleUrls: ['patient-details.component.css']
+  selector: 'doctor-patient-details',
+  standalone: false,
+  templateUrl: 'patient-details.component.html',
+  styleUrls: ['patient-details.component.css'],
 })
 export class PatientDetails implements OnInit {
-    patientId: number = 0;
+  patientId: number = 0;
+  private readonly adminService = inject(AdminService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef); // ← ADDED
 
-    private readonly adminService = inject(AdminService);
-    private readonly route = inject(ActivatedRoute);
-    private readonly router = inject(Router);
+  patientDetails: PatientResponse | null = null;
+  patientMedicalHistory: MedicalHistoryResponse[] = [];
+  patientAppointmentHistory: AppointmentResponse[] = [];
+  loading = false;
+  error: string | null = null;
+  isSubmitting = false;
 
-    // Data - simple properties
-    patientDetails: PatientResponse | null = null;
-    patientMedicalHistory: MedicalHistoryResponse[] = [];
-    patientAppointmentHistory: AppointmentResponse[] = [];
+  showUpdateModal = false;
+  showAddReportModal = false;
 
-    loading = false;
-    error: string | null = null;
-    isSubmitting = false;
+  updateModalConfig: ModalConfig = {
+    title: 'Update Patient Information',
+    size: 'medium',
+    mode: 'edit',
+    submitButtonText: 'Update Patient',
+    cancelButtonText: 'Cancel',
+  };
+  addReportModalConfig: ModalConfig = {
+    title: 'Add Medical Report',
+    size: 'medium',
+    mode: 'create',
+    submitButtonText: 'Add Report',
+    cancelButtonText: 'Cancel',
+  };
 
-    // Modal states
-    showUpdateModal = false;
-    showAddReportModal = false;
-    showDeleteConfirmation = false;
+  updateFormFields: FormField[] = [];
+  addReportFormFields: FormField[] = [];
 
-    // Modal configs
-    updateModalConfig: ModalConfig = {
-        title: 'Update User Information',
-        size: 'medium',
-        mode: 'edit',
-        submitButtonText: 'Update User',
-        cancelButtonText: 'Cancel'
-    };
+  appointmentColumns = appointmentColumns;
+  appointmentActions = appointmentActions;
+  reportColumns = reportColumns;
+  reportActions = reportActions;
 
-    addReportModalConfig: ModalConfig = {
-        title: 'Add Medical Report',
-        size: 'medium',
-        mode: 'create',
-        submitButtonText: 'Add Report',
-        cancelButtonText: 'Cancel'
-    };
+  ngOnInit(): void {
+    this.patientId = Number(this.route.snapshot.paramMap.get('id'));
+    this.loadPatientDetails();
+    this.loadMedicalHistory();
+    this.loadAppointmentHistory();
+    this.initializeFormFields();
+  }
 
-    // Form fields
-    updateFormFields: FormField[] = [];
-    addReportFormFields: FormField[] = [];
+  private initializeFormFields(): void {
+    this.updateFormFields = [
+      {
+        key: 'patientName',
+        label: 'Patient Name',
+        type: 'text',
+        placeholder: 'Enter full name',
+        required: true,
+        value: '',
+      },
+      {
+        key: 'patientEmail',
+        label: 'Email Address',
+        type: 'email',
+        placeholder: 'Enter email address',
+        required: true,
+        value: '',
+      },
+      {
+        key: 'patientContactNo',
+        label: 'Contact Number',
+        type: 'number',
+        placeholder: 'Enter Contact Number',
+        required: true,
+        value: '',
+      },
+      {
+        key: 'patientGender',
+        label: 'Gender',
+        type: 'select',
+        required: true,
+        value: '',
+        options: [
+          { label: 'Male', value: 'Male' },
+          { label: 'Female', value: 'Female' },
+          { label: 'Other', value: 'Other' },
+        ],
+      },
+      {
+        key: 'patientAddress',
+        label: 'Address',
+        type: 'text',
+        placeholder: 'Enter address',
+        required: true,
+        value: '',
+      },
+      {
+        key: 'patientAge',
+        label: 'Age',
+        type: 'number',
+        placeholder: 'Enter age',
+        required: true,
+        min: 0,
+        max: 150,
+        value: '',
+      },
+      {
+        key: 'patientMedicalHistory',
+        label: 'Medical History',
+        type: 'textarea',
+        placeholder: 'Enter medical history...',
+        required: false,
+        value: '',
+        rows: 3,
+      },
+    ];
+    this.addReportFormFields = [
+      {
+        key: 'bloodPressure',
+        label: 'Blood Pressure',
+        type: 'text',
+        placeholder: 'e.g., 120/80',
+        required: true,
+        value: '',
+      },
+      {
+        key: 'bloodSugar',
+        label: 'Blood Sugar',
+        type: 'text',
+        placeholder: 'e.g., 100 mg/dL',
+        required: true,
+        value: '',
+      },
+      {
+        key: 'weight',
+        label: 'Weight',
+        type: 'text',
+        placeholder: 'e.g., 70 kg',
+        required: true,
+        value: '',
+      },
+      {
+        key: 'temperature',
+        label: 'Temperature',
+        type: 'text',
+        placeholder: 'e.g., 98.6°F',
+        required: true,
+        value: '',
+      },
+      {
+        key: 'medicalPrescription',
+        label: 'Medical Prescription',
+        type: 'textarea',
+        placeholder: 'Enter prescription...',
+        required: true,
+        value: '',
+        rows: 4,
+      },
+    ];
+  }
 
-    appointmentColumns = appointmentColumns;
-    appointmentActions = appointmentActions;
-    reportColumns = reportColumns;
-    reportActions = reportActions;
+  // ─────────────────────────────────────────────────────────────────────────
+  // Data Loaders
+  // ─────────────────────────────────────────────────────────────────────────
 
-    ngOnInit(): void {
-        this.patientId = Number(this.route.snapshot.paramMap.get('id'));
-        this.loadPatientDetails();
-        this.loadMedicalHistory();
-        this.loadAppointmentHistory();
-        this.initializeFormFields();
-    }
-
-    // ── Initialize Form Fields ──────────────────────────────────────────
-    private initializeFormFields(): void {
-        this.updateFormFields = [
-            {
-                key: 'fullName',
-                label: 'Full Name',
-                type: 'text',
-                placeholder: 'Enter full name',
-                required: true,
-                value: ''
-            },
-            {
-                key: 'email',
-                label: 'Email Address',
-                type: 'email',
-                placeholder: 'Enter email address',
-                required: true,
-                disabled: true,
-                value: ''
-            },
-            {
-                key: 'patientAge',
-                label: 'Age',
-                type: 'number',
-                placeholder: 'Enter age',
-                required: true,
-                value: ''
-            },
-            {
-                key: 'patientContactNo',
-                label: 'Contact number',
-                type: 'number',
-                placeholder: 'Enter Contact Number',
-                required: true,
-                value: ''
-            },
-            {
-                key: 'patientGender',
-                label: 'Gender',
-                type: 'text',
-                placeholder: 'Gender',
-                required: true,
-                value: '',
-            },
-            {
-                key: 'password',
-                label: 'Password (Leave empty to keep current)',
-                type: 'text',
-                placeholder: 'Enter new password',
-                required: false,
-                value: ''
-            }
-        ];
-
-        this.addReportFormFields = [
-            {
-                key: 'bloodPressure',
-                label: 'Blood Pressure',
-                type: 'text',
-                placeholder: 'e.g., 120/80',
-                required: true,
-                value: ''
-            },
-            {
-                key: 'bloodSugar',
-                label: 'Blood Sugar',
-                type: 'text',
-                placeholder: 'e.g., 100 mg/dL',
-                required: true,
-                value: ''
-            },
-            {
-                key: 'weight',
-                label: 'Weight',
-                type: 'text',
-                placeholder: 'e.g., 70 kg',
-                required: true,
-                value: ''
-            },
-            {
-                key: 'temperature',
-                label: 'Temperature',
-                type: 'text',
-                placeholder: 'e.g., 98.6°F',
-                required: true,
-                value: ''
-            },
-            {
-                key: 'medicalPrescription',
-                label: 'Medical Prescription',
-                type: 'textarea',
-                placeholder: 'Enter medical prescription or notes...',
-                required: true,
-                value: '',
-                rows: 4
-            }
-        ];
-    }
-
-    // ── Data Loading ────────────────────────────────────────────────────
-    loadPatientDetails() {
-        this.loading = true;
-        this.error = null;
-
-        this.adminService.getPatientById(this.patientId).subscribe({
-            next: (data) => {
-                const formattedData = {
-                    ...data,
-                    creationDate: formatDate(data.creationDate, 'dd-MM-yyyy - HH:mm', 'en-US'),
-                    updationDate: data.updationDate
-                        ? formatDate(data.updationDate, 'dd-MM-yyyy - HH:mm', 'en-US')
-                        : 'N/A'
-                };
-                this.patientDetails = formattedData;
-                console.log(formattedData);
-                this.loading = false;
-            },
-            error: (err) => {
-                console.error(err);
-                this.error = 'Failed to Load Patient Details';
-                this.loading = false;
-            },
-        });
-    }
-
-    loadMedicalHistory() {
-        this.loading = true;
-        this.error = null;
-
-        this.adminService.getMedicalHistory(this.patientId).subscribe({
-            next: (data) => {
-                this.patientMedicalHistory = data;
-                console.log(data);
-                this.loading = false;
-            },
-            error: (err) => {
-                console.error(err);
-                this.error = 'Failed to Load Medical History';
-                this.loading = false;
-            },
-        });
-    }
-
-    loadAppointmentHistory() {
-        this.loading = true;
-        this.error = null;
-
-        this.adminService.getAppointmentHistory(this.patientId.toString()).subscribe({
-            next: (data) => {
-                this.patientAppointmentHistory = data;
-                console.log(data);
-                this.loading = false;
-            },
-            error: (err) => {
-                console.error(err);
-                this.error = 'Failed to Load Appointment History';
-                this.loading = false;
-            },
-        });
-    }
-
-    // ── Update User Modal ────────────────────────────────────────────────
-    openUpdateModal(): void {
-        // Update form fields with current patient data
-        this.updateFormFields = this.updateFormFields.map(field => ({
-            ...field,
-            value: this.getFieldValue(field.key)
-        }));
-        this.showUpdateModal = true;
-    }
-
-    closeUpdateModal(): void {
-        this.showUpdateModal = false;
-    }
-
-    onUpdateModalSubmit(event: ModalSubmitEvent): void {
-        if (!event.isValid) return;
-
-        this.isSubmitting = true;
-        const formValue = event.formData;
-
-        const updateRequest: UpdateUserRequest = {
-            fullName: formValue["fullName"],
-            address: formValue["address"],
-            city: formValue["city"],
-            gender: formValue["gender"],
-            ...(formValue["password"] && { password: formValue["password"] })
+  loadPatientDetails(): void {
+    this.loading = true;
+    this.adminService.getPatientById(this.patientId).subscribe({
+      next: (data) => {
+        this.patientDetails = {
+          ...data,
+          creationDate: formatDate(data.creationDate, 'dd-MM-yyyy - HH:mm', 'en-US'),
+          updationDate: data.updationDate
+            ? formatDate(data.updationDate, 'dd-MM-yyyy - HH:mm', 'en-US')
+            : 'N/A',
         };
+        this.loading = false;
+        this.cdr.detectChanges(); // ← ADDED
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'Failed to Load Patient Details';
+        this.loading = false;
+        this.cdr.detectChanges(); // ← ADDED
+      },
+    });
+  }
 
-        this.adminService.updateUser(this.patientId, updateRequest).subscribe({
-            next: (response) => {
-                console.log('User updated successfully', response);
-                this.isSubmitting = false;
-                this.closeUpdateModal();
-                this.loadPatientDetails();
-                alert('User updated successfully!');
-            },
-            error: (error) => {
-                console.error('Failed to update user', error);
-                this.isSubmitting = false;
-                this.error = 'Failed to update user. Please try again.';
-                alert('Failed to update user: ' + (error.error?.message || 'Unknown error'));
-            }
-        });
-    }
+  loadMedicalHistory(): void {
+    this.adminService.getMedicalHistory(this.patientId).subscribe({
+      next: (data) => {
+        this.patientMedicalHistory = data;
+        this.cdr.detectChanges(); // ← ADDED
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'Failed to Load Medical History';
+        this.cdr.detectChanges(); // ← ADDED
+      },
+    });
+  }
 
-    onUpdateModalCancelled(): void {
+  loadAppointmentHistory(): void {
+    this.adminService.getAppointmentHistory(this.patientId.toString()).subscribe({
+      next: (data) => {
+        this.patientAppointmentHistory = data;
+        this.cdr.detectChanges(); // ← ADDED
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'Failed to Load Appointment History';
+        this.cdr.detectChanges(); // ← ADDED
+      },
+    });
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Update Modal
+  // ─────────────────────────────────────────────────────────────────────────
+
+  openUpdateModal(): void {
+    this.updateFormFields = this.updateFormFields.map((f) => ({
+      ...f,
+      value: (this.patientDetails as any)?.[f.key] ?? '',
+    }));
+    this.showUpdateModal = true;
+  }
+
+  closeUpdateModal(): void {
+    this.showUpdateModal = false;
+  }
+
+  onUpdateModalSubmit(event: ModalSubmitEvent): void {
+    if (!event.isValid) return;
+    this.isSubmitting = true;
+    const req: UpdatePatientRequest = {
+      patientName: event.formData['patientName'],
+      patientContactNo: event.formData['patientContactNo'],
+      patientEmail: event.formData['patientEmail'],
+      patientGender: event.formData['patientGender'],
+      patientAddress: event.formData['patientAddress'],
+      patientAge: event.formData['patientAge'],
+      patientMedicalHistory: event.formData['patientMedicalHistory'],
+    };
+    this.adminService.updatePatient(this.patientId, req).subscribe({
+      next: () => {
+        this.isSubmitting = false;
         this.closeUpdateModal();
-    }
+        this.loadPatientDetails();
+        alert('Patient updated successfully!');
+      },
+      error: (e) => {
+        this.isSubmitting = false;
+        alert('Failed to update: ' + (e.error?.message || 'Unknown error'));
+      },
+    });
+  }
 
-    // ── Add Medical Report Modal ────────────────────────────────────────
-    openAddReportModal(): void {
-        // Reset form fields
-        this.addReportFormFields = this.addReportFormFields.map(field => ({
-            ...field,
-            value: ''
-        }));
-        this.showAddReportModal = true;
-    }
+  onUpdateModalCancelled(): void {
+    this.closeUpdateModal();
+  }
 
-    closeAddReportModal(): void {
-        this.showAddReportModal = false;
-    }
+  // ─────────────────────────────────────────────────────────────────────────
+  // Add Report Modal
+  // ─────────────────────────────────────────────────────────────────────────
 
-    onAddReportSubmit(event: ModalSubmitEvent): void {
-        if (!event.isValid) return;
+  openAddReportModal(): void {
+    this.addReportFormFields = this.addReportFormFields.map((f) => ({ ...f, value: '' }));
+    this.showAddReportModal = true;
+  }
 
-        this.isSubmitting = true;
-        const medicalHistoryRequest: MedicalHistoryRequest = {
-            bloodPressure: event.formData["bloodPressure"],
-            bloodSugar: event.formData["bloodSugar"],
-            weight: event.formData["weight"],
-            temperature: event.formData["temperature"],
-            medicalPrescription: event.formData["medicalPrescription"]
-        };
+  closeAddReportModal(): void {
+    this.showAddReportModal = false;
+  }
 
-        this.adminService.addMedicalHistory(this.patientId, medicalHistoryRequest).subscribe({
-            next: (response) => {
-                console.log('Medical report added successfully', response);
-                this.isSubmitting = false;
-                this.closeAddReportModal();
-                this.loadMedicalHistory();
-                alert('Medical report added successfully!');
-            },
-            error: (error) => {
-                console.error('Failed to add medical report', error);
-                this.isSubmitting = false;
-                this.error = 'Failed to add medical report. Please try again.';
-                alert('Failed to add report: ' + (error.error?.message || 'Unknown error'));
-            }
-        });
-    }
-
-    onAddReportCancelled(): void {
+  onAddReportSubmit(event: ModalSubmitEvent): void {
+    if (!event.isValid) return;
+    this.isSubmitting = true;
+    const req: MedicalHistoryRequest = {
+      bloodPressure: event.formData['bloodPressure'],
+      bloodSugar: event.formData['bloodSugar'],
+      weight: event.formData['weight'],
+      temperature: event.formData['temperature'],
+      medicalPrescription: event.formData['medicalPrescription'],
+    };
+    this.adminService.addMedicalHistory(this.patientId, req).subscribe({
+      next: () => {
+        this.isSubmitting = false;
         this.closeAddReportModal();
-    }
+        this.loadMedicalHistory();
+        alert('Report added successfully!');
+      },
+      error: (e) => {
+        this.isSubmitting = false;
+        alert('Failed: ' + (e.error?.message || 'Unknown error'));
+      },
+    });
+  }
 
-    // ── Delete User ──────────────────────────────────────────────────────
-    openDeleteConfirmation(): void {
-        this.showDeleteConfirmation = true;
-    }
-
-    closeDeleteConfirmation(): void {
-        this.showDeleteConfirmation = false;
-    }
-
-    confirmDelete(): void {
-        this.isSubmitting = true;
-
-        this.adminService.deleteUser(this.patientId).subscribe({
-            next: (response) => {
-                console.log('User deleted successfully', response);
-                this.isSubmitting = false;
-                this.closeDeleteConfirmation();
-                alert('User deleted successfully!');
-                this.router.navigate(['/admin/patients']);
-            },
-            error: (error) => {
-                console.error('Failed to delete user', error);
-                this.isSubmitting = false;
-                this.error = 'Failed to delete user. Please try again.';
-                alert('Failed to delete user: ' + (error.error?.message || 'Unknown error'));
-            }
-        });
-    }
-
-    // ── Helper Methods ──────────────────────────────────────────────────
-    private getFieldValue(fieldKey: string): any {
-        if (!this.patientDetails) return '';
-        
-        const fieldMap: Record<string, any> = {
-            'fullName': this.patientDetails.patientName,
-            'email': this.patientDetails.patientEmail,
-            'address': this.patientDetails.patientAddress,
-            'city': this.patientDetails.patientId || '',
-            'gender': this.patientDetails.patientGender,
-            'password': ''
-        };
-
-        return fieldMap[fieldKey] || '';
-    }
+  onAddReportCancelled(): void {
+    this.closeAddReportModal();
+  }
 }

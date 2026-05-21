@@ -1,12 +1,16 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core'; // 1. Added computed here
 import { AuthService } from '../../../../core/services/auth.service';
 import { RowActionEvent } from '../../../../shared/models/data-table.models';
 import { ModalSubmitEvent } from '../../../../shared/models/form.models';
 import { CreatePatientRequest, PatientResponse } from '../../models/doctor.model';
 import { DoctorService } from '../../service/doctor.service';
-import { patientActions, patientColumns, patientModalConfig, patientModalFields } from './patient.config';
+import {
+  patientActions,
+  patientColumns,
+  patientModalConfig,
+  patientModalFields,
+} from './patient.config';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-patient-management',
@@ -22,21 +26,59 @@ export class DoctorPatientsPage {
   loading = signal(false);
   error = signal<string | null>(null);
 
+  doctorId: number = 0;
+
+  // 2. Add search string state tracking signal
+  searchTerm = signal<string>('');
+
+  // 3. Add a computed signal to instantly react to text input changes
+  filteredPatients = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+    const allPatients = this.patients();
+
+    if (!term) {
+      return allPatients;
+    }
+
+    return allPatients.filter((patient) => patient.patientName?.toLowerCase().includes(term));
+  });
+
+  // Table Configuration
+  patientColumns = patientColumns;
+  patientActions = patientActions;
+  patientModalConfig = patientModalConfig;
+  patientModalFields = patientModalFields;
+
+  showPatientModal = false;
+  editingPatient: Partial<PatientResponse> = {};
+  isEditMode = false;
+
+  constructor(private router: Router) {}
+
   ngOnInit(): void {
-    this.loadPatients();
+    this.doctorId = Number(localStorage.getItem('userId'));
+    if (!this.doctorId || this.doctorId === 0) {
+      this.error.set('Invalid User ID');
+      return;
+    }
+    this.loadPatients(this.doctorId);
   }
 
-  constructor (private router: Router) {}
+  // 4. Add the tracking helper for template binding inputs
+  updateSearchTerm(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.searchTerm.set(inputElement.value);
+  }
 
-  // ── Load 
-  loadPatients(doctorId: number = 1): void {
+  // ── Load
+  loadPatients(doctorId: number): void {
     this.loading.set(true);
     this.error.set(null);
 
     this.doctorPatientService.getMyPatients(doctorId).subscribe({
       next: (data) => {
         this.patients.set(data);
-        console.log(data)
+        console.log(data);
         this.loading.set(false);
       },
       error: () => {
@@ -46,7 +88,7 @@ export class DoctorPatientsPage {
     });
   }
 
-  // ── Add 
+  // ── Add
   addPatient(request: CreatePatientRequest): void {
     this.loading.set(true);
 
@@ -63,50 +105,40 @@ export class DoctorPatientsPage {
     });
   }
 
-  // Table Configuration
-  patientColumns = patientColumns;
-  patientActions = patientActions;
-  patientModalConfig = patientModalConfig;
-  patientModalFields = patientModalFields;
-
-  showPatientModal = false;
-  editingPatient: Partial<PatientResponse> = {};
-  isEditMode = false;
-
-  openAddPatient(): void{
+  openAddPatient(): void {
     this.editingPatient = {};
     this.showPatientModal = true;
   }
 
   onSubmit(event: ModalSubmitEvent): void {
-    if(!event.isValid){
-      alert('Please fill in all required fields')
+    if (!event.isValid) {
+      alert('Please fill in all required fields');
       return;
     }
     this.addPatient(event.formData as CreatePatientRequest);
   }
 
   onPatientTableAction(event: RowActionEvent): void {
-  const { action, rowData } = event;
+    const { action, rowData } = event;
 
-  switch (action) {
-    case 'edit':
-      this.editingPatient = { ...rowData };
-      this.showPatientModal = true;
-      break;
+    switch (action) {
+      case 'edit':
+        this.editingPatient = { ...rowData };
+        this.showPatientModal = true;
+        break;
 
-    case 'view':
-      const patientId = rowData.patientId; 
-      
-      if (patientId) {
-        this.router.navigate(['/doctor/patient', patientId]);
-      } else {
-        console.error('Patient ID is missing in rowData', rowData);
-      }
-      break;
+      case 'view':
+        const patientId = rowData.patientId;
 
-    default:
-      console.warn(`Unhandled action type: ${action}`);
+        if (patientId) {
+          this.router.navigate(['/doctor/patient', patientId]);
+        } else {
+          console.error('Patient ID is missing in rowData', rowData);
+        }
+        break;
+
+      default:
+        console.warn(`Unhandled action type: ${action}`);
+    }
   }
-}
 }

@@ -1,5 +1,4 @@
 <div class="patient-details-container">
-    <!-- Page Header -->
     <div class="page-header">
         <div class="header-content">
             <div>
@@ -7,219 +6,68 @@
                 <p class="page-subtitle">Patient Medical Record</p>
             </div>
             <div class="header-meta">
-                <span class="meta-item">
-                    <span class="meta-label">Patient ID:</span>
-                    <span class="meta-value">#{{patientDetails?.patientId}}</span>
-                </span>
-                <span class="meta-item">
-                    <span class="meta-label">Doctor ID:</span>
-                    <span class="meta-value">#{{patientDetails?.doctorId}}</span>
-                </span>
+                <div class="action-buttons-group">
+                    <button class="btn btn-primary" (click)="openUpdateModal()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        <span>Update User</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons-section">
-        <div class="action-buttons-group">
-            <button class="btn btn-primary" (click)="openUpdateModal()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-                <span>Update User</span>
-            </button>
-            <button class="btn btn-danger" (click)="openDeleteConfirmation()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                </svg>
-                <span>Delete User</span>
-            </button>
-        </div>
-        <button class="btn btn-secondary" (click)="openAddReportModal()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span>Add Medical Report</span>
-        </button>
-    </div>
-
-    <!-- Patient Info Card -->
     <div class="patient-info-section">
         <div class="info-card">
-            <!-- Primary Information -->
             <div class="info-column">
-                <div class="info-header">
-                    <h3 class="info-title">Basic Information</h3>
-                </div>
+                <div class="info-header"><h3 class="info-title">Basic Information</h3></div>
                 <div class="info-grid">
-                    <div class="info-item">
-                        <label class="info-label">Full Name</label>
-                        <p class="info-value">{{patientDetails?.patientName}}</p>
-                    </div>
-                    <div class="info-item">
-                        <label class="info-label">Age</label>
-                        <p class="info-value">{{patientDetails?.patientAge}} Years</p>
-                    </div>
-                    <div class="info-item">
-                        <label class="info-label">Gender</label>
-                        <p class="info-value" [ngClass]="'capitalize'">{{patientDetails?.patientGender}}</p>
-                    </div>
+                    <div class="info-item"><label class="info-label">Full Name</label><p class="info-value">{{patientDetails?.patientName}}</p></div>
+                    <div class="info-item"><label class="info-label">Age</label><p class="info-value">{{patientDetails?.patientAge}} Years</p></div>
+                    <div class="info-item"><label class="info-label">Gender</label><p class="info-value capitalize">{{patientDetails?.patientGender}}</p></div>
                 </div>
             </div>
-
-            <!-- Contact Information -->
             <div class="info-column">
-                <div class="info-header">
-                    <h3 class="info-title">Contact Information</h3>
-                </div>
+                <div class="info-header"><h3 class="info-title">Contact Information</h3></div>
                 <div class="info-grid">
-                    <div class="info-item">
-                        <label class="info-label">Phone Number</label>
-                        <p class="info-value">{{patientDetails?.patientContactNo}}</p>
-                    </div>
-                    <div class="info-item">
-                        <label class="info-label">Email Address</label>
-                        <p class="info-value">{{patientDetails?.patientEmail}}</p>
-                    </div>
-                    <div class="info-item full-width">
-                        <label class="info-label">Residential Address</label>
-                        <p class="info-value">{{patientDetails?.patientAddress}}</p>
-                    </div>
+                    <div class="info-item"><label class="info-label">Phone Number</label><p class="info-value">{{patientDetails?.patientContactNo}}</p></div>
+                    <div class="info-item"><label class="info-label">Email Address</label><p class="info-value">{{patientDetails?.patientEmail}}</p></div>
+                    <div class="info-item full-width"><label class="info-label">Residential Address</label><p class="info-value">{{patientDetails?.patientAddress}}</p></div>
                 </div>
             </div>
-
-            <!-- Medical History Summary -->
             <div class="info-column">
-                <div class="info-header">
-                    <h3 class="info-title">Medical Background</h3>
-                </div>
-                <div class="medical-history-box">
-                    <p class="info-value">{{patientDetails?.patientMedicalHistory || 'No medical history recorded.'}}
-                    </p>
-                </div>
+                <div class="info-header"><h3 class="info-title">Medical Background</h3></div>
+                <div class="medical-history-box"><p class="info-value">{{patientDetails?.patientMedicalHistory || 'No medical history recorded.'}}</p></div>
             </div>
-
-            <!-- Record Metadata -->
             <div class="info-column">
-                <div class="info-header">
-                    <h3 class="info-title">Record Information</h3>
-                </div>
+                <div class="info-header"><h3 class="info-title">Record Information</h3></div>
                 <div class="info-grid">
-                    <div class="info-item">
-                        <label class="info-label">Created On</label>
-                        <p class="info-value">{{patientDetails?.creationDate}}</p>
-                    </div>
-                    <div class="info-item">
-                        <label class="info-label">Last Updated</label>
-                        <p class="info-value">{{patientDetails?.updationDate}}</p>
-                    </div>
+                    <div class="info-item"><label class="info-label">Created On</label><p class="info-value">{{patientDetails?.creationDate}}</p></div>
+                    <div class="info-item"><label class="info-label">Last Updated</label><p class="info-value">{{patientDetails?.updationDate}}</p></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Tables Section -->
     <div class="tables-section">
         <div class="table-wrapper">
-            <div class="table-header">
-                <h3 class="table-title">Appointment History</h3>
-                <span class="record-count">{{patientAppointmentHistory.length || 0}} records</span>
-            </div>
-            <app-data-table [columns]="appointmentColumns" [data]="patientAppointmentHistory"
-                [actions]="appointmentActions" [emptyStateMessage]="'No appointments found'">
-            </app-data-table>
+            <div class="table-header"><h3 class="table-title">Appointment History</h3><span class="record-count">{{patientAppointmentHistory.length || 0}} records</span></div>
+            <app-data-table [columns]="appointmentColumns" [data]="patientAppointmentHistory" [actions]="appointmentActions" [emptyStateMessage]="'No appointments found'"></app-data-table>
         </div>
-
         <div class="table-wrapper">
-            <div class="table-header">
-                <h3 class="table-title">Medical Reports</h3>
-                <span class="record-count">{{patientMedicalHistory.length || 0}} records</span>
-            </div>
-            <app-data-table [columns]="reportColumns" [data]="patientMedicalHistory" [actions]="reportActions"
-                [emptyStateMessage]="'No medical reports found'">
-            </app-data-table>
+            <div class="table-header"><h3 class="table-title">Medical Reports</h3><span class="record-count">{{patientMedicalHistory.length || 0}} records</span></div>
+            <app-data-table [columns]="reportColumns" [data]="patientMedicalHistory" [actions]="reportActions" [emptyStateMessage]="'No medical reports found'"></app-data-table>
         </div>
     </div>
 
-    <!-- Update User Modal -->
-    <app-modal-form [config]="updateModalConfig" [fields]="updateFormFields" [isOpen]="showUpdateModal"
-        (submitted)="onUpdateModalSubmit($event)" (cancelled)="onUpdateModalCancelled()"
-        (backdropClicked)="onUpdateModalCancelled()">
-    </app-modal-form>
+    @if (showUpdateModal) {
+        <app-modal-form [config]="updateModalConfig" [fields]="updateFormFields" [isOpen]="showUpdateModal"
+            (submitted)="onUpdateModalSubmit($event)" (cancelled)="onUpdateModalCancelled()" (backdropClicked)="onUpdateModalCancelled()">
+        </app-modal-form>
+    }
 
-    <!-- Add Medical Report Modal -->
-    <app-modal-form [config]="addReportModalConfig" [fields]="addReportFormFields" [isOpen]="showAddReportModal"
-        (submitted)="onAddReportSubmit($event)" (cancelled)="onAddReportCancelled()"
-        (backdropClicked)="onAddReportCancelled()">
-    </app-modal-form>
-
-    <!-- Delete Confirmation Modal -->
-    <div class="modal-overlay" *ngIf="showDeleteConfirmation" (click)="closeDeleteConfirmation()">
-        <div class="modal-content" (click)="$event.stopPropagation()">
-            <div class="modal-header">
-                <h2 class="modal-title">Confirm Delete</h2>
-                <button class="modal-close" (click)="closeDeleteConfirmation()" type="button">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <p>Are you sure you want to delete this user? This action cannot be undone.</p>
-            </div>
-
-            <div class="modal-actions">
-                <button type="button" class="btn btn-secondary" (click)="closeDeleteConfirmation()">Cancel</button>
-                <button type="button" class="btn btn-danger" [disabled]="isSubmitting" (click)="confirmDelete()">
-                    <span *ngIf="isSubmitting" class="spinner"></span>
-                    {{isSubmitting ? 'Deleting...' : 'Delete User'}}
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Delete Confirmation Modal -->
-    <!-- <div class="modal-overlay" *ngIf="showDeleteConfirmation" (click)="closeDeleteConfirmation()">
-        <div class="modal-content modal-confirm" (click)="$event.stopPropagation()">
-            <div class="modal-header">
-                <h2 class="modal-title">Delete User</h2>
-                <button class="modal-close" (click)="closeDeleteConfirmation()" type="button">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-
-            <div class="modal-body">
-                <div class="confirm-icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
-                </div>
-                <h3 class="confirm-title">Are you sure?</h3>
-                <p class="confirm-text">
-                    This action will permanently delete the user <strong>{{patientDetails?.patientName}}</strong>
-                    and all associated data. This cannot be undone.
-                </p>
-            </div>
-
-            <div class="modal-actions">
-                <button type="button" class="btn btn-secondary" (click)="closeDeleteConfirmation()">Cancel</button>
-                <button type="button" class="btn btn-danger" (click)="confirmDelete()" [disabled]="isSubmitting">
-                    <span *ngIf="isSubmitting" class="spinner"></span>
-                    {{isSubmitting ? 'Deleting...' : 'Delete User'}}
-                </button>
-            </div>
-        </div>
-    </div> -->
+    @if (showAddReportModal) {
+        <app-modal-form [config]="addReportModalConfig" [fields]="addReportFormFields" [isOpen]="showAddReportModal"
+            (submitted)="onAddReportSubmit($event)" (cancelled)="onAddReportCancelled()" (backdropClicked)="onAddReportCancelled()">
+        </app-modal-form>
+    }
 </div>
