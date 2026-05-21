@@ -1,7 +1,7 @@
 
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppointmentRequest, AppointmentResponse, DoctorResponse, UserResponse } from '../../../../core/models/public.model';
+import { AppointmentRequest, AppointmentResponse, DoctorResponse, UpdateUserRequest, UserResponse } from '../../../../core/models/public.model';
 import { PublicService } from '../../../../core/services/public.service';
 import { patients } from '../../../../shared/db/db';
 import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
@@ -18,6 +18,7 @@ export class PatientDashboardPage {
   private readonly appointmentService = inject(PublicService);
   private readonly titleCasePipe = inject(TitleCasePipe);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   // ── Data Signals ──
   appointments = signal<AppointmentResponse[]>([]);
@@ -117,30 +118,17 @@ export class PatientDashboardPage {
         this.router.navigate(['/patient/reports']);
       },
     },
-    {
-      icon: "patient.svg",
-      value: "Update Profile",
-      label: "Manage your personal Details",
-      cardColor: "bg-red-100",
-      action: () => this.openProfileModal(),
-    },
+    // {
+    //   icon: "patient.svg",
+    //   value: "Update Profile",
+    //   label: "Manage your personal Details",
+    //   cardColor: "bg-red-100",
+    //   action: () => this.openProfileModal(),
+    // },
   ];
 
   appointmentColumns = appointmentColumns;
 
-  // ── Appointment Modal Handlers ──
-  openAppointmentModal(): void {
-    this.editingAppointmentId = null;
-    this.appointmentModalConfig = {
-      title: 'Book Appointment',
-      submitButtonText: 'Book Appointment',
-      cancelButtonText: 'Cancel',
-      size: 'medium',
-      mode: 'create',
-    };
-    this.appointmentModalFields = buildAppointmentFields(this.doctorFieldOptions());
-    this.isAppointmentModalOpen = true;
-  }
 
   handleAppointmentSubmit(event: ModalSubmitEvent): void {
     console.log('📤 Appointment Form Submit Handler Called');
@@ -184,8 +172,8 @@ export class PatientDashboardPage {
       next: (newAppointment) => {
         this.appointments.update((prev) => [...prev, newAppointment]);
         this.loading.set(false);
-        this.closeAppointmentModal();
         console.log('✅ Appointment booked successfully');
+        this.closeAppointmentModal();
       },
       error: () => {
         this.error.set('Failed to Book Appointment');
@@ -194,15 +182,29 @@ export class PatientDashboardPage {
     });
   }
 
-  // ── Profile Modal Handlers ──
-  /**
-   * Open profile modal in EDIT mode
-   * - Fetches current user data from API using getUserById()
-   * - Pre-fills form fields with existing user data
-   * - Follows the doctor page pattern for edit workflows
-   */
+  // ── Appointment Modal Handlers ──
+  openAppointmentModal(): void {
+    // 1. Explicitly close the other modal to prevent double open bugs
+    this.isProfileModalOpen = false;
+    
+    this.editingAppointmentId = null;
+    this.appointmentModalConfig = {
+      title: 'Book Appointment',
+      submitButtonText: 'Book Appointment',
+      cancelButtonText: 'Cancel',
+      size: 'medium',
+      mode: 'create',
+    };
+    this.appointmentModalFields = buildAppointmentFields(this.doctorFieldOptions());
+    
+    // 2. Wrap state change to ensure single-click event processing
+    this.isAppointmentModalOpen = true;
+  }
+
   openProfileModal(): void {
     console.log('🔓 Opening Profile Modal for user ID:', this.userId);
+    
+    this.isAppointmentModalOpen = false; // Reset other modal state
     this.loading.set(true);
 
     this.appointmentService.getUserById(this.userId).subscribe({
@@ -210,7 +212,6 @@ export class PatientDashboardPage {
         console.log('✅ User data fetched successfully:', userData);
         this.userProfile.set(userData);
         
-        // Pre-fill form fields with fetched user data
         this.profileModalConfig = {
           title: 'Edit Profile',
           submitButtonText: 'Update Profile',
@@ -219,13 +220,19 @@ export class PatientDashboardPage {
           mode: 'edit',
         };
         this.profileModalFields = buildProfileFields(userData);
+        
+        // 2. Open the modal
         this.isProfileModalOpen = true;
         this.loading.set(false);
+
+        // 3. 💥 FORCE ANGULAR TO RENDER IMMEDIATELY
+        this.cdr.detectChanges(); 
       },
       error: (err) => {
         console.error('❌ Failed to fetch user data:', err);
         this.error.set('Failed to Load Profile Data');
         this.loading.set(false);
+        this.cdr.detectChanges(); // Force render error state
       },
     });
   }
@@ -239,7 +246,7 @@ export class PatientDashboardPage {
       return;
     }
 
-    const profileData = event.formData;
+    const profileData = event.formData as UpdateUserRequest;
     console.log('📝 Updating profile with data:', profileData);
     this.updateProfile(profileData);
   }
@@ -259,17 +266,18 @@ export class PatientDashboardPage {
     this.isProfileModalOpen = false;
   }
 
-  updateProfile(profileData: any): void {
+  updateProfile(profileData: UpdateUserRequest): void {
     this.loading.set(true);
 
     // Call the update API - adjust the endpoint based on your backend
     this.appointmentService.updateUser(this.userId, profileData).subscribe({
       next: (updatedUser) => {
-        console.log('✅ Profile updated successfully:', updatedUser);
+        console.log("Updated user:",updatedUser)
         this.userProfile.set(updatedUser);
         this.loading.set(false);
         this.closeProfileModal();
         this.error.set(null);
+        console.log('✅ Profile updated successfully:', updatedUser);
       },
       error: (err) => {
         console.error('❌ Failed to update profile:', err);

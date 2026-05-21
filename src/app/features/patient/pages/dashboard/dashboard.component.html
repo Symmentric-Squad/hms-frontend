@@ -9,11 +9,12 @@
     class="flex items-center gap-5 p-6 bg-white rounded-2xl border border-slate-200 shadow-sm cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0">
 
     <!-- Icon Wrapper (Forced to 64px / size-16) -->
-    <div class="flex items-center justify-center size-16 shrink-0">
-      <!-- SVG Mask with Dynamic Color Matching the Card -->
-      <div class="w-full h-full bg-contain bg-center bg-no-repeat"
-        [style.background-color]="cardDetail.cardColor" [style.mask-image]="'url(' + cardDetail.icon + ')'"
-        [style.webkit-mask-image]="'url(' + cardDetail.icon + ')'">
+    <div class="flex items-center justify-center size-16 shrink-0 rounded-xl">
+      <div 
+        [style.mask-image]="'url(' + cardDetail.icon + ')'"
+        [style.webkit-mask-image]="'url(' + cardDetail.icon + ')'"
+        [style.background]="cardDetail.cardColor"
+        class="svg-mask-icon size-8 bg-current w-[100px] h-[60px]">
       </div>
     </div>
 

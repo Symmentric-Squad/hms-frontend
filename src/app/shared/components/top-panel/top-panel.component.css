@@ -1,0 +1,68 @@
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dropdown animation utilities */
+.animate-in {
+  animation: slideInFromTop 0.2s ease-out;
+}
+
+.fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.slide-in-from-top-2 {
+  animation: slideInFromTop 0.2s ease-out;
+}
+
+.duration-200 {
+  animation-duration: 200ms;
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+.transition-colors {
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.transition-transform {
+  transition: transform 0.3s ease;
+}
+
+.group:hover .group-hover\:text-blue-600 {
+  color: rgb(37, 99, 235);
+}
+
+.group:hover .group-hover\:text-orange-600 {
+  color: rgb(234, 88, 12);
+}
+
+/* Dropdown hover effects */
+button:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Smooth rotation for chevron icon */
+.rotate-180 {
+  transform: rotateZ(180deg);
+}

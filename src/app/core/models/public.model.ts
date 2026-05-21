@@ -68,3 +68,9 @@ export interface ContactQueryRequest {
   contactNo: number;
   message: string;
 }
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}

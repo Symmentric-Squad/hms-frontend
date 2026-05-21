@@ -8,8 +8,8 @@ import { FormField, ModalConfig, ModalSubmitEvent } from '../../models/form.mode
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
+  @if(isOpen){
     <div
-      *ngIf="isOpen"
       class="fixed inset-0 bg-black/45 z-[1000] flex items-center justify-center p-5 animate-[fadeIn_0.2s_ease]"
       (click)="onBackdropClick()"
     >
@@ -142,6 +142,7 @@ import { FormField, ModalConfig, ModalSubmitEvent } from '../../models/form.mode
 
       </div>
     </div>
+                  }
   `,
 })
 export class ModalFormComponent implements OnChanges {
@@ -168,11 +169,11 @@ export class ModalFormComponent implements OnChanges {
       for (const field of this.fields) {
         const validators = [];
 
-        if (field.required)         validators.push(Validators.required);
+        if (field.required) validators.push(Validators.required);
         if (field.type === 'email') validators.push(Validators.email);
-        if (field.min != null)      validators.push(Validators.min(+field.min));
-        if (field.max != null)      validators.push(Validators.max(+field.max));
-        if (field.pattern)          validators.push(Validators.pattern(field.pattern));
+        if (field.min != null) validators.push(Validators.min(+field.min));
+        if (field.max != null) validators.push(Validators.max(+field.max));
+        if (field.pattern) validators.push(Validators.pattern(field.pattern));
 
         controls[field.key] = new FormControl(
           { value: field.value ?? '', disabled: !!field.disabled },

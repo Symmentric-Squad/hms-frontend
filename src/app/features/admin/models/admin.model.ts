@@ -167,4 +167,5 @@ export interface UpdateUserRequest {
   city: string;
   gender: string;
   password?: string;
+  email: string;
 }

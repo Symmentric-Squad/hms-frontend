@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AppointmentRequest, AppointmentResponse, ContactQueryRequest, DoctorResponse, MedicalHistoryResponse, SpecializationResponse, UpdateUserRequest, UserResponse } from '../models/public.model';
+import { AppointmentRequest, AppointmentResponse, ChangePasswordRequest, ContactQueryRequest, DoctorResponse, MedicalHistoryResponse, SpecializationResponse, UpdateUserRequest, UserResponse } from '../models/public.model';
 
 
 
