@@ -20,12 +20,20 @@ export class PatientReportsPage {
   loading = signal(false);
   error = signal<string | null>(null);
 
+  userId : number = 0;
+
   ngOnInit(): void {
-    this.loadReports();
+    this.userId = Number(localStorage.getItem('userId'));
+    if (!this.userId || this.userId === 0) {
+      this.error.set('Invalid User ID');
+      return;
+    }
+    this.loadReports(this.userId);
   }
 
   // ── Load 
-  loadReports(userId: number = 1): void {
+  loadReports(userId: number): void {
+    console.log(userId)
     this.loading.set(true);
     this.error.set(null);
 

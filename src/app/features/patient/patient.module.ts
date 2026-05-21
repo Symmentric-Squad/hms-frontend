@@ -12,7 +12,6 @@ import { PatientRoutingModule } from "./patient-routing.module";
 import { PatientDashboardPage } from "./pages/dashboard/dashboard.component";
 import { PatientAppointmentsPage } from "./pages/appointment/appointment.component";
 import { PatientReportsPage } from "./pages/report/report.component";
-import { AngularSvgIconModule } from "angular-svg-icon";
 
 @NgModule({
   declarations: [
@@ -30,8 +29,7 @@ import { AngularSvgIconModule } from "angular-svg-icon";
     SidebarComponent,
     PatientRoutingModule,
     PatientSidebarComponent,
-    PaitentLayoutComponent,
-    AngularSvgIconModule
+    PaitentLayoutComponent
   ],
   providers: [
     TitleCasePipe,

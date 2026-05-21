@@ -35,7 +35,7 @@ import { AdminService } from '../../service/admin.service';
         <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
           <div class="flex items-center justify-between mb-5">
             <h3 class="text-base font-bold text-slate-800">Pending Review</h3>
-            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-700">
+            <span class="text-md font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-700">
               {{ notOpenedQueries().length }}
             </span>
           </div>
@@ -49,8 +49,8 @@ import { AdminService } from '../../service/admin.service';
               <div class="flex flex-col gap-3">
                
                 <div>
-                  <h4 class="font-semibold text-slate-800 text-sm">{{ query.fullName }}</h4>
-                  <div class="text-xs text-slate-500 mt-1 space-x-1">
+                  <h4 class="font-semibold text-slate-800 text-xl">{{ query.fullName }}</h4>
+                  <div class="text-md text-slate-500 mt-1 space-x-1">
                     <span><strong>Email:</strong> {{ query.email }}</span>
                     <span class="text-slate-300">|</span>
                     <span><strong>Phone:</strong> {{ query.contactNo }}</span>
@@ -68,12 +68,12 @@ import { AdminService } from '../../service/admin.service';
                       [(ngModel)]="remarksInputMap[query.contactQueryId]"
                       placeholder="Type response notes or dynamic resolution action details here..."
                       rows="2"
-                      class="flex-1 text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none transition">
+                      class="flex-1 text-md p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none transition">
                     </textarea>
                     <button
                       (click)="handleResolve(query)"
                       [disabled]="resolvingId() === query.contactQueryId"
-                      class="px-4 py-2 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 transition shadow-sm h-full self-stretch flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                      class="px-4 py-2 rounded-lg text-md font-semibold bg-blue-600 text-white hover:bg-blue-700 transition shadow-sm h-full self-stretch flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
                       {{ resolvingId() === query.contactQueryId ? 'Resolving...' : 'Resolve' }}
                     </button>
                   </div>
@@ -87,10 +87,10 @@ import { AdminService } from '../../service/admin.service';
           </div>
         </div>
  
-        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm mt-6">
           <div class="flex items-center justify-between mb-5">
             <h3 class="text-base font-bold text-slate-800">Resolved History</h3>
-            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">
+            <span class="text-md font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">
               {{ reviewedQueries().length }}
             </span>
           </div>
@@ -104,11 +104,11 @@ import { AdminService } from '../../service/admin.service';
               <div class="flex flex-col gap-2.5">
                
                 <div class="flex items-center justify-between">
-                  <span class="font-semibold text-slate-700 text-sm">{{ query.fullName }}</span>
+                  <span class="font-semibold text-slate-700 text-xl">{{ query.fullName }}</span>
                   <span class="px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-100 text-emerald-800">Resolved</span>
                 </div>
                
-                <div class="text-xs text-slate-500 space-x-1">
+                <div class="text-md text-slate-500 space-x-1">
                   <span><strong>Email:</strong> {{ query.email }}</span>
                   <span class="text-slate-300">|</span>
                   <span><strong>Phone:</strong> {{ query.contactNo }}</span>
@@ -120,7 +120,7 @@ import { AdminService } from '../../service/admin.service';
  
                 <div *ngIf="getDetailRemark(query.contactQueryId)" class="p-3 bg-emerald-50 border border-emerald-100 text-emerald-900 rounded-lg">
                   <span class="block text-[10px] font-bold uppercase tracking-wider text-emerald-700 mb-0.5">Admin Remark:</span>
-                  <p class="text-xs m-0 italic font-medium">"{{ getDetailRemark(query.contactQueryId) }}"</p>
+                  <p class="text-md m-0 italic font-medium">"{{ getDetailRemark(query.contactQueryId) }}"</p>
                 </div>
  
                 <div class="text-[11px] text-slate-400 mt-1">
@@ -134,7 +134,7 @@ import { AdminService } from '../../service/admin.service';
       </div>
     </div>
   `,
-  styleUrl: '../../../../../styles.css',
+  // styleUrl: '../../../../../styles.css',
 })
 export class AdminContactUsPage implements OnInit {
   private readonly adminService = inject(AdminService);

@@ -17,16 +17,23 @@ export class AdminReportsPage {
   private readonly adminReportService = inject(AdminService);
   private readonly auth = inject(AuthService);
 
+  userId:number = 0;
+
   reports = signal<MedicalHistoryResponse[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
 
   ngOnInit(): void {
-    this.loadReports();
+    this.userId = Number(localStorage.getItem('userId'));
+    if (!this.userId || this.userId === 0) {
+      this.error.set('Invalid User ID');
+      return;
+    }
+    this.loadReports(this.userId);
   }
 
   // ── Load 
-  loadReports(userId: number = 1): void {
+  loadReports(userId: number): void {
     this.loading.set(true);
     this.error.set(null);
 

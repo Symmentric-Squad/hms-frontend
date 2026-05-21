@@ -20,7 +20,7 @@ interface ValidationError {
       <div class="bg-white rounded-[18px] shadow-[0_20px_60px_rgba(0,0,0,0.12)] w-full max-w-[580px] flex flex-col overflow-hidden">
 
         <div class="px-6 pt-6 pb-4 border-b border-gray-100 text-center">
-          <h2 class="text-[22px] font-bold text-slate-800 m-0">📝 Patient Registration</h2>
+          <h2 class="text-[22px] font-bold text-slate-800 m-0">Patient Registration</h2>
           <p class="text-sm text-gray-400 mt-1 mb-0">Create your account to get started</p>
         </div>
 
