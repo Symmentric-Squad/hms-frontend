@@ -1,0 +1,53 @@
+<aside class="admin-sidebar" [class.collapsed]="isSidebarCollapsed">
+        <div class="sidebar-brand p-5">
+        <span 
+          class="brand-icon inline-block cursor-pointer bg-white w-[24px] h-[24px]"
+          (click)="toggleSidebar()"
+          style="
+            mask-image: url('hospital_2.svg'); 
+            -webkit-mask-image: url('hospital_2.svg');
+            mask-size: contain;
+            mask-repeat: no-repeat;
+          "
+        ></span>
+          <span class="brand-text" *ngIf="!isSidebarCollapsed">HMS {{ currentUser.role | customTitleCase }}</span>
+        </div>
+
+        <nav class="sidebar-nav">
+          <a *ngFor="let item of navItems"
+             [routerLink]="item.link"
+             routerLinkActive="active-link"
+             [routerLinkActiveOptions]="{exact: item.exact}"
+             class="nav-link"
+             [title]="item.label">
+            <span class="svg-host" 
+                [style.mask-image]="'url(' + item.icon + ')'"
+                [style.webkit-mask-image]="'url(' + item.icon + ')'"
+                [style.background-color]= "'white'"
+                [style.width.px]=24
+                [style.height.px]=24>
+            </span>
+            <span class="nav-label" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button class="logout-btn" (click)="logout()" [title]="'Logout'">
+            <span 
+              class="brand-icon inline-block cursor-pointer bg-red-600 w-[24px] h-[24px]"
+              (click)="togglelogout()"
+              style="
+                mask-image: url('logout.svg'); 
+                -webkit-mask-image: url('logout.svg');
+                mask-size: contain;
+                mask-repeat: no-repeat;
+              "
+            ></span>
+            <span class="nav-label" *ngIf="!isSidebarCollapsed">Logout</span>
+          </button>
+        </div>
+
+        <button class="toggle-btn" (click)="isSidebarCollapsed = !isSidebarCollapsed">
+          {{ isSidebarCollapsed ? '▶' : '◀' }}
+        </button>
+      </aside>

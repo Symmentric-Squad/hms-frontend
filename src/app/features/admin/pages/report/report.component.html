@@ -1,0 +1,72 @@
+<div>
+  @if(loading()){
+  <div class="flex items-center justify-center min-h-screen">
+    <h1 class="absolute
+    -translate-x-1/2 
+    -translate-y-1/2 
+    text-3xl font-bold">
+        Loading...
+      </h1>
+    </div>
+   }
+  @if (error()) {
+    <div class="flex flex-col items-center justify-center space-y-4 p-6 text-center">
+      <!-- Icon (Optional but recommended for UX) -->
+      <div class="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+        <span 
+            class="brand-icon inline-block cursor-pointer bg-red-900 w-[24px] h-[24px]"
+            style="
+              mask-image: url('close.svg'); 
+              -webkit-mask-image: url('close.svg');
+              mask-size: contain;
+              mask-repeat: no-repeat;
+            "
+          ></span>
+      </div>
+
+      <div class="max-w-xs">
+        <h3 class="text-lg font-semibold text-gray-900">Connection Error</h3>
+        <p class="text-sm text-gray-500 mt-1 leading-relaxed">
+          {{ error() }}
+        </p>
+      </div>
+
+      <button 
+        (click)="loadReports()" 
+        class="mt-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors">
+        Retry Connection
+      </button>
+    </div>
+  }
+  @else {
+    <div class="section-header">
+      <div>
+        <h2>Medical Reports</h2>
+        <p>View and manage patient medical reports</p>
+      </div>
+      <!-- <button class="add-btn" (click)="openAddReport()">+ New Report</button> -->
+    </div>
+  
+    <div class="md:w-[840px] mx-auto">
+      <app-data-table
+        [columns]="reportColumns"
+        [data]="reports()"
+        [actions]="reportActions"
+        [emptyStateMessage]="'No reports found'"
+        (actionTriggered)="onMedicalHistoryTableAction($event)"
+      ></app-data-table>
+    </div>
+  
+    <!-- Report Modal -->
+    @if(showReportModal) {
+      <app-modal-form
+        [config]="reportModalConfig"
+        [fields]="reportModalFields"
+        (submitted)="onSubmit($event)"
+        (cancelled)="showReportModal = false"
+        (backdropClicked)="showReportModal = false"
+      >
+      </app-modal-form>
+    }
+  }
+</div>

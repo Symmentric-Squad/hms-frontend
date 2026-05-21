@@ -1,0 +1,27 @@
+<div>
+  <div class="section-header">
+    <div>
+      <h2>Manage Doctors</h2>
+      <p>View and manage all registered doctors</p>
+    </div>
+    <button class="add-btn" (click)="handleOpenCreate()">+ Add Doctor</button>
+  </div>
+
+  <app-data-table
+    [columns]="doctorColumns"
+    [data]="doctors()"
+    [actions]="doctorActions"
+    [emptyStateMessage]="'No doctors found'"
+    (actionTriggered)="onTableAction($event)"
+  ></app-data-table>
+
+  <app-modal-form
+      [isOpen]="isModalOpen"
+      [config]="modalConfig"
+      [fields]="modalFields"
+      (submitted)="handleSubmit($event)"
+      (cancelled)="handleCancel()"
+      (backdropClicked)="handleBackdropClick()"
+    />
+</div>
+

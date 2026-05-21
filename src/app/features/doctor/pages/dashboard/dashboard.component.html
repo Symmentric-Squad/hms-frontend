@@ -1,0 +1,41 @@
+<div class="section-header">
+  <h2>Welcome Back, Doctor</h2>
+  <!-- <p>Here's an overview of the hospital today</p> -->
+</div>
+
+<div class="stat-grid">
+  @for(cardDetail of cardDetails(); track $index){
+    <app-dashboard-card
+      [cardStats] = cardDetail
+    ></app-dashboard-card>
+  }
+  </div>
+<div class="dash-bottom">
+  <div class="dash-panel">
+    <div class="panel-header">
+      <h3>Recent Appointments</h3>
+      <button class="view-all-btn" routerLink="/doctor/appointments">View All →</button>
+    </div>
+
+    <app-data-table [columns]="appointmentColumns" [data]="appointments().slice(0,4)" [actions]="appointmentActions"
+      [emptyStateMessage]="'No appointments found'"></app-data-table>
+
+  </div>
+
+  <div class="dash-panel">
+    <div class="panel-header">
+      <h3>Patient Overview</h3>
+      <button class="view-all-btn" routerLink="/doctor/patients">View All →</button>
+    </div>
+    <div class="doctor-list">
+      <div class="doctor-item" *ngFor="let patient of patients()">
+        <div class="doctor-avatar">{{ patient.patientName[0] }}</div>
+        <div class="doctor-meta">
+          <span class="doctor-name">{{ patient.patientName }}</span>
+          <span class="doctor-specialty">{{ patient.patientAge }} - {{patient.patientGender}}</span>
+        </div>
+        <span class="status-badge">{{ patient.patientContactNo }}</span>
+      </div>
+    </div>
+  </div>
+</div>

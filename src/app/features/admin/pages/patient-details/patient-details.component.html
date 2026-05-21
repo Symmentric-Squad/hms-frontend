@@ -1,0 +1,82 @@
+<div class="patient-details-container">
+    <div class="page-header">
+        <div class="header-content">
+            <div>
+                <h1 class="page-title">{{patientDetails?.patientName}}</h1>
+                <p class="page-subtitle">Patient Medical Record</p>
+            </div>
+            <div class="header-meta">
+                <span class="meta-item"><span class="meta-label">Patient ID:</span><span class="meta-value">#{{patientDetails?.patientId}}</span></span>
+                <span class="meta-item"><span class="meta-label">Doctor ID:</span><span class="meta-value">#{{patientDetails?.doctorId}}</span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons-section">
+        <div class="action-buttons-group">
+            <button class="btn btn-primary" (click)="openUpdateModal()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                <span>Update User</span>
+            </button>
+        </div>
+        <button class="btn btn-secondary" (click)="openAddReportModal()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Add Medical Report</span>
+        </button>
+    </div>
+
+    <div class="patient-info-section">
+        <div class="info-card">
+            <div class="info-column">
+                <div class="info-header"><h3 class="info-title">Basic Information</h3></div>
+                <div class="info-grid">
+                    <div class="info-item"><label class="info-label">Full Name</label><p class="info-value">{{patientDetails?.patientName}}</p></div>
+                    <div class="info-item"><label class="info-label">Age</label><p class="info-value">{{patientDetails?.patientAge}} Years</p></div>
+                    <div class="info-item"><label class="info-label">Gender</label><p class="info-value capitalize">{{patientDetails?.patientGender}}</p></div>
+                </div>
+            </div>
+            <div class="info-column">
+                <div class="info-header"><h3 class="info-title">Contact Information</h3></div>
+                <div class="info-grid">
+                    <div class="info-item"><label class="info-label">Phone Number</label><p class="info-value">{{patientDetails?.patientContactNo}}</p></div>
+                    <div class="info-item"><label class="info-label">Email Address</label><p class="info-value">{{patientDetails?.patientEmail}}</p></div>
+                    <div class="info-item full-width"><label class="info-label">Residential Address</label><p class="info-value">{{patientDetails?.patientAddress}}</p></div>
+                </div>
+            </div>
+            <div class="info-column">
+                <div class="info-header"><h3 class="info-title">Medical Background</h3></div>
+                <div class="medical-history-box"><p class="info-value">{{patientDetails?.patientMedicalHistory || 'No medical history recorded.'}}</p></div>
+            </div>
+            <div class="info-column">
+                <div class="info-header"><h3 class="info-title">Record Information</h3></div>
+                <div class="info-grid">
+                    <div class="info-item"><label class="info-label">Created On</label><p class="info-value">{{patientDetails?.creationDate}}</p></div>
+                    <div class="info-item"><label class="info-label">Last Updated</label><p class="info-value">{{patientDetails?.updationDate}}</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tables-section">
+        <div class="table-wrapper">
+            <div class="table-header"><h3 class="table-title">Appointment History</h3><span class="record-count">{{patientAppointmentHistory.length || 0}} records</span></div>
+            <app-data-table [columns]="appointmentColumns" [data]="patientAppointmentHistory" [actions]="appointmentActions" [emptyStateMessage]="'No appointments found'"></app-data-table>
+        </div>
+        <div class="table-wrapper">
+            <div class="table-header"><h3 class="table-title">Medical Reports</h3><span class="record-count">{{patientMedicalHistory.length || 0}} records</span></div>
+            <app-data-table [columns]="reportColumns" [data]="patientMedicalHistory" [actions]="reportActions" [emptyStateMessage]="'No medical reports found'"></app-data-table>
+        </div>
+    </div>
+
+    @if (showUpdateModal) {
+        <app-modal-form [config]="updateModalConfig" [fields]="updateFormFields" [isOpen]="showUpdateModal"
+            (submitted)="onUpdateModalSubmit($event)" (cancelled)="onUpdateModalCancelled()" (backdropClicked)="onUpdateModalCancelled()">
+        </app-modal-form>
+    }
+
+    @if (showAddReportModal) {
+        <app-modal-form [config]="addReportModalConfig" [fields]="addReportFormFields" [isOpen]="showAddReportModal"
+            (submitted)="onAddReportSubmit($event)" (cancelled)="onAddReportCancelled()" (backdropClicked)="onAddReportCancelled()">
+        </app-modal-form>
+    }
+</div>
