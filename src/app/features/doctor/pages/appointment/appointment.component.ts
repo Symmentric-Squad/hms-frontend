@@ -1,8 +1,4 @@
-import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
-import { AuthService } from '../../../../core/services/auth.service';
-import { PublicService } from '../../../../core/services/public.service';
-import { doctors } from '../../../../shared/db/db';
 import { RowActionEvent } from '../../../../shared/models/data-table.models';
 import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
 import { AppointmentResponse, PatientResponse } from '../../models/doctor.model';
@@ -30,7 +26,6 @@ export class DoctorAppointmentsPage {
 
   doctorId :number = 0; 
 
-  doctors = doctors;
   appointmentColumns = patientAppointmentColumns;
   appointmentActions = patientAppointmentActions;
 
@@ -73,25 +68,39 @@ export class DoctorAppointmentsPage {
   }
 
   loadAppointments(doctorId: number): void {
-    this.loading.set(true);
-    this.error.set(null);
+  this.loading.set(true);
+  this.error.set(null);
 
-    this.doctorService.getAppointments(doctorId).subscribe({
-      next: (data) => {
-        const formattedData = data.map(apt => ({
+  this.doctorService.getAppointments(doctorId).subscribe({
+    next: (data: AppointmentResponse[]) => {
+      const now = new Date();
+
+      const formattedData = data.map(apt => {
+        // 1. Combine date and time strings to check if it's in the past
+        // Assumes format: 'YYYY-MM-DD' and 'HH:mm'
+        const appointmentDateTime = new Date(`${apt.appointmentDate}T${apt.appointmentTime}`);
+        
+        // 2. Determine the status based on the time
+        const status = appointmentDateTime < now ? 'Completed' : apt.currentStatus;
+
+        // 3. Return the newly transformed object
+        return {
           ...apt,
           creationDate: formatDate(apt.creationDate, 'dd-MM-yyyy - HH:mm', 'en-US'),
-        }));
-        this.appointments.set(formattedData);
-        console.log(formattedData)
-        this.loading.set(false);
-      },
-      error: () => {
-        this.error.set('Failed to Load Appointments');
-        this.loading.set(false);
-      },
-    });
-  }
+          currentStatus: status
+        };
+      });
+
+      this.appointments.set(formattedData);
+      console.log(formattedData);
+      this.loading.set(false);
+    },
+    error: () => {
+      this.error.set('Failed to Load Appointments');
+      this.loading.set(false);
+    },
+  });
+}
 
   // ── Status check helper ────────────────────────────────────────────────────
   isAppointmentActive(appointment: AppointmentResponse): boolean {

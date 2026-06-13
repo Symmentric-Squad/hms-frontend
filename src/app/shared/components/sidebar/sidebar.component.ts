@@ -7,7 +7,7 @@ import { TitleCasePipe } from '../../pipe/custom-title-case.pipe';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterModule, TitleCasePipe],
+  imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })

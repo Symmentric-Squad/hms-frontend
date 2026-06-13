@@ -6,26 +6,25 @@
 <div class="stat-grid">
   @for(cardDetail of cardDetails; track $index){
   <div [ngClass]="cardDetail.cardColor" (click)="cardDetail.action()"
-    class="flex items-center gap-5 p-6 bg-white rounded-2xl border border-slate-200 shadow-sm cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0">
+    class="flex min-w-65 items-center gap-5 p-6 bg-white rounded-2xl border border-slate-200 shadow-sm cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0">
 
-    <!-- Icon Wrapper (Forced to 64px / size-16) -->
     <div class="flex items-center justify-center size-16 shrink-0 rounded-xl">
       <div 
-        [style.mask-image]="'url(' + cardDetail.icon + ')'"
+        [style.mask]="'url(' + cardDetail.icon + ') no-repeat'"
         [style.webkit-mask-image]="'url(' + cardDetail.icon + ')'"
-        [style.background]="cardDetail.cardColor"
-        class="svg-mask-icon size-8 bg-current w-[100px] h-[60px]">
+        [style.background-color]="cardDetail.cardColor"
+        class="svg-mask-icon size-8 bg-current w-15 h-15">
       </div>
     </div>
 
     <!-- Text Info -->
     <div class="flex flex-col gap-1">
-      <span class="text-2xl font-extrabold text-slate-900 leading-none tracking-tight">
+      <h1 class="text-xl font-extrabold text-slate-900 leading-none tracking-tight">
         {{ cardDetail.value }}
-      </span>
-      <span class="text-sm font-medium text-slate-500">
+      </h1>
+      <!-- <h3 class="text-sm font-medium text-slate-500">
         {{ cardDetail.label }}
-      </span>
+      </h3> -->
     </div>
   </div>
   }

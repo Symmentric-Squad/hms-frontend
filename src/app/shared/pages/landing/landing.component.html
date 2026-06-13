@@ -1,246 +1,108 @@
-<div class="landing-container">
+<div class="landing-container pt-19">
   <landing-navbar></landing-navbar>
-  <section id="home" class="home">
-    <div class="overlay">
-      <h3>Welcome to Our</h3>
-      <h1>Hospital Management System</h1>
-    </div>
-  </section>
+  <app-carousel></app-carousel>
   <app-login-section></app-login-section>
-  <section class="services" id="services">
-    <h2 class="text-3xl font-bold">Our Key Services</h2>
-    <h6>Take a Look it some of our Services</h6>
- 
-    <div class="features">
-      <div class="feature">
-        <img src="services/cardiologist.png" alt="Cardiology Icon" />
-        <h4>Cardiology</h4>
+
+  <section id="about" class="about bg-white px-4 py-16 sm:px-8 md:py-24 lg:px-16">
+    <div class="text-center mb-12 md:mb-16">
+      <h2 class="text-3xl font-extrabold text-[#0d6efd] sm:text-4xl">About Us</h2>
+      <p class="mt-3 text-md text-gray-400 font-medium">Learn more about who we are</p>
+    </div>
+
+    <div class="about-content flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-16 max-w-6xl mx-auto">
+      <div class="w-full md:flex-1 max-w-md md:max-w-full">
+        <img src="about us.jpg" alt="Hospital Image"
+          class="w-full h-auto shadow-md object-cover transform hover:scale-[1.02] transition-transform duration-300" />
       </div>
- 
-      <div class="feature">
-        <img src="services/orthopedics.png" alt="Orthopaedic Icon" />
-        <h4>Orthopaedics</h4>
+
+      <div
+        class="w-full md:flex-1 text-center md:text-left border-t-4 md:border-t-0 md:border-l-4 border-[#0d6efd] pt-6 md:pt-0 md:pl-8">
+        <p class="text-base sm:text-lg text-gray-600 leading-relaxed">
+          Our Hospital Management System is dedicated to providing world-class healthcare with
+          compassion and innovation. We combine modern technology with experienced professionals to
+          ensure the best outcomes for our patients. From specialized departments to emergency care,
+          we strive to deliver excellence in every aspect of healthcare.
+        </p>
       </div>
- 
-      <div class="feature">
-        <img src="services/neurology.png" alt="Neurology Icon" />
-        <h4>Neurology</h4>
-      </div>
- 
-      <div class="feature">
-        <img src="services/pediatric.png" alt="Pediatric Icon" />
-        <h4>Pediatric</h4>
-      </div>
- 
-      <div class="feature">
-        <img src="services/endocrinology.png" alt="Endocrinology Icon" />
-        <h4>Endocrinology</h4>
-      </div>
- 
-      <div class="feature">
-        <img src="services/doctor.png" alt="ENT Icon" />
-        <h4>ENT</h4>
-      </div>
- 
-      <div class="feature">
-        <img src="services/pharma.png" alt="Pharma Pipeline Icon" />
-        <h4>Pharma Pipeline</h4>
-      </div>
- 
-      <div class="feature">
-        <img src="services/emergency-call.png" alt="Telemedicine Icon" />
-        <h4>Telemedicine</h4>
-      </div>
- 
-      <div class="feature">
-        <img src="services/help.png" alt="Pharma Team Icon" />
-        <h4>Pharma Team</h4>
-      </div>
- 
-      <div class="feature">
-        <img src="services/talking.png" alt="Treatment Icon" />
-        <h4>High-Quality Treatments</h4>
-      </div>
+
     </div>
   </section>
-  <section id="about" class="about">
-    <h2 class="text-3xl font-bold">About Us</h2>
-    <h6>Learn more about who we are</h6>
- 
-    <div class="about-content">
-      <img src="about us.jpg" alt="Hospital Image" />
-      <p>
-        Our Hospital Management System is dedicated to providing world-class healthcare with
-        compassion and innovation. We combine modern technology with experienced professionals to
-        ensure the best outcomes for our patients. From specialized departments to emergency care,
-        we strive to deliver excellence in every aspect of healthcare.
+
+  <section id="services" class="services px-10 py-10 text-center pb-30">
+    <h2 class="text-3xl font-bold text-blue-600">Our Services</h2>
+    <h6 class="mb-10 mt-3 text-center text-md text-gray-400">What we offer</h6>
+
+    <div class="grid grid-cols-2 gap-x-6 gap-y-14 justify-items-center sm:grid-cols-2 md:grid-cols-5 xl:grid-cols-5">
+      @for(service of keyServices; track $index){
+      <div class="feature text-center">
+        <img [src]="service.img" [alt]="service.text + ' Icon'" class="h-15 w-15 mx-auto mb-2">
+        <h4 class="m-0 text-[16px] text-[#222] text-center">{{service.text}}</h4>
+      </div>
+      }
+    </div>
+  </section>
+
+  <app-image-gallery></app-image-gallery>
+
+  <app-contact-us-form></app-contact-us-form>
+
+  <!-- Bottom Section -->
+  <div
+    class="mx-auto flex max-w-[900px] flex-col gap-[30px] pt-5 text-left md:flex-row md:justify-between md:gap-[60px]">
+
+    <!-- Useful Links -->
+    <div class="useful-links flex-1">
+      <h4 class="mb-[25px] w-fit border-b-2 border-[#eee] pb-2.5 text-[20px] font-bold text-[#0d6efd]">Useful Links</h4>
+      <ul class="m-0 list-none p-0">
+        <li class="group relative mb-3 pl-5">
+          <span
+            class="absolute left-0 text-[#ea4343] opacity-50 transition-all duration-300 group-hover:left-[5px] group-hover:opacity-100">→</span>
+          <a href="#home"
+            class="inline-block font-medium text-[#555] no-underline transition-all duration-300 ease-in-out group-hover:pl-2.5 group-hover:text-[#0d6efd]">Home</a>
+        </li>
+        <li class="group relative mb-3 pl-5">
+          <span
+            class="absolute left-0 text-[#ea4343] opacity-50 transition-all duration-300 group-hover:left-[5px] group-hover:opacity-100">→</span>
+          <a href="#services"
+            class="inline-block font-medium text-[#555] no-underline transition-all duration-300 ease-in-out group-hover:pl-2.5 group-hover:text-[#0d6efd]">Services</a>
+        </li>
+        <li class="group relative mb-3 pl-5">
+          <span
+            class="absolute left-0 text-[#ea4343] opacity-50 transition-all duration-300 group-hover:left-[5px] group-hover:opacity-100">→</span>
+          <a href="#about"
+            class="inline-block font-medium text-[#555] no-underline transition-all duration-300 ease-in-out group-hover:pl-2.5 group-hover:text-[#0d6efd]">About
+            Us</a>
+        </li>
+        <li class="group relative mb-3 pl-5">
+          <span
+            class="absolute left-0 text-[#ea4343] opacity-50 transition-all duration-300 group-hover:left-[5px] group-hover:opacity-100">→</span>
+          <a href="#gallery"
+            class="inline-block font-medium text-[#555] no-underline transition-all duration-300 ease-in-out group-hover:pl-2.5 group-hover:text-[#0d6efd]">Gallery</a>
+        </li>
+        <li class="group relative mb-3 pl-5">
+          <span
+            class="absolute left-0 text-[#ea4343] opacity-50 transition-all duration-300 group-hover:left-[5px] group-hover:opacity-100">→</span>
+          <a href="#contact"
+            class="inline-block font-medium text-[#555] no-underline transition-all duration-300 ease-in-out group-hover:pl-2.5 group-hover:text-[#0d6efd]">Contact
+            Us</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Hospital Info -->
+    <div class="flex-1 rounded-xl border border-dashed border-[#ddd] bg-[#f9f9f9] padding-box p-[25px]">
+      <h4 class="mb-[25px] w-fit border-b-2 border-[#eee] pb-2.5 text-[20px] font-bold text-[#0d6efd]">Hospital
+        Information</h4>
+      <p class="mb-3.75 flex items-center gap-2.5 text-[15px] text-[#666]">Email: info@hospital.com</p>
+      <p class="mb-3.75 flex items-center gap-2.5 text-[15px] text-[#666]">Phone: +91 98765 43210</p>
+      <p class="mb-3.75 flex items-center gap-2.5 text-[15px] text-[#666]">Timings: Mon–Sat, 9 AM – 9 PM</p>
+      <p class="mb-0 flex items-center gap-2.5 text-[15px] text-[#666]">Address: 123 Health Street, Siruseri, Chennai
       </p>
     </div>
-  </section>
- 
-  <section id="gallery" class="gallery">
-    <h2>Gallery</h2>
-    <h6>Explore our departments visually</h6>
- 
-    <div class="filter-buttons">
-      <button class="filter-btn active" data-filter="all">ALL</button>
-      <button class="filter-btn" data-filter="cardiology">Cardiology</button>
-      <button class="filter-btn" data-filter="neurology">Neurology</button>
-      <button class="filter-btn" data-filter="orthopedics">Orthopedics</button>
-      <button class="filter-btn" data-filter="endocrinology">Endocrinology</button>
-      <button class="filter-btn" data-filter="ENT">ENT</button>
-    </div>
- 
-    <div class="gallery-grid">
-      <div class="gallery-item cardiology">
-        <img src="gallery/cardiology 1.jpg" alt="Cardiology" />
-      </div>
-      <div class="gallery-item neurology">
-        <img src="gallery/neurology1.jpg" alt="Neurology" />
-      </div>
-      <div class="gallery-item endocrinology">
-        <img src="gallery/endocrynology1.jpg" alt="Endocrinology" />
-      </div>
-      <div class="gallery-item ENT">
-        <img src="gallery/ent1.jpg" alt="ENT" />
-      </div>
-      <div class="gallery-item orthopedics">
-        <img src="gallery/orthopedic1.jpg" alt="Orthopedics" />
-      </div>
- 
-      <div class="gallery-item cardiology">
-        <img src="gallery/cardiology 2.jpg" alt="Cardiology" />
-      </div>
-      <div class="gallery-item neurology">
-        <img src="gallery/neurology2.jpg" alt="Neurology" />
-      </div>
-      <div class="gallery-item endocrinology">
-        <img src="gallery/endocrynology2.jpg" alt="Endocrinology" />
-      </div>
-      <div class="gallery-item ENT">
-        <img src="gallery/ent1.jpg" alt="ENT" />
-      </div>
-      <div class="gallery-item orthopedics">
-        <img src="gallery/orthopedic2.jpg" alt="Orthopedics" />
-      </div>
- 
-      <div class="gallery-item cardiology">
-        <img src="gallery/cardiology 3.jpg" alt="Cardiology" />
-      </div>
-      <div class="gallery-item neurology">
-        <img src="gallery/neurology3.jpg" alt="Neurology" />
-      </div>
-      <div class="gallery-item endocrinology">
-        <img src="gallery/endocrynology3.jpg" alt="Endocrinology" />
-      </div>
-      <div class="gallery-item ENT">
-        <img src="gallery/ent3.jpg" alt="ENT" />
-      </div>
-      <div class="gallery-item orthopedics">
-        <img src="gallery/orthopedic3.jpg" alt="Orthopedics" />
-      </div>
- 
-      <div class="gallery-item cardiology">
-        <img src="gallery/cardiology 4.jpg" alt="Cardiology" />
-      </div>
-      <div class="gallery-item neurology">
-        <img src="gallery/neurology4.jpg" alt="Neurology" />
-      </div>
-      <div class="gallery-item endocrinology">
-        <img src="gallery/endocrynology4.jpg" alt="Endocrinology" />
-      </div>
-      <div class="gallery-item ENT">
-        <img src="gallery/ent4.jpg" alt="ENT" />
-      </div>
-      <div class="gallery-item orthopedics">
-        <img src="gallery/orthopedic4.jpg" alt="Orthopedics" />
-      </div>
-    </div>
-  </section>
- 
-  <section id="contact" class="contact">
-    <h2>Contact Us</h2>
-    <h6>We’re here to help you</h6>
-    <div class="contact-form">
-      <form (ngSubmit)="submitContactForm()">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input
-            id="name"
-            type="text"
-            [(ngModel)]="contactForm.fullName"
-            name="fullName"
-            placeholder="Enter your name"
-            required
-          />
-        </div>
- 
-        <div class="form-group">
-          <label for="phone">Phone</label>
-          <input
-            id="phone"
-            type="tel"
-            [(ngModel)]="contactForm.contactNo"
-            name="contactNo"
-            placeholder="Enter your phone number"
-            required
-          />
-        </div>
- 
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            [(ngModel)]="contactForm.email"
-            name="email"
-            placeholder="Enter your email"
-            required
-          />
-        </div>
- 
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea
-            id="message"
-            [(ngModel)]="contactForm.message"
-            name="message"
-            placeholder="Enter your message"
-            rows="5"
-            required
-          ></textarea>
-        </div>
- 
-        <button type="submit" [disabled]="isSubmitting">
-          {{ isSubmitting ? 'Sending...' : 'Send Message' }}
-        </button>
-      </form>
-    </div>
- 
-    <div class="divider"></div>
- 
-    <div class="contact-bottom">
-      <div class="useful-links">
-        <h4>Useful Links</h4>
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#gallery">Gallery</a></li>
-          <li><a href="#contact">Contact Us</a></li>
-        </ul>
-      </div>
- 
-      <div class="hospital-info">
-        <h4>Hospital Information</h4>
-        <p>Email: info@hospital.com</p>
-        <p>Phone: +91 98765 43210</p>
-        <p>Timings: Mon–Sat, 9 AM – 9 PM</p>
-        <p>Address: 123 Health Street, Siruseri, Chennai</p>
-      </div>
-    </div>
-  </section>
-  <footer class="footer">
+
+  </div>
+
+  <footer class="footer text-center bg-gray-600 p-3.75 text-md text-white">
     <p>© 2026 Hospital Management System. All Rights Reserved.</p>
   </footer>
 </div>

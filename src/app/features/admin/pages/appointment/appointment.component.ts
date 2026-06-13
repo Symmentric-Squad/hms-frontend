@@ -135,24 +135,37 @@ export class AdminAppointmentsPage {
   /**
    * Load all appointments from API
    */
-  loadAppointments(): void {
-    console.log('📥 Loading appointments...');
-    this.loading.set(true);
-    this.error.set(null);
+loadAppointments(): void {
+  console.log('📥 Loading appointments...');
+  this.loading.set(true);
+  this.error.set(null);
 
-    this.adminService.getAllAppointments().subscribe({
-      next: (data) => {
-        console.log('✅ Appointments loaded successfully:', data);
-        this.appointments.set(data);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.error('❌ Failed to load appointments:', err);
-        this.error.set('Failed to Load Appointments');
-        this.loading.set(false);
-      },
-    });
-  }
+  this.adminService.getAllAppointments().subscribe({
+    next: (data: AppointmentResponse[]) => {
+      console.log('✅ Appointments loaded successfully:', data);
+      
+      const now = new Date();
+
+      // Map through all appointments to update past ones to 'Completed'
+      const updatedAppointments = data.map(apt => {
+        const appointmentDateTime = new Date(`${apt.appointmentDate}T${apt.appointmentTime}`);
+        
+        return {
+          ...apt,
+          currentStatus: appointmentDateTime < now ? 'Completed' : apt.currentStatus
+        };
+      });
+
+      this.appointments.set(updatedAppointments);
+      this.loading.set(false);
+    },
+    error: (err) => {
+      console.error('❌ Failed to load appointments:', err);
+      this.error.set('Failed to Load Appointments');
+      this.loading.set(false);
+    },
+  });
+}
 
   // ────────────────────────────────────────────────────────────────────────────
   // MODAL HANDLERS

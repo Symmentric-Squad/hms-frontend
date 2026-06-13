@@ -10,25 +10,29 @@
             mask-repeat: no-repeat;
           "
         ></span>
-          <span class="brand-text" *ngIf="!isSidebarCollapsed">HMS {{ currentUser.role | customTitleCase }}</span>
+        @if(!isSidebarCollapsed){
+          <span class="brand-text">HMS</span>
+        }
         </div>
 
         <nav class="sidebar-nav">
-          <a *ngFor="let item of navItems"
-             [routerLink]="item.link"
-             routerLinkActive="active-link"
-             [routerLinkActiveOptions]="{exact: item.exact}"
-             class="nav-link"
-             [title]="item.label">
-            <span class="svg-host" 
-                [style.mask-image]="'url(' + item.icon + ')'"
-                [style.webkit-mask-image]="'url(' + item.icon + ')'"
-                [style.background-color]= "'white'"
-                [style.width.px]=24
-                [style.height.px]=24>
-            </span>
-            <span class="nav-label" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
-          </a>
+          @for(item of navItems; track $index){
+            <a
+               [routerLink]="item.link"
+               routerLinkActive="active-link"
+               [routerLinkActiveOptions]="{exact: item.exact}"
+               class="nav-link"
+               [title]="item.label">
+              <span class="svg-host" 
+                  [style.mask-image]="'url(' + item.icon + ')'"
+                  [style.webkit-mask-image]="'url(' + item.icon + ')'"
+                  [style.background-color]= "'white'"
+                  [style.width.px]=24
+                  [style.height.px]=24>
+              </span>
+              <span class="nav-label" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
+            </a>
+          }
         </nav>
 
         <div class="sidebar-footer">

@@ -3,7 +3,6 @@ import { ChangeDetectorRef, Component, computed, inject, signal } from '@angular
 import { Router } from '@angular/router';
 import { AppointmentRequest, AppointmentResponse, DoctorResponse, UpdateUserRequest, UserResponse } from '../../../../core/models/public.model';
 import { PublicService } from '../../../../core/services/public.service';
-import { patients } from '../../../../shared/db/db';
 import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
 import { appointmentColumns, bookAppointmentModalConfig, buildAppointmentFields, buildProfileFields, editProfileModalConfig } from './dashboard.config';
 import { TitleCasePipe } from '../../../../shared/pipe/custom-title-case.pipe';
@@ -27,7 +26,6 @@ export class PatientDashboardPage {
   loading = signal(false);
   error = signal<string | null>(null);
 
-  patients = patients;
   userId: number = 0;
 
   // ── Computed doctor options for form ──
@@ -224,8 +222,6 @@ export class PatientDashboardPage {
         // 2. Open the modal
         this.isProfileModalOpen = true;
         this.loading.set(false);
-
-        // 3. 💥 FORCE ANGULAR TO RENDER IMMEDIATELY
         this.cdr.detectChanges(); 
       },
       error: (err) => {

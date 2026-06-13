@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { RegisterUserRequest } from '../../core/models/auth.model';
+import { LandingPageNavBar } from '../components/landing-navbar/landing-navbar.component';
 
 interface ValidationError {
   field: string;
@@ -13,8 +14,9 @@ interface ValidationError {
 @Component({
   selector: 'app-patient-registration',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, LandingPageNavBar],
   template: `
+    <landing-navbar></landing-navbar>
     <div class="min-h-screen bg-gray-50 flex items-center justify-center p-5">
 
       <div class="bg-white rounded-[18px] shadow-[0_20px_60px_rgba(0,0,0,0.12)] w-full max-w-[580px] flex flex-col overflow-hidden">
@@ -35,10 +37,6 @@ interface ValidationError {
                 class="px-[13px] py-[10px] border-[1.5px] rounded-lg text-sm outline-none transition-all duration-200 bg-white text-gray-700"
                 [class.border-red-400]="getFieldError('fullName')"
                 [class.border-gray-200]="!getFieldError('fullName')"
-                [class.focus:border-red-500]="getFieldError('fullName')"
-                [class.focus:border-[#0891B2]]="!getFieldError('fullName')"
-                [class.focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]]="getFieldError('fullName')"
-                [class.focus:shadow-[0_0_0_3px_rgba(8,145,178,0.1)]]="!getFieldError('fullName')"
                 type="text"
                 [(ngModel)]="user.fullName"
                 name="fullName"
@@ -58,10 +56,6 @@ interface ValidationError {
                 class="px-[13px] py-[10px] border-[1.5px] rounded-lg text-sm outline-none transition-all duration-200 bg-white text-gray-700"
                 [class.border-red-400]="getFieldError('email')"
                 [class.border-gray-200]="!getFieldError('email')"
-                [class.focus:border-red-500]="getFieldError('email')"
-                [class.focus:border-[#0891B2]]="!getFieldError('email')"
-                [class.focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]]="getFieldError('email')"
-                [class.focus:shadow-[0_0_0_3px_rgba(8,145,178,0.1)]]="!getFieldError('email')"
                 type="email"
                 [(ngModel)]="user.email"
                 name="email"
@@ -82,10 +76,6 @@ interface ValidationError {
                   class="w-full px-[13px] py-[10px] border-[1.5px] rounded-lg text-sm outline-none transition-all duration-200 bg-white text-gray-700"
                   [class.border-red-400]="getFieldError('password')"
                   [class.border-gray-200]="!getFieldError('password')"
-                  [class.focus:border-red-500]="getFieldError('password')"
-                  [class.focus:border-[#0891B2]]="!getFieldError('password')"
-                  [class.focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]]="getFieldError('password')"
-                  [class.focus:shadow-[0_0_0_3px_rgba(8,145,178,0.1)]]="!getFieldError('password')"
                   [type]="'password'"
                   [(ngModel)]="user.password"
                   name="password"
@@ -106,10 +96,6 @@ interface ValidationError {
                 class="px-[13px] py-[10px] border-[1.5px] rounded-lg text-sm outline-none transition-all duration-200 bg-white text-gray-700"
                 [class.border-red-400]="getFieldError('gender')"
                 [class.border-gray-200]="!getFieldError('gender')"
-                [class.focus:border-red-500]="getFieldError('gender')"
-                [class.focus:border-[#0891B2]]="!getFieldError('gender')"
-                [class.focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]]="getFieldError('gender')"
-                [class.focus:shadow-[0_0_0_3px_rgba(8,145,178,0.1)]]="!getFieldError('gender')"
                 [(ngModel)]="user.gender"
                 name="gender"
                 required
@@ -132,10 +118,6 @@ interface ValidationError {
                 class="px-[13px] py-[10px] border-[1.5px] rounded-lg text-sm outline-none transition-all duration-200 bg-white text-gray-700"
                 [class.border-red-400]="getFieldError('address')"
                 [class.border-gray-200]="!getFieldError('address')"
-                [class.focus:border-red-500]="getFieldError('address')"
-                [class.focus:border-[#0891B2]]="!getFieldError('address')"
-                [class.focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]]="getFieldError('address')"
-                [class.focus:shadow-[0_0_0_3px_rgba(8,145,178,0.1)]]="!getFieldError('address')"
                 type="text"
                 [(ngModel)]="user.address"
                 name="address"
@@ -155,10 +137,6 @@ interface ValidationError {
                 class="px-[13px] py-[10px] border-[1.5px] rounded-lg text-sm outline-none transition-all duration-200 bg-white text-gray-700"
                 [class.border-red-400]="getFieldError('city')"
                 [class.border-gray-200]="!getFieldError('city')"
-                [class.focus:border-red-500]="getFieldError('city')"
-                [class.focus:border-[#0891B2]]="!getFieldError('city')"
-                [class.focus:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]]="getFieldError('city')"
-                [class.focus:shadow-[0_0_0_3px_rgba(8,145,178,0.1)]]="!getFieldError('city')"
                 type="text"
                 [(ngModel)]="user.city"
                 name="city"

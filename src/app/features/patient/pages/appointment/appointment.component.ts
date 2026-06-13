@@ -1,7 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { AuthService } from '../../../../core/services/auth.service';
 import { PublicService } from '../../../../core/services/public.service';
-import { doctors, patients } from '../../../../shared/db/db';
 import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
 import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
 import { AppointmentRequest, AppointmentResponse, DoctorResponse } from '../../../../core/models/public.model';
@@ -27,7 +26,6 @@ export class PatientAppointmentsPage {
 
   userId:number = 0;
 
-  patients = patients;
   appointmentColumns = appointmentColumns;
   appointmentActions = appointmentActions;
 
@@ -54,29 +52,41 @@ export class PatientAppointmentsPage {
     }
 
     this.loadAppointments(this.userId);
-    this.loadDoctors();
 
   }
 
   // ── Loaders ────────────────────────────────────────────────────────────────
-
-  loadDoctors(): void {
-    this.loading.set(true);
-    this.error.set(null);
-    this.publicService.getAllDoctors().subscribe({
-      next: (data) => { this.doctors.set(data); console.log(data); this.loading.set(false); },
-      error: () => { this.error.set('Failed to Load Doctors'); this.loading.set(false); },
-    });
-  }
 
   loadAppointments(userId: number): void {
     this.loading.set(true);
     this.error.set(null);
 
     this.publicService.getMyAppointments(userId).subscribe({
-      next: (data) => {
-        this.appointments.set(data);
-        console.log(data)
+      next: (data: AppointmentResponse[]) => {
+        const now = new Date();
+
+        // Map through the appointments to check and update the status
+        const updatedAppointments = data.map(appointment => {
+          // Combine date and time strings into a single Date object
+          // Assumes format: 'YYYY-MM-DD' and 'HH:mm' or 'HH:mm:ss'
+          const appointmentDateTime = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}`);
+          console.log("appointment date time is ", appointmentDateTime)
+
+          // If the appointment date/time is in the past, mark it as completed
+          if (appointmentDateTime < now) {
+            console.log("found an appointment which is over")
+            return {
+              ...appointment,
+              currentStatus: 'Completed'
+            };
+          }
+
+          // Keep the original appointment if it's in the future
+          return appointment;
+        });
+
+        this.appointments.set(updatedAppointments);
+        console.log(updatedAppointments);
         this.loading.set(false);
       },
       error: () => {

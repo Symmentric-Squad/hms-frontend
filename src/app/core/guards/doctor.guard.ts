@@ -13,7 +13,7 @@ export class DoctorGuard implements CanActivate {
     }
  
     // If not authenticated or wrong role, redirect to login
-    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    this.router.navigate(['/#login'], { queryParams: { returnUrl: state.url } });
     return false;
   }
 }

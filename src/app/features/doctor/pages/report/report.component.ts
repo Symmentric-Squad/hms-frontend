@@ -1,12 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
-import { patients, reports } from '../../../../shared/db/db';
-import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
-import { PatientReport } from '../../models/report.doctor.model';
-import { PublicService } from '../../../../core/services/public.service';
-import { AdminService } from '../../../admin/service/admin.service';
 import { AuthService } from '../../../../core/services/auth.service';
-import { MedicalHistoryRequest, MedicalHistoryResponse } from '../../models/doctor.model';
+import { PublicService } from '../../../../core/services/public.service';
+import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
 import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
+import { MedicalHistoryRequest, MedicalHistoryResponse } from '../../models/doctor.model';
 import { DoctorService } from '../../service/doctor.service';
 
 @Component({
@@ -71,13 +68,8 @@ export class DoctorReportsPage {
     { key: "weight", label: "Weight" },
     { key: "temperature", label: "Temperature" },
     { key: "medicalPrescription", label: "Medical Prescription" },
+    // TODO: Backend should return CreatedAt
     // { key: "creationDate", label: "Report Date" },
-  ];
-
-  reportActions: TableAction[] = [
-    // { id: 'view',   label: 'View',   icon: 'eye.svg',   type: 'secondary', actionColor: 'gray' },
-    // { id: 'edit',   label: 'Edit',   icon: 'edit.svg',  type: 'primary',   actionColor: 'blue' },
-    // { id: 'delete', label: 'Delete', icon: 'trash.svg', type: 'danger',    actionColor: 'red'  },
   ];
 
   reportModalConfig: ModalConfig = {

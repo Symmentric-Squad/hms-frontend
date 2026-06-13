@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { LoginCardComponent } from './login-card.component';
-import { LoginSubmitEvent, RoleConfig } from './login.model';
+import { LoginCardComponent } from '../login-section/login-card.component';
+import { LoginSubmitEvent, RoleConfig } from '../login-section/login.model';
 import { LoginRequest } from '../../../core/models/auth.model';
 
 @Component({
@@ -11,24 +11,25 @@ import { LoginRequest } from '../../../core/models/auth.model';
   standalone: true,
   imports: [CommonModule, RouterModule, LoginCardComponent],
   template: `
-    <section id="login" class="bg-gradient-to-br from-[#f0f6ff] via-[#e8f4fd] to-[#f5f0ff] pt-24 pb-20 px-10 text-center">
+    <section id="login" class="bg-linear-to-br from-[#f0f6ff] via-[#e8f4fd] to-[#f5f0ff] pt-24 pb-20 px-10 text-center">
       <h2 class="text-3xl font-bold text-blue-600">Portal Login</h2>
       <h6 class="text-xs text-gray-500 mt-1 mb-12">Select your role and sign in to access your dashboard</h6>
 
-      <div class="mx-auto flex w-full max-w-[1100px] flex-nowrap items-start justify-center gap-7 overflow-x-auto">
-        <app-login-card
-          *ngFor="let config of roles"
-          [role]="config.role"
-          [label]="config.label"
-          [icon]="config.icon"
-          [subtitle]="config.subtitle"
-          [isActive]="activeLogin === config.role"
-          [errorMessage]="loginError[config.role] || ''"
-          [showRegisterLink]="config.showRegisterLink ?? false"
-          [isLoading]="false"
-          (cardClick)="setActiveLogin($event)"
-          (loginSubmit)="onLogin($event)"
-        ></app-login-card>
+      <div class="mx-auto flex w-full max-w-275 flex-col sm:flex-row items-center md:items-start justify-center gap-7">
+        @for(config of roles; track $index){
+          <app-login-card
+            [role]="config.role"
+            [label]="config.label"
+            [icon]="config.icon"
+            [subtitle]="config.subtitle"
+            [isActive]="activeLogin === config.role"
+            [errorMessage]="loginError[config.role] || ''"
+            [showRegisterLink]="config.showRegisterLink ?? false"
+            [isLoading]="isLoading[config.role] || false"
+            (cardClick)="setActiveLogin($event)"
+            (loginSubmit)="onLogin($event)"
+          ></app-login-card>
+        }
       </div>
     </section>
   `

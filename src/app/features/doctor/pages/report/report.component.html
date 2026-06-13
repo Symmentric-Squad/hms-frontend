@@ -50,7 +50,7 @@
     <app-data-table
       [columns]="reportColumns"
       [data]="reports()"
-      [actions]="reportActions"
+      [actions]="[]"
       [emptyStateMessage]="'No reports found'"
       (actionTriggered)="onMedicalHistoryTableAction($event)"
     ></app-data-table>

@@ -2,6 +2,7 @@ import { Component,computed, inject, signal } from '@angular/core';
 import { DoctorService } from '../../service/doctor.service';
 import { AppointmentResponse, PatientResponse } from '../../models/doctor.model';
 import { TableColumn } from '../../../../shared/models/data-table.models';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-doctor-dashboard',
@@ -34,10 +35,30 @@ export class DoctorDashboardPage {
 
   loadAppointments(doctorId: number): void {
     this.loading.set(true);
+    this.error.set(null);
+
     this.doctorService.getAppointments(doctorId).subscribe({
-      next: (data) => {
-        this.appointments.set(data);
-        console.log(data)
+      next: (data: AppointmentResponse[]) => {
+        const now = new Date();
+
+        const formattedData = data.map(apt => {
+          // 1. Combine date and time strings to check if it's in the past
+          // Assumes format: 'YYYY-MM-DD' and 'HH:mm'
+          const appointmentDateTime = new Date(`${apt.appointmentDate}T${apt.appointmentTime}`);
+          
+          // 2. Determine the status based on the time
+          const status = appointmentDateTime < now ? 'Completed' : apt.currentStatus;
+
+          // 3. Return the newly transformed object
+          return {
+            ...apt,
+            creationDate: formatDate(apt.creationDate, 'dd-MM-yyyy - HH:mm', 'en-US'),
+            currentStatus: status
+          };
+        });
+
+        this.appointments.set(formattedData);
+        console.log(formattedData);
         this.loading.set(false);
       },
       error: () => {

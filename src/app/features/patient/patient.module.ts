@@ -7,11 +7,11 @@ import { ModalFormComponent } from "../../shared/components/dialog-form/dialog-f
 import { SidebarComponent } from "../../shared/components/sidebar/sidebar.component";
 import { TitleCasePipe } from "../../shared/pipe/custom-title-case.pipe";
 import { PatientSidebarComponent } from "./component/patient-sidebar.component";
-import { PaitentLayoutComponent } from './patient.layout';
-import { PatientRoutingModule } from "./patient-routing.module";
-import { PatientDashboardPage } from "./pages/dashboard/dashboard.component";
 import { PatientAppointmentsPage } from "./pages/appointment/appointment.component";
+import { PatientDashboardPage } from "./pages/dashboard/dashboard.component";
 import { PatientReportsPage } from "./pages/report/report.component";
+import { PatientRoutingModule } from "./patient-routing.module";
+import { PaitentLayoutComponent } from './patient.layout';
 
 @NgModule({
   declarations: [
@@ -29,7 +29,7 @@ import { PatientReportsPage } from "./pages/report/report.component";
     SidebarComponent,
     PatientRoutingModule,
     PatientSidebarComponent,
-    PaitentLayoutComponent
+    PaitentLayoutComponent,
   ],
   providers: [
     TitleCasePipe,

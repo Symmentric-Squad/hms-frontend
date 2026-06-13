@@ -19,7 +19,7 @@ import { PatientService } from "../../../features/patient/service/patient.servic
   standalone: true,
   imports: [CommonModule, TitleCasePipe, FormsModule, ModalFormComponent],
   templateUrl: './top-panel.component.html',
-  styleUrls: ['./top-panel.component.css']
+  // styleUrls: ['./top-panel.component.css']
 })
 export class TopPanelComponent implements OnInit, OnDestroy {
   currentUser: AppUser = {
@@ -78,9 +78,9 @@ export class TopPanelComponent implements OnInit, OnDestroy {
   profileModalFields = signal<FormField[]>([]);
 
   changePasswordFields: FormField[] = [
-    { key: 'currentPassword', label: 'Current Password', type: 'text', required: true, placeholder: 'Enter current password' },
     { key: 'newPassword', label: 'New Password', type: 'text', required: true, placeholder: 'Enter new password' },
-    { key: 'confirmPassword', label: 'Confirm Password', type: 'text', required: true, placeholder: 'Confirm new password' }
+    { key: 'confirmPassword', label: 'Confirm Password', type: 'text', required: true, placeholder: 'Confirm new password' },
+    { key: 'currentPassword', label: 'Current Password', type: 'text', required: true, placeholder: 'Enter current password' },
   ];
 
   constructor(
@@ -118,7 +118,7 @@ export class TopPanelComponent implements OnInit, OnDestroy {
   onProfileClick(): void {
     this.closeDropdown();
     this.isLoadingProfileData = true;
-    // ✅ Reset signal before loading fresh data
+
     this.profileModalFields.set([]);
     this.loadProfileData();
     this.showProfileModal = true;
@@ -152,7 +152,6 @@ export class TopPanelComponent implements OnInit, OnDestroy {
               .pipe(takeUntil(this.destroy$))
               .subscribe(
                 (doctor) => {
-                  // ✅ Use .set() to update the signal
                   this.profileModalFields.set(
                     this.doctorProfileFields.map(field => ({
                       ...field,
