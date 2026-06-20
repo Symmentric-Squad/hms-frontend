@@ -128,6 +128,8 @@ export class DoctorAppointmentsPage {
         return `${baseClass} bg-red-100 text-red-900`;
       case 'Cancel by User':
         return `${baseClass} bg-red-100 text-red-900`;
+      case 'Completed':
+        return `${baseClass} bg-green-100 text-green-900`;
       default:
         return `${baseClass} bg-gray-100 text-gray-800`;
     }

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ChangePasswordRequest } from '../../admin/models/admin.model';
+import { ChangePasswordRequest, PatientResponse } from '../../admin/models/admin.model';
+import { CreatePatientRequest } from '../../../core/models/public.model';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +41,10 @@ export class PatientService {
     return this.http.put<string>(`${this.baseUrl}/users/${id}/change-password`, request, {
       responseType: 'text' as 'json',
     });
+  }
+
+  //POST /api/patients
+  createPatients(patientRequest: CreatePatientRequest): Observable<PatientResponse> {
+    return this.http.post<PatientResponse>(`${this.baseUrl}/patients`, patientRequest);
   }
 }

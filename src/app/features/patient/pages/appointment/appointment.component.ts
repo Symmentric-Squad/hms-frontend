@@ -3,9 +3,11 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { PublicService } from '../../../../core/services/public.service';
 import { RowActionEvent, TableAction, TableColumn } from '../../../../shared/models/data-table.models';
 import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
-import { AppointmentRequest, AppointmentResponse, DoctorResponse } from '../../../../core/models/public.model';
+import { AppointmentRequest, AppointmentResponse, CreatePatientRequest, DoctorResponse, PatientResponse } from '../../../../core/models/public.model';
 import { TitleCasePipe } from '../../../../shared/pipe/custom-title-case.pipe';
 import { appointmentActions, appointmentColumns, buildAppointmentFields } from './appointment.config';
+import { PatientService } from '../../service/patient.service';
+import { form } from '@angular/forms/signals';
 
 
 @Component({
@@ -16,6 +18,7 @@ import { appointmentActions, appointmentColumns, buildAppointmentFields } from '
 })
 export class PatientAppointmentsPage {
   private readonly publicService = inject(PublicService);
+  private readonly patientService = inject(PatientService);
   private readonly auth = inject(AuthService);
   private readonly titleCasePipe = inject(TitleCasePipe);
 
@@ -29,6 +32,7 @@ export class PatientAppointmentsPage {
   appointmentColumns = appointmentColumns;
   appointmentActions = appointmentActions;
 
+  // ── Computed doctor options for form ──
   doctorFieldOptions = computed(() =>
     this.doctors().map((docObj) => ({
       label: this.titleCasePipe.transform(docObj.doctorName),
@@ -52,7 +56,7 @@ export class PatientAppointmentsPage {
     }
 
     this.loadAppointments(this.userId);
-
+    this.loadDoctors();
   }
 
   // ── Loaders ────────────────────────────────────────────────────────────────
@@ -96,9 +100,24 @@ export class PatientAppointmentsPage {
     });
   }
 
+    // ── Load Doctors ──
+  loadDoctors(): void {
+    this.publicService.getAllDoctors().subscribe({
+      next: (data) => {
+        this.doctors.set(data);
+      },
+      error: () => {
+        console.error('Failed to load doctors');
+      },
+    });
+  }
+
   // ── Book 
   bookAppointment(request: AppointmentRequest): void {
     this.loading.set(true);
+
+    request.userId = Number(localStorage.getItem('userId'));
+    request.consultancyFees = 0;
 
     this.publicService.bookAppointment(request).subscribe({
       next: (newAppointment) => {
@@ -110,6 +129,43 @@ export class PatientAppointmentsPage {
         this.error.set('Failed to Book Appointment');
         this.loading.set(false);
       },
+    });
+  }
+
+  onCreatePatientFromProfile(userId: any, doctorId: number): void {
+    this.patientService.getProfile(userId).subscribe({
+      next: (userProfile) => {
+        
+        // 1. Map the user profile data into the patient request object
+        const patientData: CreatePatientRequest = {
+          doctorId: doctorId, // Cast to 'any' since interface expects a number
+          patientName: userProfile.fullName,
+          patientContactNo: null as any,
+          patientEmail: userProfile.email,
+          patientGender: userProfile.gender,
+          // Concatenating address and city from UserResponse safely
+          patientAddress: userProfile.city 
+            ? `${userProfile.address}, ${userProfile.city}` 
+            : userProfile.address,
+          patientAge: null as any,
+          patientMedicalHistory: null as any
+        };
+
+        // 2. Call the service to create the patient with this data
+        this.patientService.createPatients(patientData).subscribe({
+          next: (response: PatientResponse) => {
+            console.log('Patient successfully created:', response);
+            // Handle success (e.g., show a toast message or redirect)
+          },
+          error: (err) => {
+            console.error('Error creating patient:', err);
+          }
+        });
+
+      },
+      error: (err) => {
+        console.error('Error fetching user profile:', err);
+      }
     });
   }
 
@@ -136,6 +192,8 @@ export class PatientAppointmentsPage {
         return `${baseClass} bg-red-100 text-red-900`;
       case 'Cancel by User':
         return `${baseClass} bg-red-100 text-red-900`;
+      case 'Completed':
+        return `${baseClass} bg-green-100 text-green-900`;
       default:
         return `${baseClass} bg-gray-100 text-gray-800`;
     }
@@ -163,17 +221,18 @@ export class PatientAppointmentsPage {
   }
 
   handleSubmit(event: ModalSubmitEvent): void {
-    // const formData = event.formData as AppointmentRequest;
+    const formData = event.formData as AppointmentRequest;
 
     // if (this.editingId === null) {
-    //   // CREATE — delegate to API
-    //   this.bookAppointment(formData);
+      // CREATE — delegate to API
+      this.bookAppointment(formData);
+      this.onCreatePatientFromProfile(formData.userId, formData.doctorId);
     // } else {
-    //   // EDIT — TODO: wire up your update API call here
-    //   this.appointments.update(current =>
-    //     current.map(a => a.id === this.editingId ? { ...a, ...formData } : a)
-    //   );
-    //   this.closeModal();
+      // EDIT — TODO: wire up your update API call here
+      // this.appointments.update(current =>
+        // current.map(a => a.id === this.editingId ? { ...a, ...formData } : a)
+      // );
+      this.closeModal();
     // }
   }
 

@@ -114,6 +114,7 @@ export class DoctorDashboardPage {
           Active: { bg: '#dbeafe', text: '#1e40af' },
           'Cancel by Doctor': { bg: '#fee2e2', text: '#991b1b' },
           'Cancel by User': { bg: '#fee2e2', text: '#991b1b' },
+          'Completed': { bg: '#d1fae5', text: '#065f46' },
         }
       }
     ];

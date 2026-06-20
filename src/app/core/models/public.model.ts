@@ -74,3 +74,28 @@ export interface ChangePasswordRequest {
   newPassword: string;
   confirmPassword: string;
 }
+
+export interface CreatePatientRequest {
+  doctorId: number;
+  patientName: string;
+  patientContactNo: number;
+  patientEmail: string;
+  patientGender: string;
+  patientAddress: string;
+  patientAge: number;
+  patientMedicalHistory: string;
+}
+
+export interface PatientResponse {
+  patientId: number;
+  doctorId: number;
+  patientName: string;
+  patientContactNo: number;
+  patientEmail: string;
+  patientGender: string;
+  patientAddress: string;
+  patientAge: number;
+  patientMedicalHistory: string;
+  creationDate: string;
+  updationDate: string | null;
+}

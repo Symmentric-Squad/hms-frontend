@@ -50,15 +50,8 @@ export var appointmentActions: TableAction[] = [
 // ];
 
 export function buildAppointmentFields( doctorFieldOptions:FieldOption[],source?: Partial<AppointmentResponse>): FormField[] {
+  console.log(doctorFieldOptions)
   return [
-    {
-      key: 'doctorId',
-      label: 'Doctor Name',
-      type: 'select',
-      value: source?.doctorName ?? '',
-      required: true,
-      options: doctorFieldOptions
-    },
     {
       key: 'appointmentDate',
       label: 'Appt. Date',
@@ -76,12 +69,20 @@ export function buildAppointmentFields( doctorFieldOptions:FieldOption[],source?
       required: true,
     },
     {
-      key: 'consultancyFees',
-      label: 'Consultancy Fees',
-      type: 'number',
-      value: source?.consultancyFees ?? '',
-      placeholder: '100',
+      key: 'doctorId',
+      label: 'Doctor Name',
+      type: 'select',
+      value: source?.doctorName ?? '',
       required: true,
+      options: doctorFieldOptions
     },
+    // {
+    //   key: 'consultancyFees',
+    //   label: 'Consultancy Fees',
+    //   type: 'number',
+    //   value: source?.consultancyFees ?? '',
+    //   placeholder: '100',
+    //   required: true,
+    // },
   ];
 }

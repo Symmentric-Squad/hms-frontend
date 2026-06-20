@@ -4,6 +4,7 @@ import { TableColumn } from '../../../../shared/models/data-table.models';
 import { DashboardResponse, DoctorResponse, PatientResponse } from '../../models/admin.model';
 import { AdminService } from '../../service/admin.service';
 import { Router } from '@angular/router';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -55,9 +56,18 @@ export class AdminDashboardPage implements OnInit {
   ]);
 
   appointmentColumns: TableColumn[] = [
-    { key: "patientName", label: "Patient" },
-    { key: "doctorName", label: "Doctor" },
-    { key: "appointmentDate", label: "Appt. Date" },
+     { key: "patientName", label: "Patient" },
+      // { key: "doctorName", label: "Doctor" },
+      { key: "appointmentDate", label: "Appt. Date" },
+      { key: "appointmentTime", label: "Appt. Time"},
+      { key: "currentStatus", label: "Status", type: 'badge',
+        tagColors: {
+          Active: { bg: '#dbeafe', text: '#1e40af' },
+          'Cancel by Doctor': { bg: '#fee2e2', text: '#991b1b' },
+          'Cancel by User': { bg: '#fee2e2', text: '#991b1b' },
+          'Completed': { bg: '#d1fae5', text: '#065f46' },
+        }
+      }
   ];
 
   appointmentActions = [];
@@ -136,8 +146,26 @@ export class AdminDashboardPage implements OnInit {
 
     this.adminService.getAllAppointments().subscribe({
       next: (data) => {
-        console.log('✅ Appointments loaded successfully:', data);
-        this.appointments.set(data);
+        const now = new Date();
+
+        const formattedData = data.map(apt => {
+          // 1. Combine date and time strings to check if it's in the past
+          // Assumes format: 'YYYY-MM-DD' and 'HH:mm'
+          const appointmentDateTime = new Date(`${apt.appointmentDate}T${apt.appointmentTime}`);
+          
+          // 2. Determine the status based on the time
+          const status = appointmentDateTime < now ? 'Completed' : apt.currentStatus;
+
+          // 3. Return the newly transformed object
+          return {
+            ...apt,
+            creationDate: formatDate(apt.creationDate, 'dd-MM-yyyy - HH:mm', 'en-US'),
+            currentStatus: status
+          };
+        });
+
+        this.appointments.set(formattedData);
+        console.log(formattedData);
         this.loading.set(false);
       },
       error: (err) => {

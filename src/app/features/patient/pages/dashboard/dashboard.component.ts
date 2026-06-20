@@ -65,9 +65,31 @@ export class PatientDashboardPage {
     this.error.set(null);
 
     this.appointmentService.getMyAppointments(userId).subscribe({
-      next: (data) => {
-        this.appointments.set(data);
-        console.log('Appointments loaded:', data);
+      next: (data: AppointmentResponse[]) => {
+        const now = new Date();
+
+        // Map through the appointments to check and update the status
+        const updatedAppointments = data.map(appointment => {
+          // Combine date and time strings into a single Date object
+          // Assumes format: 'YYYY-MM-DD' and 'HH:mm' or 'HH:mm:ss'
+          const appointmentDateTime = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}`);
+          console.log("appointment date time is ", appointmentDateTime)
+
+          // If the appointment date/time is in the past, mark it as completed
+          if (appointmentDateTime < now) {
+            console.log("found an appointment which is over")
+            return {
+              ...appointment,
+              currentStatus: 'Completed'
+            };
+          }
+
+          // Keep the original appointment if it's in the future
+          return appointment;
+        });
+
+        this.appointments.set(updatedAppointments);
+        console.log('Appointments loaded:', updatedAppointments);
         this.loading.set(false);
       },
       error: () => {

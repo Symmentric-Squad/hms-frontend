@@ -22,6 +22,7 @@ export const appointmentColumns: TableColumn[] = [
             'Active': { bg: '#dbeafe', text: '#1e40af' },
             'Cancel by User': { bg: '#fef0e1', text: '#c06311' },
             'Cancel by Doctor': { bg: '#fee2e2', text: '#991b1b' },
+            'Completed': { bg: '#d1fae5', text: '#065f46' },
         }
     }
 ];
