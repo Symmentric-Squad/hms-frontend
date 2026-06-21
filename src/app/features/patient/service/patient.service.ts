@@ -13,7 +13,7 @@ export class PatientService {
   constructor(private http: HttpClient) { }
 
   getProfile(id: any): Observable<any> {
-    return this.http.get<any>(`/api/users/${id}`);
+    return this.http.get<any>(`${this.baseUrl}/users/${id}`);
   }
 
   updateProfile(id: any, profileData: any): Observable<any> {
@@ -46,5 +46,10 @@ export class PatientService {
   //POST /api/patients
   createPatients(patientRequest: CreatePatientRequest): Observable<PatientResponse> {
     return this.http.post<PatientResponse>(`${this.baseUrl}/patients`, patientRequest);
+  }
+
+  // GET /api/patients/:id
+  getPatientById(id: number): Observable<PatientResponse> {
+    return this.http.get<PatientResponse>(`${this.baseUrl}/patients/${id}`);
   }
 }

@@ -39,7 +39,7 @@ export class PatientReportsPage {
 
     this.reportService.getMedicalHistory(userId).subscribe({
       next: (data) => {
-        this.reports.set(data);
+        this.reports.set(data.reverse());
         console.log(data)
         this.loading.set(false);
       },

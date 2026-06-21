@@ -8,6 +8,7 @@ import { TitleCasePipe } from '../../../../shared/pipe/custom-title-case.pipe';
 import { appointmentActions, appointmentColumns, buildAppointmentFields } from './appointment.config';
 import { PatientService } from '../../service/patient.service';
 import { form } from '@angular/forms/signals';
+import { switchMap, EMPTY, catchError, throwError } from 'rxjs';
 
 
 @Component({
@@ -69,15 +70,12 @@ export class PatientAppointmentsPage {
       next: (data: AppointmentResponse[]) => {
         const now = new Date();
 
-        // Map through the appointments to check and update the status
         const updatedAppointments = data.map(appointment => {
-          // Combine date and time strings into a single Date object
-          // Assumes format: 'YYYY-MM-DD' and 'HH:mm' or 'HH:mm:ss'
+          console.log("Appointments before crt",appointment);
           const appointmentDateTime = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}`);
           console.log("appointment date time is ", appointmentDateTime)
 
-          // If the appointment date/time is in the past, mark it as completed
-          if (appointmentDateTime < now) {
+          if (appointmentDateTime < now && appointment.currentStatus == "Active") {
             console.log("found an appointment which is over")
             return {
               ...appointment,
@@ -85,11 +83,10 @@ export class PatientAppointmentsPage {
             };
           }
 
-          // Keep the original appointment if it's in the future
           return appointment;
         });
 
-        this.appointments.set(updatedAppointments);
+        this.appointments.set(updatedAppointments.reverse());
         console.log(updatedAppointments);
         this.loading.set(false);
       },
@@ -132,42 +129,54 @@ export class PatientAppointmentsPage {
     });
   }
 
-  onCreatePatientFromProfile(userId: any, doctorId: number): void {
-    this.patientService.getProfile(userId).subscribe({
-      next: (userProfile) => {
-        
-        // 1. Map the user profile data into the patient request object
-        const patientData: CreatePatientRequest = {
-          doctorId: doctorId, // Cast to 'any' since interface expects a number
-          patientName: userProfile.fullName,
-          patientContactNo: null as any,
-          patientEmail: userProfile.email,
-          patientGender: userProfile.gender,
-          // Concatenating address and city from UserResponse safely
-          patientAddress: userProfile.city 
-            ? `${userProfile.address}, ${userProfile.city}` 
-            : userProfile.address,
-          patientAge: null as any,
-          patientMedicalHistory: null as any
-        };
+ onCreatePatientFromProfile(userId: any, doctorId: number): void {
+  this.patientService.getProfile(userId).pipe(
+    switchMap((userProfile: any) => { // Changed type to any or your specific Profile type to avoid TS errors
+      console.log("User Profile: ", userProfile);
+      
+      // FIX: Map the correct fields from the user profile
+      const patientData: CreatePatientRequest = {
+        doctorId: doctorId,
+        patientName: userProfile.fullName,       // mapped from fullName
+        patientContactNo: 0,           // Add a real field if available (e.g., userProfile.phone)
+        patientEmail: userProfile.email,         // mapped from email
+        patientGender: userProfile.gender,       // mapped from gender
+        patientAddress: userProfile.city ? `${userProfile.address}, ${userProfile.city}` : userProfile.address, // combined address & city
+        patientAge: 0,
+        patientMedicalHistory: ""
+      };
+      
+      console.log("patientdata: ", patientData);
 
-        // 2. Call the service to create the patient with this data
-        this.patientService.createPatients(patientData).subscribe({
-          next: (response: PatientResponse) => {
-            console.log('Patient successfully created:', response);
-            // Handle success (e.g., show a toast message or redirect)
-          },
-          error: (err) => {
-            console.error('Error creating patient:', err);
+      // 2. Check if patient already exists using userId or profile ID
+      return this.patientService.getPatientById(userId).pipe(
+        switchMap((existingPatient) => {
+          if (existingPatient) {
+            console.log('Patient already exists:', existingPatient);
+            return EMPTY; 
           }
-        });
-
-      },
-      error: (err) => {
-        console.error('Error fetching user profile:', err);
+          return this.patientService.createPatients(patientData);
+        }),
+        catchError((err) => {
+          if (err.status === 400) {
+            console.log('Patient not found. Proceeding to create...');
+            return this.patientService.createPatients(patientData);
+          }
+          return throwError(() => err);
+        })
+      );
+    })
+  ).subscribe({
+    next: (response: PatientResponse) => {
+      if (response) {
+        console.log('Patient successfully handled/created:', response);
       }
-    });
-  }
+    },
+    error: (err) => {
+      console.error('An error occurred in the process:', err);
+    }
+  });
+}
 
   // ── Cancel
   cancelAppointment(appointmentId: number): void {

@@ -80,7 +80,7 @@ export type Role = 'admin' | 'doctor' | 'patient';
             [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
             [class.disabled]="isLoading"
           >
-            {{ showPassword ? '🙈' : '👁️' }}
+            <!-- {{ showPassword ? '🙈' : '👁️' }} -->
           </span>
         </div>
       </div>

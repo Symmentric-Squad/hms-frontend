@@ -78,12 +78,12 @@ export interface ChangePasswordRequest {
 export interface CreatePatientRequest {
   doctorId: number;
   patientName: string;
-  patientContactNo: number;
+  patientContactNo: number | null;
   patientEmail: string;
   patientGender: string;
   patientAddress: string;
-  patientAge: number;
-  patientMedicalHistory: string;
+  patientAge: number | null;
+  patientMedicalHistory: string | null;
 }
 
 export interface PatientResponse {

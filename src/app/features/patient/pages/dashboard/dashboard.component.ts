@@ -1,11 +1,13 @@
 
 import { ChangeDetectorRef, Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppointmentRequest, AppointmentResponse, DoctorResponse, UpdateUserRequest, UserResponse } from '../../../../core/models/public.model';
+import { AppointmentRequest, AppointmentResponse, CreatePatientRequest, DoctorResponse, PatientResponse, UpdateUserRequest, UserResponse } from '../../../../core/models/public.model';
 import { PublicService } from '../../../../core/services/public.service';
 import { FormField, ModalConfig, ModalSubmitEvent } from '../../../../shared/models/form.models';
 import { appointmentColumns, bookAppointmentModalConfig, buildAppointmentFields, buildProfileFields, editProfileModalConfig } from './dashboard.config';
 import { TitleCasePipe } from '../../../../shared/pipe/custom-title-case.pipe';
+import { PatientService } from '../../service/patient.service';
+import { switchMap, EMPTY, catchError, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-doctor-dashboard',
@@ -15,6 +17,7 @@ import { TitleCasePipe } from '../../../../shared/pipe/custom-title-case.pipe';
 export class PatientDashboardPage {
 
   private readonly appointmentService = inject(PublicService);
+  private readonly patientService = inject(PatientService);
   private readonly titleCasePipe = inject(TitleCasePipe);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -88,7 +91,7 @@ export class PatientDashboardPage {
           return appointment;
         });
 
-        this.appointments.set(updatedAppointments);
+        this.appointments.set(updatedAppointments.slice(-5).reverse());
         console.log('Appointments loaded:', updatedAppointments);
         this.loading.set(false);
       },
@@ -164,6 +167,7 @@ export class PatientDashboardPage {
       const createRequest = event.formData as AppointmentRequest;
       console.log('➕ Booking new appointment with data:', createRequest);
       this.bookAppointment(createRequest);
+      this.onCreatePatientFromProfile(this.userId, createRequest.doctorId);
     }
   }
 
@@ -199,6 +203,55 @@ export class PatientDashboardPage {
         this.error.set('Failed to Book Appointment');
         this.loading.set(false);
       },
+    });
+  }
+
+  onCreatePatientFromProfile(userId: any, doctorId: number): void {
+    this.patientService.getProfile(userId).pipe(
+      switchMap((userProfile: any) => { // Changed type to any or your specific Profile type to avoid TS errors
+        console.log("User Profile: ", userProfile);
+        
+        // FIX: Map the correct fields from the user profile
+        const patientData: CreatePatientRequest = {
+          doctorId: doctorId,
+          patientName: userProfile.fullName,       // mapped from fullName
+          patientContactNo: 0,           // Add a real field if available (e.g., userProfile.phone)
+          patientEmail: userProfile.email,         // mapped from email
+          patientGender: userProfile.gender,       // mapped from gender
+          patientAddress: userProfile.city ? `${userProfile.address}, ${userProfile.city}` : userProfile.address, // combined address & city
+          patientAge: 0,
+          patientMedicalHistory: ""
+        };
+        
+        console.log("patientdata: ", patientData);
+  
+        // 2. Check if patient already exists using userId or profile ID
+        return this.patientService.getPatientById(userId).pipe(
+          switchMap((existingPatient) => {
+            if (existingPatient) {
+              console.log('Patient already exists:', existingPatient);
+              return EMPTY; 
+            }
+            return this.patientService.createPatients(patientData);
+          }),
+          catchError((err) => {
+            if (err.status === 400) {
+              console.log('Patient not found. Proceeding to create...');
+              return this.patientService.createPatients(patientData);
+            }
+            return throwError(() => err);
+          })
+        );
+      })
+    ).subscribe({
+      next: (response: PatientResponse) => {
+        if (response) {
+          console.log('Patient successfully handled/created:', response);
+        }
+      },
+      error: (err) => {
+        console.error('An error occurred in the process:', err);
+      }
     });
   }
 

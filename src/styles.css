@@ -154,8 +154,7 @@
 
 /* Doctor list preview */
 .doctor-list { display: flex; flex-direction: column; gap: 12px; }
-.doctor-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; background: #f8faff; transition: background 0.2s; }
-.doctor-item:hover { background: #edf3ff; }
+.doctor-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; background: #f8faff;}
 .doctor-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #0d6efd, #0a58ca); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
 .doctor-meta { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .doctor-name { font-weight: 600; color: #1e293b; font-size: 14px; }
